@@ -1,0 +1,12 @@
+Flask
+Flask-Cors
+Flask-SQLAlchemy
+python-dotenv
+
+
+
+pymysql
+
+pandas
+librosa
+scikit-learn
