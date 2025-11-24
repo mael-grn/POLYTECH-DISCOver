@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const  Color secondaryColor = Color(0xFF695C7B);
 const Color primaryColor = Color(0xFF977086);
 const Color backgroundColor = Color(0xFF021334);
 const Color backgroundVariantColor = Color(0xFF012A61);
-const Color foregroundColor = Color(0xFFA5C5CC);
-const Color foregroundVariantColor = Color(0xFF6CA5DB);
+const Color foregroundColor = Color(0xFFE9F3F5);
+const Color foregroundVariantColor = Color(0xFFAFC7DD);
 
 const Color invalidColor = Colors.redAccent;
 const Color validColor = Color(0xFF58AC88);
@@ -31,39 +32,31 @@ final ThemeData appTheme = ThemeData(
   brightness: Brightness.light,
   primarySwatch: customColor,
   visualDensity: VisualDensity.adaptivePlatformDensity,
-  fontFamily: 'Poppins',
   textTheme: TextTheme(
-    bodySmall: TextStyle(
-      fontFamily: 'Poppins',
+    bodySmall: GoogleFonts.poppins(
       color: foregroundColor
     ),
-    bodyMedium: TextStyle(
-      fontFamily: 'Poppins',
+    bodyMedium: GoogleFonts.poppins(
         color: foregroundColor
     ),
-    bodyLarge: TextStyle(
-      fontFamily: 'Poppins',
+    bodyLarge: GoogleFonts.poppins(
         color: foregroundColor
     ),
-    headlineSmall: TextStyle(
-      fontFamily: 'Poppins',
+    headlineSmall: GoogleFonts.poppins(
         color: foregroundColor
     ),
-    headlineMedium: TextStyle(
-      fontFamily: 'Poppins',
+    headlineMedium: GoogleFonts.poppins(
         color: foregroundColor
     ),
-    headlineLarge: TextStyle(
-      fontFamily: 'Poppins',
+    headlineLarge: GoogleFonts.poppins(
         color: foregroundColor
     )
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       foregroundColor: foregroundColor,
-      textStyle: TextStyle(
+      textStyle: GoogleFonts.poppins(
         fontWeight: FontWeight.w800,
-        fontFamily: 'Poppins',
         color: foregroundColor,
       ),
       backgroundColor: Colors.transparent,

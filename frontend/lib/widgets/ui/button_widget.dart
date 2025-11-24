@@ -29,7 +29,7 @@ class ButtonWidget extends StatelessWidget {
     super.key,
     required this.message,
     required this.icon,
-    this.foregroundColor = app_theme.backgroundColor,
+    this.foregroundColor = app_theme.foregroundColor,
     this.backgroundColor = primaryColor,
     required this.onPressed,
     this.padding = const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
@@ -40,12 +40,13 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final children = <Widget>[
-      if (!iconOnRight) Icon(icon, size: 22),
+      if (!iconOnRight) Icon(icon, size: 22, color: Colors.white),
       if (!iconOnRight) SizedBox(width: 10),
-      Text(message),
+      Text(message, style: TextStyle(color: foregroundColor),),
       if (iconOnRight) SizedBox(width: 10),
-      if (iconOnRight) Icon(icon, size: 22),
+      if (iconOnRight) Icon(icon, size: 22, color: Colors.white),
     ];
 
     return Hero(
@@ -61,7 +62,8 @@ class ButtonWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
             padding: padding,
-            textStyle: const TextStyle(
+            textStyle: TextStyle(
+              color: foregroundColor,
               fontWeight: FontWeight.w600,
               fontSize: 16,
               fontFamily: 'Poppins',

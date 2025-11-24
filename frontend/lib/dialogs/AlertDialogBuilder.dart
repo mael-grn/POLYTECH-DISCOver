@@ -45,6 +45,7 @@ class DialogBuilder {
     return _showDialog((BuildContext context) {
       return ScaleAnimationWidget(
         child: AlertDialog(
+          backgroundColor: backgroundVariantColor,
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
