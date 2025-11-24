@@ -89,7 +89,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
               // Le corps de la page
               Padding(
                 // Moins de padding sur les côtés en version desktop pour profiter de l'espace
-                padding: EdgeInsets.fromLTRB(isDesktop ? 0 : 20, 0, isDesktop ? 0 : 20, isDesktop ? 0 : 100),
+                padding: EdgeInsets.fromLTRB(isDesktop ? 40 : 20, 20, isDesktop ? 40 : 20, isDesktop ? 40 : 100),
                 child: PageView(
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(), // Empêche le swipe manuel si désiré

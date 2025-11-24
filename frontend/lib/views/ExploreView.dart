@@ -1,10 +1,12 @@
 
 import 'package:discover/controllers/ExploreController.dart';
+import 'package:discover/widgets/ui/Text_field_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/ui/PageWidget.dart';
+import '../widgets/ui/TextInputWidget.dart';
 
 class ExploreView extends StatefulWidget {
   ExploreView({super.key});
@@ -30,9 +32,11 @@ class _ExploreView extends State<ExploreView> {
 
     return Column(
       children: [
-        Text(
-          'Explorer',
-
+        TextInputWidget(
+          controller: controller.searchQueryController,
+          hint: "Artists, songs, ...",
+          icon: Icons.search,
+          big: true,
         ),
       ],
     );
