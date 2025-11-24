@@ -1,6 +1,10 @@
+import 'package:discover/controllers/AccountController.dart';
+import 'package:discover/controllers/ExploreController.dart';
+import 'package:discover/controllers/HomeController.dart';
+import 'package:discover/controllers/UploadController.dart';
 import 'package:discover/controllers/gestionPersonneExempleController.dart';
 import 'package:discover/services/PersonneExempleService.dart';
-import 'package:discover/views/GestionPersonneExempleView.dart';
+import 'package:discover/views/GlobalLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -23,13 +27,17 @@ void main() async {
     MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => GestionPersonnExempleController(personneExempleService)),
+          ChangeNotifierProvider(create: (_) => HomeController()),
+          ChangeNotifierProvider(create: (_) => ExploreController()),
+          ChangeNotifierProvider(create: (_) => UploadController()),
+          ChangeNotifierProvider(create: (_) => AccountController()),
         ],
         child: MaterialApp(
           title: 'DISCOver',
           debugShowCheckedModeBanner: false,
           theme: appTheme,
           navigatorKey: navigatorKey,
-          home: GestionPersonneExempleView(),
+          home: GlobalLayout(),
         )
     ),
   );

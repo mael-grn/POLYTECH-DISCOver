@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-const  Color secondaryColor = Color(0xFF87DFBA);
-const Color primaryColor = Color(0xFF58AC88);
-const Color backgroundColor = Color(0xFFFFFFFF);
-const Color backgroundVariantColor = Color(0xFFC6D1D0);
-const Color foregroundColor = Color(0xFF000000);
-const Color foregroundVariantColor = Color(0xFF282E28);
+const  Color secondaryColor = Color(0xFF695C7B);
+const Color primaryColor = Color(0xFF977086);
+const Color backgroundColor = Color(0xFF021334);
+const Color backgroundVariantColor = Color(0xFF012A61);
+const Color foregroundColor = Color(0xFFA5C5CC);
+const Color foregroundVariantColor = Color(0xFF6CA5DB);
 
 const Color invalidColor = Colors.redAccent;
 const Color validColor = Color(0xFF58AC88);
@@ -35,21 +35,27 @@ final ThemeData appTheme = ThemeData(
   textTheme: TextTheme(
     bodySmall: TextStyle(
       fontFamily: 'Poppins',
+      color: foregroundColor
     ),
     bodyMedium: TextStyle(
       fontFamily: 'Poppins',
+        color: foregroundColor
     ),
     bodyLarge: TextStyle(
       fontFamily: 'Poppins',
+        color: foregroundColor
     ),
     headlineSmall: TextStyle(
       fontFamily: 'Poppins',
+        color: foregroundColor
     ),
     headlineMedium: TextStyle(
       fontFamily: 'Poppins',
+        color: foregroundColor
     ),
     headlineLarge: TextStyle(
       fontFamily: 'Poppins',
+        color: foregroundColor
     )
   ),
   textButtonTheme: TextButtonThemeData(
