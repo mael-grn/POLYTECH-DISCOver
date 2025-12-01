@@ -17,7 +17,7 @@ CREATE TABLE Songs (
     audio_valence float
 );
 
-LOAD DATA INFILE '/mnt/c/Users/nahel/Downloads/song_data.csv'
+LOAD DATA INFILE '../../data/raw/song_data.csv'
 INTO TABLE Songs
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'
