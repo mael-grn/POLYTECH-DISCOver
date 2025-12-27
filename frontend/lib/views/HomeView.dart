@@ -32,20 +32,11 @@ class _HomeView extends State<HomeView> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(width: 300, height: 200, "images/music_white.png"),
-        Text(
-          'Ready for the next era of music ?',
-          style: TextStyle(
-            color: foregroundColor,
-            fontSize: 30,
-          ),
-          textAlign: TextAlign.center,
-        ),
+        Image.asset(width: 300, height: 200, "images/team/mael-welcome.png"),
         SizedBox(
           height: 30,
         ),
-        ButtonWidget(message: "Browse new songs", icon: Icons.music_note, onPressed: controller.onDiscoverNewSongsClicked),
-
+        ButtonWidget(message: "Upload a song", icon: Icons.cloud_upload_rounded, onPressed: controller.onUploadSongClicked),
       ],
     );
   }

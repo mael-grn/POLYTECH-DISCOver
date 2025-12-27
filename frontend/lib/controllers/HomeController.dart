@@ -11,7 +11,7 @@ class HomeController with ChangeNotifier {
 
   }
 
-  void onDiscoverNewSongsClicked() {
+  void onUploadSongClicked() {
     DialogBuilder.warning("You're too fast", "This functionality has not been developed yet.");
   }
 }
