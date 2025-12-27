@@ -1,9 +1,12 @@
-
 import 'package:discover/controllers/UploadController.dart';
+import 'package:discover/widgets/ui/button_widget.dart';
+import 'package:discover/widgets/ui/lordicon_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lordicon/lordicon.dart';
 import 'package:provider/provider.dart';
 
+import '../core/theme/app_theme.dart';
 import '../widgets/ui/PageWidget.dart';
 
 class Uploadview extends StatefulWidget {
@@ -14,10 +17,10 @@ class Uploadview extends StatefulWidget {
 }
 
 class _Uploadview extends State<Uploadview> {
-
   @override
   void initState() {
     super.initState();
+
     final controller = Provider.of<UploadController>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.initData();
@@ -28,13 +31,24 @@ class _Uploadview extends State<Uploadview> {
   Widget build(BuildContext context) {
     final controller = context.watch<UploadController>();
 
-    return Column(
-      children: [
-        Text(
-          'Upload',
 
-        ),
-      ],
+
+    return PageWidget(
+      title: "Upload a song",
+        body: Center(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 35),
+                LordiconWidget("upload"),
+                SizedBox(height: 20),
+                ButtonWidget(tag: "upload-song-btn", message: "Select a file", icon: Icons.insert_drive_file, onPressed: controller.insertFile),
+
+
+              ]
+          ),
+        )
     );
   }
 }

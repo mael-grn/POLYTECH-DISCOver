@@ -9,4 +9,8 @@ class UploadController with ChangeNotifier {
   Future<void> initData() async {
 
   }
+
+  void insertFile() {
+
+  }
 }
