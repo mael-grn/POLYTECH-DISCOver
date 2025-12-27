@@ -38,14 +38,12 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
     _pageController = PageController(initialPage: currentPageIndex);
     _pages = [
       HomeView(key: PageStorageKey('HomeView')),
-      ExploreView(key: PageStorageKey('MoneyView')),
-      Uploadview(key: PageStorageKey('FriendsView')),
+      ExploreView(key: PageStorageKey('ExploreView')),
       AccountView(key: PageStorageKey('MeView')),
     ];
   }
 
   void _onItemTapped(int index) {
-    // Animation uniquement utile pour le style mobile, mais on la lance quand même
     _animation = Tween<double>(
       begin: currentPageIndex.toDouble(),
       end: index.toDouble(),
@@ -72,10 +70,8 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    // Utilisation de LayoutBuilder pour la réactivité
     return LayoutBuilder(
       builder: (context, constraints) {
-        // On considère "Desktop" si la largeur dépasse 800px (ajustable)
         bool isDesktop = constraints.maxWidth > 800;
 
         return Scaffold(
@@ -109,7 +105,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
                       height: 70,
                       child: Center(
                         child: Container(
-                            width: 280,
+                            width: 210,
                             height: 70,
                             decoration: BoxDecoration(
                               color: backgroundVariantColor,
@@ -139,8 +135,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
                                   children: [
                                     _buildMobileNavItem('icons/home.svg', 0),
                                     _buildMobileNavItem('icons/search.svg', 1),
-                                    _buildMobileNavItem('icons/upload.svg', 2),
-                                    _buildMobileNavItem('icons/account.svg', 3),
+                                    _buildMobileNavItem('icons/account.svg', 2),
                                   ],
                                 ),
                               ],

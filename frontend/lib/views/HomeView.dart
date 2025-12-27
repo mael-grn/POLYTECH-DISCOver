@@ -30,13 +30,16 @@ class _HomeView extends State<HomeView> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(width: 300, height: 200, "images/team/mael-welcome.png"),
+        Image.asset(width: 500, height: 333, "images/team/mael-welcome.png"),
         SizedBox(
-          height: 30,
+          height: 20,
         ),
         ButtonWidget(message: "Upload a song", icon: Icons.cloud_upload_rounded, onPressed: controller.onUploadSongClicked),
+        SizedBox(
+          height: 50,
+        ),
+        ButtonWidget(message: "Discover some music", icon: Icons.music_note, onPressed: controller.onDiscoverSomeMusicCLicked),
       ],
     );
   }
