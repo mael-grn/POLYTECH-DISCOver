@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 
 class UploadController with ChangeNotifier {
 
+  bool isUploading = false;
+
   UploadController();
 
   Future<void> initData() async {
@@ -11,6 +13,8 @@ class UploadController with ChangeNotifier {
   }
 
   void insertFile() {
+    isUploading = true;
+    notifyListeners();
 
   }
 }

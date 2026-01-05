@@ -189,6 +189,14 @@ class DialogBuilder {
     );
   }
 
+  static Future<void> welcome() {
+    return _simpleImageDialog(
+      "Welcome!",
+      "You are on DISCOver, the best app ever!",
+      "images/team/mael-welcome.png",
+    );
+  }
+
   static Future<void> loading() {
     return _showDialog((BuildContext context) {
       return AlertDialog(

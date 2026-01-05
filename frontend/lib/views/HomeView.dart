@@ -1,6 +1,7 @@
 import 'package:discover/controllers/HomeController.dart';
 import 'package:discover/core/theme/app_theme.dart';
 import 'package:discover/widgets/animations/scale_animation_widget.dart';
+import 'package:discover/widgets/ui/Container_widget.dart';
 import 'package:discover/widgets/ui/button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,18 +34,12 @@ class _HomeView extends State<HomeView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 800,
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: backgroundVariantColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
+          ContainerWidget(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                LordiconWidget("doodle-music", loop: true),
+                LordiconWidget("doodle-music"),
                 SizedBox(height: 10),
                 Text(
                   "No song recently uploaded",
@@ -63,14 +58,8 @@ class _HomeView extends State<HomeView> {
           ),
           SizedBox(height: 20),
 
-          Container(
-            width: 800,
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: backgroundVariantColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
+          ContainerWidget(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -90,11 +79,11 @@ class _HomeView extends State<HomeView> {
                         Row(
                           children: [
                             index == 0
-                                ? LordiconWidget("one", loop: true, size: 100)
+                                ? LordiconWidget("one", size: 100)
                                 : index == 1
-                                ? LordiconWidget("two", loop: true, size: 100)
+                                ? LordiconWidget("two", size: 100)
                                 : index == 2
-                                ? LordiconWidget("three", loop: true, size: 100)
+                                ? LordiconWidget("three", size: 100)
                                 : Text("$index - "),
                             SizedBox(width: 10),
                             Expanded(child: Text(controller.trends[index], style: TextStyle(fontWeight: index < 3 ? FontWeight.w600 : FontWeight.w400, fontSize: index < 3 ? 20 : 15))),

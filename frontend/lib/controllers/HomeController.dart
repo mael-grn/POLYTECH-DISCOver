@@ -19,6 +19,8 @@ class HomeController with ChangeNotifier {
       "He’s a Pirate - Geoff Zanelli, Hans Zimmer et Klaus Badelt",
       "Zillertaler Bravourjodler - Musikantenstadl"
     ];
+    notifyListeners();
+    DialogBuilder.welcome();
   }
 
   void onUploadSongClicked() {
@@ -26,6 +28,6 @@ class HomeController with ChangeNotifier {
   }
 
   void onDiscoverSomeMusicCLicked() {
-    DialogBuilder.warning("You're too fast", "This functionality has not been developed yet.");
+    DialogBuilder.error("You're too fast", "This functionality has not been developed yet.");
   }
 }

@@ -1,4 +1,5 @@
 import 'package:discover/controllers/UploadController.dart';
+import 'package:discover/widgets/ui/Container_widget.dart';
 import 'package:discover/widgets/ui/button_widget.dart';
 import 'package:discover/widgets/ui/lordicon_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,18 +37,26 @@ class _Uploadview extends State<Uploadview> {
     return PageWidget(
       title: "Upload a song",
         body: Center(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 35),
-                LordiconWidget("upload"),
-                SizedBox(height: 20),
-                ButtonWidget(tag: "upload-song-btn", message: "Select a file", icon: Icons.insert_drive_file, onPressed: controller.insertFile),
+          child: ContainerWidget(
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 35),
+                  LordiconWidget("cloud-plus", loop: controller.isUploading,),
+                  SizedBox(height: 20),
+                  Text(
+                    "Select a file to start uploading",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  ButtonWidget(tag: "upload-song-btn", message: "Select a file", icon: Icons.insert_drive_file, onPressed: controller.insertFile),
 
 
-              ]
-          ),
+                ]
+            ),
+          )
         )
     );
   }
