@@ -1,27 +1,33 @@
-from datetime import datetime
-from ..core.db import db
+# app/models/history.py
+from __future__ import annotations
 
-class SearchHistory(db.Model):
+from sqlalchemy import Integer, DateTime, ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.db.base import Base
+
+
+class History(Base):
     __tablename__ = "history"
 
-    id = db.Column(db.Integer, primary_key=True)
+    song_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("song.song_id", ondelete="CASCADE"), primary_key=True
+    )
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("user.user_id", ondelete="CASCADE"), primary_key=True
+    )
 
-    # Qui a fait la recherche ?
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    user = db.relationship("User", back_populates="history_entries")
+    # dans ton schéma: last_research + date
+    last_research: Mapped["DateTime"] = mapped_column(
+        DateTime, nullable=False, server_default=func.now()
+    )
+    date: Mapped["DateTime"] = mapped_column(
+        DateTime, nullable=False, server_default=func.now()
+    )
 
-    # Sur quel morceau ?
-    track_id = db.Column(db.Integer, db.ForeignKey("tracks.id"), nullable=True)
-    track = db.relationship("Track", back_populates="history_entries")
+    song: Mapped["Song"] = relationship(back_populates="history_entries")
+    user: Mapped["User"] = relationship(back_populates="history_entries")
 
-    # Type de recherche: "dataset" (morceau du CSV) ou "upload" (MP3 envoyé)
-    search_type = db.Column(db.String(20), nullable=False)
 
-    # Nom affiché pour l'historique (ex : nom du fichier ou titre saisi)
-    display_name = db.Column(db.String(255), nullable=False)
-
-    # Résultat de l'analyse sérialisé en JSON (texte brut)
-    # (ex: {"prediction": 0.82, "reason": "...", ...})
-    result_json = db.Column(db.Text, nullable=True)
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+from backend.app.models.song import Song  # noqa: E402
+from backend.app.models.user import User  # noqa: E402

@@ -12,8 +12,8 @@ def create_app():
     db.init_app(app)
 
     # Import des blueprints API
-    from .api.tracks import tracks_bp
-    from .api.users import users_bp
+    from backend.app.api.routes.songs import tracks_bp
+    from backend.app.api.routes.users import users_bp
 
     app.register_blueprint(tracks_bp, url_prefix="/api/tracks")
     app.register_blueprint(users_bp, url_prefix="/api/users")

@@ -1,11 +1,11 @@
-# backend/app/api/tracks.py
+# backend/app/api/songs.py
 
 from flask import Blueprint, jsonify, request
 import json
 
-from ..core.db import db
-from ..models.track import Track
-from ..models.history import SearchHistory
+from backend.app.core.db import db
+from backend.app.models.song import Track
+from backend.app.models.history import SearchHistory
 
 tracks_bp = Blueprint("tracks", __name__)
 
