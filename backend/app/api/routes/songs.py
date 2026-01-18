@@ -1,93 +1,76 @@
-# backend/app/api/songs.py
-
 from flask import Blueprint, jsonify, request
-import json
+from marshmallow import ValidationError
 
-from backend.app.core.db import db
-from backend.app.models.song import Track
-from backend.app.models.history import SearchHistory
+from app.extensions import db
+from app.models.song import Song
+from app.schemas.song_schema import SongCreateSchema, SongReadSchema
+from sqlalchemy.exc import SQLAlchemyError
 
-tracks_bp = Blueprint("tracks", __name__)
+songs_bp = Blueprint("songs", __name__)
 
-#######################################################
-#   GET : liste des tracks (dataset Kaggle)
-#######################################################
+song_create_schema = SongCreateSchema()
+song_read_schema = SongReadSchema()
+songs_read_schema = SongReadSchema(many=True)
 
-@tracks_bp.route("/", methods=["GET"])
-def list_tracks():
-    limit = int(request.args.get("limit", 100))
-    tracks = Track.query.limit(limit).all()
-    return jsonify([t.to_dict() for t in tracks])
+@songs_bp.post("/songs")
+def create_song():
+    schema_song = request.get_json(silent=True)
+    if schema_song is None:
+        return jsonify({"error": "Invalid or missing JSON body"}), 400
 
+    try:
+        data = song_create_schema.load(schema_song)
+    except ValidationError as err:
+        return jsonify({"error": "ValidationError", "messages": err.messages}), 422
 
-#######################################################
-#   GET : un track précis
-#######################################################
+    song = Song(**data)
 
-@tracks_bp.route("/<int:track_id>", methods=["GET"])
-def get_track(track_id):
-    track = Track.query.get_or_404(track_id)
-    return jsonify(track.to_dict())
-
-
-#######################################################
-#   POST : analyse d’un morceau venant du dataset
-#######################################################
-
-@tracks_bp.route("/<int:track_id>/analyze", methods=["POST"])
-def analyze_track(track_id):
-    # Dans le futur : on récupérera l'user via JWT
-    data = request.get_json()
-    user_id = data.get("user_id")  # temporaire
-
-    if not user_id:
-        return jsonify({"error": "user_id manquant"}), 400
-
-    track = Track.query.get_or_404(track_id)
-
-    # ---- ICI TU METTRAS TA PRÉDICTION RÉELLE ----
-    prediction_result = {
-        "success_score": 0.81,
-        "will_succeed": True,
-        "reason": "High energy + danceability",
-        "tempo": track.tempo,
-        "energy": track.energy
-    }
-    # ---------------------------------------------
-
-    history_entry = SearchHistory(
-        user_id=user_id,
-        track_id=track.id,
-        search_type="dataset",
-        display_name=track.track_name,
-        result_json=json.dumps(prediction_result)
-    )
-
-    db.session.add(history_entry)
+    db.session.add(song)
     db.session.commit()
 
+    return jsonify(song_read_schema.dump(song)), 201
+
+@songs_bp.get("/songs/<int:song_id>")
+def get_song(song_id: int):
+    """
+    Récupère une chanson par son ID.
+    """
+    song = db.session.get(Song, song_id)  # SQLAlchemy 1.4+/2.x
+
+    if song is None:
+        return jsonify({"error": "NotFound", "message": f"Song {song_id} not found"}), 404
+
+    return jsonify(song_read_schema.dump(song)), 200
+
+@songs_bp.get("/songs")
+def list_songs():
+    """
+    Liste des songs avec une limit de 50 par defaut et un max de 100 et on en skip 0.
+    """
+    try:
+        skip = int(request.args.get("skip", 0))
+        limit = int(request.args.get("limit", 50))
+    except ValueError:
+        return jsonify({"error": "ValidationError", "message": "skip/limit must be integers"}), 422
+
+    if skip < 0:
+        skip = 0
+    if limit < 1:
+        limit = 1
+    if limit > 100:
+        limit = 100
+
+    songs = (
+        db.session.query(Song)
+        .order_by(Song.song_id.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
     return jsonify({
-        "track": track.to_dict(),
-        "analysis": prediction_result
-    })
-
-
-#######################################################
-#   GET : historique d’un utilisateur
-#######################################################
-
-@tracks_bp.route("/history/<int:user_id>", methods=["GET"])
-def get_user_history(user_id):
-    entries = SearchHistory.query.filter_by(user_id=user_id).all()
-
-    result = []
-    for h in entries:
-        result.append({
-            "id": h.id,
-            "search_type": h.search_type,
-            "display_name": h.display_name,
-            "result": json.loads(h.result_json) if h.result_json else None,
-            "created_at": h.created_at.isoformat(),
-        })
-
-    return jsonify(result)
+        "skip": skip,
+        "limit": limit,
+        "count": len(songs),
+        "items": songs_read_schema.dump(songs),
+    }), 200
