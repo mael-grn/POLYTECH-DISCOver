@@ -1,4 +1,4 @@
-# app/models/song.py
+
 from __future__ import annotations
 
 from sqlalchemy import String, Integer, Float, Boolean
@@ -27,27 +27,24 @@ class Song(Base):
 
     is_in_data_set: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-    # 1–1 (Analyze.id_song = PK + FK vers Song.song_id)
     analyze: Mapped["Analyze | None"] = relationship(
         back_populates="song",
         uselist=False,
         cascade="all, delete-orphan",
     )
 
-    # 0..1 uploader (contrainte aussi côté table uploaded_by)
     upload: Mapped["UploadedBy | None"] = relationship(
         back_populates="song",
         uselist=False,
         cascade="all, delete-orphan",
     )
 
-    # 0..* history entries
     history_entries: Mapped[list["History"]] = relationship(
         back_populates="song",
         cascade="all, delete-orphan",
     )
 
 
-from backend.app.models.analyze import Analyze  # noqa: E402
-from backend.app.models.uploaded_by import UploadedBy  # noqa: E402
-from backend.app.models.history import History  # noqa: E402
+from backend.app.models.analyze import Analyze
+from backend.app.models.uploaded_by import UploadedBy
+from backend.app.models.history import History
