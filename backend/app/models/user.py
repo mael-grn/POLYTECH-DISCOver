@@ -1,4 +1,3 @@
-# app/models/user.py
 from __future__ import annotations
 
 from sqlalchemy import String, Integer, UniqueConstraint
@@ -29,5 +28,5 @@ class User(Base):
     )
 
 
-from backend.app.models.uploaded_by import UploadedBy  # noqa: E402
-from backend.app.models.history import History  # noqa: E402
+from backend.app.models.uploaded_by import UploadedBy
+from backend.app.models.history import History

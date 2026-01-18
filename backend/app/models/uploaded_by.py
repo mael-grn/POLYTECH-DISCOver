@@ -1,4 +1,3 @@
-# app/models/uploaded_by.py
 from __future__ import annotations
 
 from sqlalchemy import Integer, Boolean, DateTime, ForeignKey, UniqueConstraint, func
@@ -14,7 +13,6 @@ class UploadedBy(Base):
         UniqueConstraint("song_id", name="uq_uploaded_by_song_id"),
     )
 
-    # PK composite (comme ton diagramme avec #song_id et #user_id)
     song_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("song.song_id", ondelete="CASCADE"), primary_key=True
     )
@@ -29,5 +27,5 @@ class UploadedBy(Base):
     user: Mapped["User"] = relationship(back_populates="uploads")
 
 
-from backend.app.models.song import Song  # noqa: E402
-from backend.app.models.user import User  # noqa: E402
+from backend.app.models.song import Song
+from backend.app.models.user import User

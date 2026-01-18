@@ -1,4 +1,4 @@
-# app/models/analyze.py
+
 from __future__ import annotations
 
 from sqlalchemy import Integer, Float, ForeignKey
@@ -10,7 +10,6 @@ from backend.app.db.base import Base
 class Analyze(Base):
     __tablename__ = "analyze"
 
-    # PK = song_id (=> 1 seule ligne Analyze par Song)
     id_song: Mapped[int] = mapped_column(
         Integer,
         ForeignKey("song.song_id", ondelete="CASCADE"),
@@ -25,4 +24,4 @@ class Analyze(Base):
     )
 
 
-from backend.app.models.song import Song  # noqa: E402
+from backend.app.models.song import Song

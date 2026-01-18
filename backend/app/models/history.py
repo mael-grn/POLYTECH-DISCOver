@@ -1,4 +1,4 @@
-# app/models/history.py
+
 from __future__ import annotations
 
 from sqlalchemy import Integer, DateTime, ForeignKey, func
@@ -17,7 +17,6 @@ class History(Base):
         Integer, ForeignKey("user.user_id", ondelete="CASCADE"), primary_key=True
     )
 
-    # dans ton schéma: last_research + date
     last_research: Mapped["DateTime"] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
@@ -29,5 +28,5 @@ class History(Base):
     user: Mapped["User"] = relationship(back_populates="history_entries")
 
 
-from backend.app.models.song import Song  # noqa: E402
-from backend.app.models.user import User  # noqa: E402
+from backend.app.models.song import Song
+from backend.app.models.user import User
