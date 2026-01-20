@@ -18,7 +18,7 @@ class SongCreateSchema(Schema):
     liveness = fields.Float(required=False, allow_none=True)
     loudness = fields.Float(required=False, allow_none=True)
 
-    is_in_data_set = fields.Bool(required=False, missing=False)
+    is_in_data_set = fields.Bool(load_default=False)
 
 
 class SongUpdateSchema(Schema):
