@@ -1,45 +1,65 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart'; // Préférable à cupertino pour la compatibilité générale
 import 'package:lordicon/lordicon.dart';
 
-import '../../core/theme/app_theme.dart';
-
-class LordiconWidget extends StatelessWidget {
+class LordiconWidget extends StatefulWidget {
   final String iconName;
   final bool loop;
-  final Function? onTap;
+  final VoidCallback? onTap;
   final Color? color;
   final double size;
-  const LordiconWidget(this.iconName, {super.key, this.onTap, this.loop = false, this.color, this.size = 200});
+
+  const LordiconWidget(this.iconName, {
+    super.key,
+    this.onTap,
+    this.loop = false,
+    this.color,
+    this.size = 200
+  });
 
   @override
-  Widget build(BuildContext context) {
-    var controller = IconController.assets("icons/$iconName.json");
+  State<LordiconWidget> createState() => _LordiconWidgetState();
+}
 
-    controller.addStatusListener((status) {
+class _LordiconWidgetState extends State<LordiconWidget> {
+  late IconController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = IconController.assets("icons/${widget.iconName}.json");
+
+    _controller.addStatusListener((status) {
       if (status == ControllerStatus.ready) {
-        controller.playFromBeginning();
+        _controller.playFromBeginning();
       }
       if (status == ControllerStatus.completed) {
-        if (loop) {
-          controller.playFromBeginning();
+        if (widget.loop) {
+          _controller.playFromBeginning();
         } else {
-          controller.goToFirstFrame();
+          _controller.goToFirstFrame();
         }
       }
     });
+  }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (onTap != null) {
-          controller.playFromBeginning();
-          onTap?.call();
-        }
+        _controller.playFromBeginning();
+        widget.onTap?.call();
       },
       child: IconViewer(
-        controller: controller,
-        width: size,
-        height: size,
-        colorize: color,
+        controller: _controller,
+        width: widget.size,
+        height: widget.size,
+        colorize: widget.color,
       ),
     );
   }

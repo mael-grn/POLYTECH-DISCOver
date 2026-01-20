@@ -1,3 +1,5 @@
+import 'package:discover/dialogs/AlertDialogBuilder.dart';
+import 'package:discover/exceptions/RequestException.dart';
 import 'package:flutter/cupertino.dart';
 import '../models/Song.dart';
 import '../services/SearchService.dart';
@@ -8,7 +10,7 @@ class ExploreController with ChangeNotifier {
 
   final searchQueryController = TextEditingController();
   List<Song> searchResults = [];
-  bool isLoading = false;
+  bool hasSearched = false;
 
   Future<void> initData() async {
     // Rien pour l'instant
@@ -16,19 +18,28 @@ class ExploreController with ChangeNotifier {
 
   Future<void> searchSongs() async {
     final query = searchQueryController.text.trim();
-    if (query.isEmpty) return;
-
-    isLoading = true;
-    notifyListeners();
-
+    if (query.isEmpty) {
+      DialogBuilder.warning("Not so fast!", "You must enter a query in the appropriate field to initiate a search.");
+      return;
+    }
+    DialogBuilder.loading();
     try {
       searchResults = await SearchService.searchSongs(query);
-    } catch (e) {
+      hasSearched = true;
+    } on NetworkException catch (e) {
+      DialogBuilder.networkError(e.networkError);
       searchResults = [];
-      // Ici tu pourrais afficher un dialog d'erreur
+      hasSearched = false;
+    } catch (_) {
+      DialogBuilder.appError();
+      searchResults = [];
+      hasSearched = false;
     } finally {
-      isLoading = false;
       notifyListeners();
     }
+  }
+
+  void onSearchResultPressed(int songIndex) {
+    DialogBuilder.warning("Not so fast!", "Not implemented yet...");
   }
 }
