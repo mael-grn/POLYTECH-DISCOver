@@ -3,13 +3,12 @@ from __future__ import annotations
 from sqlalchemy import Integer, Boolean, DateTime, ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.db.base import Base
+from app.extensions import db
 
 
-class UploadedBy(Base):
+class UploadedBy(db.Model):
     __tablename__ = "uploaded_by"
     __table_args__ = (
-        # Important : garantit 0..1 uploader par song (comme ton diagramme)
         UniqueConstraint("song_id", name="uq_uploaded_by_song_id"),
     )
 
@@ -27,5 +26,5 @@ class UploadedBy(Base):
     user: Mapped["User"] = relationship(back_populates="uploads")
 
 
-from backend.app.models.song import Song
-from backend.app.models.user import User
+from app.models.song import Song
+from app.models.user import User

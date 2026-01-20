@@ -3,10 +3,10 @@ from __future__ import annotations
 from sqlalchemy import String, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.db.base import Base
+from app.extensions import db
 
 
-class User(Base):
+class User(db.Model):
     __tablename__ = "user"
     __table_args__ = (
         UniqueConstraint("email", name="uq_user_email"),
@@ -28,5 +28,5 @@ class User(Base):
     )
 
 
-from backend.app.models.uploaded_by import UploadedBy
-from backend.app.models.history import History
+from app.models.uploaded_by import UploadedBy
+from app.models.history import History
