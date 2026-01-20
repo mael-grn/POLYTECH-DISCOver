@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
 
-from app.extensions import db
+from app.core.db import db
 from app.models.song import Song
 from app.schemas.song_schema import SongCreateSchema, SongReadSchema
 from sqlalchemy.exc import SQLAlchemyError
@@ -74,3 +74,25 @@ def list_songs():
         "count": len(songs),
         "items": songs_read_schema.dump(songs),
     }), 200
+
+@songs_bp.get("/songs/search")
+def search_songs():
+    """
+    Recherche les chansons par nom ou artiste.
+    GET /songs/search?q=Green Day
+    """
+    query = request.args.get("q", "").strip()
+    if not query:
+        return jsonify([]), 200
+
+    try:
+        # Recherche dans song_name et dans uploaded_by.artist_name si tu veux étendre
+        songs = (
+            db.session.query(Song)
+            .filter(Song.song_name.ilike(f"%{query}%"))
+            .limit(50)
+            .all()
+        )
+        return jsonify(songs_read_schema.dump(songs)), 200
+    except SQLAlchemyError as e:
+        return jsonify({"error": "DatabaseError", "message": str(e)}), 500

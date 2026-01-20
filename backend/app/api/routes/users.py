@@ -3,8 +3,8 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from backend.app.core.db import db
-from backend.app.models.user import User
+from app.core.db import db
+from app.models.user import User
 
 users_bp = Blueprint("users", __name__)
 

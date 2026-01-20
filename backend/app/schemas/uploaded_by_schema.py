@@ -6,7 +6,7 @@ class UploadCreateSchema(Schema):
     Cette classe defini ce qui est necessaire pour creer un uploaded_by."""
     song_id = fields.Int(required=True)
     user_id = fields.Int(required=True)
-    private = fields.Bool(required=False, missing=False)
+    private = fields.Bool(required=False, load_default=False)
 
 
 class UploadUpdateSchema(Schema):

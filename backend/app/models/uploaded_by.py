@@ -3,10 +3,10 @@ from __future__ import annotations
 from sqlalchemy import Integer, Boolean, DateTime, ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.db.base import Base
+from app.core.db import db
 
 
-class UploadedBy(Base):
+class UploadedBy(db.Model):
     __tablename__ = "uploaded_by"
     __table_args__ = (
         # Important : garantit 0..1 uploader par song (comme ton diagramme)
@@ -14,7 +14,7 @@ class UploadedBy(Base):
     )
 
     song_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("song.song_id", ondelete="CASCADE"), primary_key=True
+        Integer, ForeignKey("Songs.id", ondelete="CASCADE"), primary_key=True
     )
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("user.user_id", ondelete="CASCADE"), primary_key=True
@@ -23,9 +23,10 @@ class UploadedBy(Base):
     date: Mapped["DateTime"] = mapped_column(DateTime, nullable=False, server_default=func.now())
     private: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
-    song: Mapped["Song"] = relationship(back_populates="upload")
-    user: Mapped["User"] = relationship(back_populates="uploads")
+    song: Mapped["Song"] = relationship("Song", back_populates="upload")
+    user: Mapped["User"] = relationship("User", back_populates="uploads")
 
-
-from backend.app.models.song import Song
-from backend.app.models.user import User
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .song import Song
+    from .user import User

@@ -19,7 +19,7 @@ class HomeController with ChangeNotifier {
 
   Future<void> initData() async {
     trends = [
-      "Say My Name - Destiny's Child",
+      "Say My Name - Destiny's Child test",
       "Inspecteur gadget - Shuki Levy, Haim Saban et Jacques Cardona",
       "Axel F - Crazy Frog",
       "He’s a Pirate - Geoff Zanelli, Hans Zimmer et Klaus Badelt",

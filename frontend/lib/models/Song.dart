@@ -1,3 +1,4 @@
+// import 'dart:ffi';
 
 class Song {
 
@@ -28,27 +29,27 @@ class Song {
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
-      json['song_id'],
-      json['song_name'],
-      json['artist'],
-      json['album'],
-      json['annee'],
-      json['genre'],
-      json['song_duration_ms'],
-      json['explicite'],
-      json['danceability'],
-      json['energy'],
-      json['key'],
-      json['loudness'],
-      json['mode'],
-      json['speechiness'],
-      json['acousticness'],
-      json['instrumentalness'],
-      json['liveness'],
-      json['valence'],
-      json['tempo'],
-      json['time_signature'],
-      json['isInDataset'],
+      json['song_id'] ?? 0,
+      json['song_name'] ?? '',
+      json['artist'] ?? 'Unknown',
+      json['album'] ?? 'Unknown',
+      json['annee'] ?? 0,
+      json['genre'] ?? 'Unknown',
+      json['song_duration_ms'] ?? 0,
+      json['explicite'] ?? false,
+      (json['danceability'] ?? 0.0).toDouble(),
+      (json['energy'] ?? 0.0).toDouble(),
+      json['key'] ?? 0,
+      (json['loudness'] ?? 0.0).toDouble(),
+      json['mode'] ?? 0,
+      (json['speechiness'] ?? 0.0).toDouble(),
+      (json['acousticness'] ?? 0.0).toDouble(),
+      (json['instrumentalness'] ?? 0.0).toDouble(),
+      (json['liveness'] ?? 0.0).toDouble(),
+      (json['valence'] ?? 0.0).toDouble(),
+      (json['tempo'] ?? 0.0).toDouble(),
+      json['time_signature'] ?? 4,
+      json['isInDataset'] ?? true,
     );
   }
 

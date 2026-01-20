@@ -9,9 +9,10 @@ class Settings:
 
     # URL de connexion à MariaDB/MySQL
     # Exemple : mysql+pymysql://user:password@localhost:3306/song_popularity
+    # app/core/config.py
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
-        "mysql+pymysql://root:root@localhost:3306/song_popularity"
+        "mysql+pymysql://pythonuser:MotDePasse123@localhost:3306/songs_db"
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False

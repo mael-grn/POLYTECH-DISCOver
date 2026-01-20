@@ -4,14 +4,14 @@ from __future__ import annotations
 from sqlalchemy import Integer, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.base import Base
+from app.core.db import db
 
 
-class History(Base):
+class History(db.Model):
     __tablename__ = "history"
 
     song_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("song.song_id", ondelete="CASCADE"), primary_key=True
+        Integer, ForeignKey("Songs.id", ondelete="CASCADE"), primary_key=True
     )
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("user.user_id", ondelete="CASCADE"), primary_key=True
@@ -24,9 +24,10 @@ class History(Base):
         DateTime, nullable=False, server_default=func.now()
     )
 
-    song: Mapped["Song"] = relationship(back_populates="history_entries")
-    user: Mapped["User"] = relationship(back_populates="history_entries")
+    song: Mapped["Song"] = relationship("Song", back_populates="history_entries")
+    user: Mapped["User"] = relationship("User", back_populates="history_entries")
 
-
-from backend.app.models.song import Song
-from backend.app.models.user import User
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .song import Song
+    from .user import User
