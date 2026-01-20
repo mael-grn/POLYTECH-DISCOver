@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 class Song {
 
@@ -8,7 +7,7 @@ class Song {
   final String album;
   final int annee;
   final String genre;
-  final Long duration; // En millisecondes
+  final int duration; // En millisecondes
   final bool explicite;
   final double danceability;
   final double energy;

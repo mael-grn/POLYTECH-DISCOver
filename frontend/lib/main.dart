@@ -1,16 +1,17 @@
 import 'package:discover/controllers/AccountController.dart';
 import 'package:discover/controllers/ExploreController.dart';
 import 'package:discover/controllers/HomeController.dart';
-import 'package:discover/controllers/UploadController.dart';
+import 'package:discover/controllers/upload/UploadController.dart';
 import 'package:discover/controllers/gestionPersonneExempleController.dart';
+import 'package:discover/controllers/upload/UploadSuccessController.dart';
 import 'package:discover/services/PersonneExempleService.dart';
+import 'package:discover/services/UploadService.dart';
 import 'package:discover/views/GlobalLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'core/global.dart';
 import 'core/theme/app_theme.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
 
@@ -22,15 +23,17 @@ void main() async {
   ));
 
   final personneExempleService = PersonneExampleService();
+  final uploadService = Uploadservice();
 
   runApp(
     MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => GestionPersonnExempleController(personneExempleService)),
-          ChangeNotifierProvider(create: (_) => HomeController()),
+          ChangeNotifierProvider(create: (_) => HomeController(uploadService)),
           ChangeNotifierProvider(create: (_) => ExploreController()),
-          ChangeNotifierProvider(create: (_) => UploadController()),
+          ChangeNotifierProvider(create: (_) => UploadController(uploadService)),
           ChangeNotifierProvider(create: (_) => AccountController()),
+          ChangeNotifierProvider(create: (_) => UploadSuccessController()),
         ],
         child: MaterialApp(
           title: 'DISCOver',

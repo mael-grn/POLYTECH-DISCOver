@@ -1,14 +1,20 @@
 
 import 'package:discover/core/CustomNavigator.dart';
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
+import 'package:discover/models/Song.dart';
+import 'package:discover/services/UploadService.dart';
 import 'package:discover/views/upload/UploadNewSongView.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../exceptions/RequestException.dart';
 
 
 class HomeController with ChangeNotifier {
 
-  HomeController();
+  HomeController(this.uploadService);
+  final Uploadservice uploadService;
 
+  Song? song = null;
   List<String> trends = ["Aucune donnée."];
 
   Future<void> initData() async {
@@ -19,8 +25,14 @@ class HomeController with ChangeNotifier {
       "He’s a Pirate - Geoff Zanelli, Hans Zimmer et Klaus Badelt",
       "Zillertaler Bravourjodler - Musikantenstadl"
     ];
+    try {
+      song = await uploadService.getLastUploadedSongByUser();
+    } on NetworkException catch (e) {
+      DialogBuilder.networkError(e.networkError);
+    } catch (_) {
+      DialogBuilder.appError();
+    }
     notifyListeners();
-    DialogBuilder.welcome();
   }
 
   void onUploadSongClicked() {
@@ -28,6 +40,6 @@ class HomeController with ChangeNotifier {
   }
 
   void onDiscoverSomeMusicCLicked() {
-    DialogBuilder.error("You're too fast", "This functionality has not been developed yet.");
+    DialogBuilder.warning("You're too fast", "This functionality has not been developed yet.");
   }
 }

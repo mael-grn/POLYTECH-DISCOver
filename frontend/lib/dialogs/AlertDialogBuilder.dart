@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:discover/widgets/ui/button_widget.dart';
 
+import '../core/global.dart';
 import '../core/theme/app_theme.dart';
 import '../enums/NetworkErrorEnum.dart';
-import '../main.dart';
 import '../widgets/animations/scale_animation_widget.dart';
 
 class DialogBuilder {
@@ -200,6 +200,7 @@ class DialogBuilder {
   static Future<void> loading() {
     return _showDialog((BuildContext context) {
       return AlertDialog(
+        backgroundColor: backgroundVariantColor,
         content: SizedBox(
           width: 100,
           height: 100,

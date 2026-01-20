@@ -1,7 +1,5 @@
 import 'package:discover/views/AccountView.dart';
 import 'package:discover/views/ExploreView.dart';
-import 'package:discover/views/UploadView.dart';
-import 'package:discover/widgets/ui/PageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,8 +21,6 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
   late AnimationController _animationController;
   late Animation<double> _animation;
 
-  late final List<Widget> _pages;
-
   @override
   void initState() {
     super.initState();
@@ -36,12 +32,6 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
     _animation = Tween<double>(begin: 0, end: 0).animate(_animationController);
 
     _pageController = PageController(initialPage: currentPageIndex);
-    _pages = [
-      HomeView(key: PageStorageKey('HomeView')),
-      ExploreView(key: PageStorageKey('ExploreView')),
-      Uploadview(key: PageStorageKey('UploadView')),
-      AccountView(key: PageStorageKey('MeView')),
-    ];
   }
 
   void _onItemTapped(int index) {
@@ -90,7 +80,11 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
                 child: PageView(
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: _pages
+                  children: [
+                    HomeView(),
+                    ExploreView(),
+                    AccountView(),
+                  ]
                 ),
               ),
 
@@ -160,14 +154,20 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
       backgroundColor: backgroundColor,
       elevation: 0,
       scrolledUnderElevation: 0,
-      title: Text(
-        "DISCOver",
-        style: TextStyle(
-          color: foregroundColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 35,
-        ),
-      ),
+      title: Row(
+        children: [
+          Image.asset(width: 60, height: 60, "images/DISCOver.png"),
+          SizedBox(width: 10,),
+          Text(
+            "DISCOver",
+            style: TextStyle(
+              color: foregroundColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 35,
+            ),
+          ),
+        ],
+      )
     );
   }
 
@@ -200,12 +200,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           children: [
-            // Logo / Titre à gauche
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey[400]), // Placeholder pour le cercle du logo si besoin
-            ),
+            Image.asset(width: 100, height: 100, "images/DISCOver.png"),
             const SizedBox(width: 15),
             Text(
               "DISCOver",
@@ -225,9 +220,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
                 const SizedBox(width: 10),
                 _buildDesktopNavItem("SEARCH", 'icons/search.svg', 1),
                 const SizedBox(width: 10),
-                _buildDesktopNavItem("UPLOAD", 'icons/upload.svg', 2),
-                const SizedBox(width: 10),
-                _buildDesktopNavItem("ACCOUNT", 'icons/account.svg', 3),
+                _buildDesktopNavItem("ACCOUNT", 'icons/account.svg', 2),
               ],
             )
           ],
