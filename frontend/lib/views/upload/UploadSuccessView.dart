@@ -45,7 +45,7 @@ class _Uploadsuccessview extends State<Uploadsuccessview> {
                     ),
                     SizedBox(height: 20),
 
-                    ButtonWidget(message: "Back to home page", icon: Icons.insert_drive_file, onPressed: controller.goBackHome),
+                    ButtonWidget(message: "Back to home page", icon: Icons.check, onPressed: controller.goBackHome),
                   ]
               ),
             )
