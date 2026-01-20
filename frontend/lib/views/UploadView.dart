@@ -34,9 +34,8 @@ class _Uploadview extends State<Uploadview> {
 
 
 
-    return PageWidget(
-      title: "Upload a song",
-        body: Center(
+    return SingleChildScrollView(
+        child: Center(
           child: ContainerWidget(
             Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +50,7 @@ class _Uploadview extends State<Uploadview> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20),
-                  ButtonWidget(tag: "upload-song-btn", message: "Select a file", icon: Icons.insert_drive_file, onPressed: controller.insertFile),
+                  ButtonWidget(message: "Select a file", icon: Icons.insert_drive_file, onPressed: controller.insertFile),
 
 
                 ]

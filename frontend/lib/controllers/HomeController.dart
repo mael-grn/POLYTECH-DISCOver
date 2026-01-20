@@ -1,7 +1,7 @@
 
 import 'package:discover/core/CustomNavigator.dart';
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
-import 'package:discover/views/UploadView.dart';
+import 'package:discover/views/upload/UploadNewSongView.dart';
 import 'package:flutter/cupertino.dart';
 
 
@@ -24,7 +24,7 @@ class HomeController with ChangeNotifier {
   }
 
   void onUploadSongClicked() {
-    CustomNavigator.pushFromRight(Uploadview());
+    CustomNavigator.pushFromRight(UploadNewSongView());
   }
 
   void onDiscoverSomeMusicCLicked() {

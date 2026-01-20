@@ -39,6 +39,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
     _pages = [
       HomeView(key: PageStorageKey('HomeView')),
       ExploreView(key: PageStorageKey('ExploreView')),
+      Uploadview(key: PageStorageKey('UploadView')),
       AccountView(key: PageStorageKey('MeView')),
     ];
   }

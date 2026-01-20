@@ -48,7 +48,6 @@ class _HomeView extends State<HomeView> {
                 ),
                 SizedBox(height: 20),
                 ButtonWidget(
-                  tag: "upload-song-btn",
                   message: "Upload a song",
                   icon: Icons.upload_rounded,
                   onPressed: controller.onUploadSongClicked,
