@@ -1,62 +1,78 @@
-# backend/app/api/users.py
-
-from flask import Blueprint, request, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from backend.app.core.db import db
-from backend.app.models.user import User
+from flask import Blueprint, jsonify, request
+from app.api.deps import get_request_user_id
+from app.extensions import db
+from app.models.user import User
+from app.schemas.user_schema import UserCreateSchema
+from marshmallow import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 users_bp = Blueprint("users", __name__)
+user_create_schema = UserCreateSchema()
 
-@users_bp.route("/register", methods=["POST"])
-def register():
-    data = request.get_json()
+@users_bp.get("/users/me")
+def get_me():
+    user_id = get_request_user_id()
+    if user_id is None:
+        return jsonify({"error": "Unauthorized", "message": "Missing X-User-Id (dev auth)"}), 401
 
-    email = data.get("email")
-    username = data.get("username")
-    password = data.get("password")
+    user = db.session.get(User, user_id)
+    if user is None:
+        return jsonify({"error": "NotFound", "message": f"User {user_id} not found"}), 404
 
-    if not email or not username or not password:
-        return jsonify({"error": "Champs manquants"}), 400
+    return jsonify({
+        "user_id": user.user_id,
+        "name": getattr(user, "name", None),
+        "email": getattr(user, "email", None),
+        "created_at": getattr(user, "created_at", None),
+    }), 200
 
-    if User.query.filter_by(email=email).first():
-        return jsonify({"error": "Email déjà utilisé"}), 400
+@users_bp.post("/users")
+def create_user():
+    payload = request.get_json(silent=True)
+    if payload is None:
+        return jsonify({"error": "InvalidOrMissingJSON"}), 400
 
-    if User.query.filter_by(username=username).first():
-        return jsonify({"error": "Nom d'utilisateur déjà pris"}), 400
-
-    hashed = generate_password_hash(password)
+    try:
+        data = user_create_schema.load(payload)
+    except ValidationError as err:
+        return jsonify({"error": "ValidationError", "messages": err.messages}), 422
 
     user = User(
-        email=email,
-        username=username,
-        password_hash=hashed
+        name=data["name"],
+        email=data.get("email")
     )
+    user.set_password(data["password"])
 
-    db.session.add(user)
-    db.session.commit()
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError as e:
+        db.session.rollback()
+        return jsonify({"error": "IntegrityError",
+        "message": "User already exists (name or email must be unique).",
+                        "details": str(getattr(e, "orig", e))}), 409
 
-    return jsonify({"message": "Compte créé avec succès", "user_id": user.id}), 201
-
-
-@users_bp.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
-
-    email = data.get("email")
-    password = data.get("password")
-
-    if not email or not password:
-        return jsonify({"error": "Champs manquants"}), 400
-
-    user = User.query.filter_by(email=email).first()
-
-    if not user or not check_password_hash(user.password_hash, password):
-        return jsonify({"error": "Identifiants invalides"}), 401
-
-    # Pas encore d'auth JWT → on renvoie l'user_id (à améliorer plus tard)
     return jsonify({
-        "message": "Connexion réussie",
-        "user_id": user.id,
-        "username": user.username
-    })
+        "user_id": user.user_id,
+        "username": user.username,
+        "email": user.email
+    }), 201
+
+@users_bp.get("/users")
+def list_users():
+    # dev: limite pour éviter de dump trop
+    limit = request.args.get("limit", 50, type=int)
+    limit = max(1, min(limit, 200))
+
+    users = db.session.query(User).order_by(User.user_id.asc()).limit(limit).all()
+    return jsonify({
+        "count": len(users),
+        "items": [
+            {
+                "user_id": u.user_id,
+                "name": getattr(u, "name", None),
+                "email": getattr(u, "email", None),
+            }
+            for u in users
+        ]
+    }), 200

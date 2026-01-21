@@ -4,7 +4,7 @@ class UserCreateSchema(Schema):
     """Cette class defini tout ce qui est attendu pour Creer un user"""
     name = fields.Str(required=True, validate=validate.Length(min=1, max=120))
     email = fields.Email(required=True, validate=validate.Length(max=255))
-    password = fields.Str(required=True, validate=validate.Length(min=6, max=128))
+    password = fields.Str(required=True, load_only=True)
 
 class UserLoginSchema(Schema):
     """Cette class defini tout ce qui est attendu pour se connecter (login)."""

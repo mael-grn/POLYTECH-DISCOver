@@ -6,6 +6,8 @@ from app.extensions import db
 from app.models.uploaded_by import UploadedBy
 from app.schemas.uploaded_by_schema import UploadCreateSchema, UploadReadSchema, UploadUpdateSchema
 from app.api.deps import get_request_user_id
+from app.models.history import History
+from app.models.song import Song
 
 uploads_bp = Blueprint("uploads", __name__)
 
@@ -115,3 +117,4 @@ def get_upload(song_id: int):
     # -------------------------
 
     return jsonify(upload_read_schema.dump(upload)), 200
+
