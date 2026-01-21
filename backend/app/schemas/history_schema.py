@@ -6,7 +6,6 @@ class HistoryCreateSchema(Schema):
     Cette classe defini ce qui est necessaire pour creer un history.
     """
     song_id = fields.Int(required=True)
-    user_id = fields.Int(required=True)
 
 
 class HistoryReadSchema(Schema):
