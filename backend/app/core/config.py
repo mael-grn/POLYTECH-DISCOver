@@ -1,22 +1,15 @@
 import os
-from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parents[2]
 
-class Settings:
-    # Mode debug (log + reload)
-    DEBUG = os.getenv("DEBUG", "true").lower() == "true"
-
-    # URL de connexion à MariaDB/MySQL
-    # Exemple : mysql+pymysql://user:password@localhost:3306/song_popularity
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        "mysql+pymysql://pythonuser:MotDePasse123@localhost:3306/songs_db"
-    )
-
+class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JSON_SORT_KEYS = False
 
-    # Pour plus tard (auth JWT, etc.)
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-me")
-
-settings = Settings()
+class DevConfig(Config):
+    # base SQLite dans backend/dev.bd
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "SQLALCHEMY_DATABASE_URI",
+        f"sqlite:///{(BASE_DIR / 'dev.bd').as_posix()}",
+    )

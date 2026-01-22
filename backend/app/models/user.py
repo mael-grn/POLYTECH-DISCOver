@@ -1,9 +1,12 @@
 from __future__ import annotations
 from sqlalchemy import String, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.base import Base
 
-class User(Base):
+from app.extensions import db
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
+class User(db.Model):
     __tablename__ = "user"
     __table_args__ = (UniqueConstraint("email", name="uq_user_email"),)
 
@@ -22,6 +25,11 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
-# Import tardif pour éviter le circular import
-from .uploaded_by import UploadedBy
-from .history import History
+    def set_password(self, password: str):
+        self.hashed_password  = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.hashed_password , password)
+
+from app.models.uploaded_by import UploadedBy
+from app.models.history import History

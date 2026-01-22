@@ -15,4 +15,3 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(uploads_bp, url_prefix=prefix)
     app.register_blueprint(history_bp, url_prefix=prefix)
     app.register_blueprint(users_bp, url_prefix=prefix)
-

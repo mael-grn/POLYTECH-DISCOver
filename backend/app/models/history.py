@@ -1,9 +1,11 @@
 from __future__ import annotations
 from sqlalchemy import Integer, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.base import Base
 
-class History(Base):
+from app.extensions import db
+
+
+class History(db.Model):
     __tablename__ = "history"
 
     song_id: Mapped[int] = mapped_column(Integer, ForeignKey("song.song_id", ondelete="CASCADE"), primary_key=True)
@@ -15,6 +17,6 @@ class History(Base):
     song: Mapped["Song"] = relationship(back_populates="history_entries")
     user: Mapped["User"] = relationship(back_populates="history_entries")
 
-# Import tardif
-from .song import Song
-from .user import User
+
+from app.models.song import Song
+from app.models.user import User

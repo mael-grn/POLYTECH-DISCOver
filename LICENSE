@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+Voici en gros ce qu'on m'a dit de faire, mais je n'ai pas tout compris :
+Maël :
+"Il faut surtout aider Alexis sur le back, pour faire tous les endpoints, opérations crud, entraînement du modèle"
+Alexis :
+"Il faut aussi trouver unz biblio python pour pouvoir analyzer un fichier mp3 ou mp4"
+Alexis :
+"Les routes de l’api j’ai fini le model et les schema json pour les requetes"
+"Pour ceux qui ont rien à faire il faut finir les routes de l’api regarder ma branche au mlins 80% sont faites"
+Compte tenu de tous les fichiers que je t'ai envoyé, qu'est-ce qui est attendu de moi exactement, et que dois-je faire ?

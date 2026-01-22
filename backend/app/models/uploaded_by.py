@@ -1,11 +1,15 @@
 from __future__ import annotations
 from sqlalchemy import Integer, Boolean, DateTime, ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.base import Base
 
-class UploadedBy(Base):
+from app.extensions import db
+
+
+class UploadedBy(db.Model):
     __tablename__ = "uploaded_by"
-    __table_args__ = (UniqueConstraint("song_id", name="uq_uploaded_by_song_id"),)
+    __table_args__ = (
+        UniqueConstraint("song_id", name="uq_uploaded_by_song_id"),
+    )
 
     song_id: Mapped[int] = mapped_column(Integer, ForeignKey("song.song_id", ondelete="CASCADE"), primary_key=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.user_id", ondelete="CASCADE"), primary_key=True)
@@ -16,6 +20,6 @@ class UploadedBy(Base):
     song: Mapped["Song"] = relationship(back_populates="upload")
     user: Mapped["User"] = relationship(back_populates="uploads")
 
-# Import tardif
-from .song import Song
-from .user import User
+
+from app.models.song import Song
+from app.models.user import User

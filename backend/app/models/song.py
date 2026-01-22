@@ -4,10 +4,10 @@ from __future__ import annotations
 from sqlalchemy import String, Integer, Float, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.core.base import Base
+from app.extensions import db
 
 
-class Song(Base):
+class Song(db.Model):
     __tablename__ = "song"
 
     song_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -45,6 +45,6 @@ class Song(Base):
     )
 
 
-from .analyze import Analyze
-from .uploaded_by import UploadedBy
-from .history import History
+from app.models.analyze import Analyze
+from app.models.uploaded_by import UploadedBy
+from app.models.history import History
