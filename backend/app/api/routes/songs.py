@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
 
-from app.core.db import db
+from app.extensions import db
 from app.models.song import Song
 from app.schemas.song_schema import SongCreateSchema, SongReadSchema
 from sqlalchemy.exc import SQLAlchemyError

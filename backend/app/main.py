@@ -1,17 +1,11 @@
-from . import create_app
-from .core.base import Base         # ✅ Base SQLAlchemy 2.0
-from .core.config import settings
-from .core.db import db
-from sqlalchemy import create_engine
-
-# Crée le moteur SQLAlchemy pur
-engine = create_engine(settings.SQLALCHEMY_DATABASE_URI, echo=True, future=True)
+from app import create_app
+from app.extensions import db
 
 app = create_app()
 
-with app.app_context():
-    db.create_all()  # ne crée que les tables manquantes
-    print("Tables créées ou existantes ✅")
-
 if __name__ == "__main__":
+    with app.app_context():  # context app pour SQLAlchemy
+        db.create_all()       # crée toutes les tables
+        print("Tables créées ou existantes ✅")
+    
     app.run(debug=True)

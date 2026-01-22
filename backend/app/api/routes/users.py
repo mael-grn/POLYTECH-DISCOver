@@ -38,7 +38,7 @@ def create_user():
         return jsonify({"error": "ValidationError", "messages": err.messages}), 422
 
     user = User(
-        name=data["name"],
+        username=data["name"],
         email=data.get("email")
     )
     user.set_password(data["password"])
