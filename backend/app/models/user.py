@@ -1,19 +1,14 @@
 from __future__ import annotations
-
 from sqlalchemy import String, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from backend.app.db.base import Base
-
+from app.core.base import Base
 
 class User(Base):
     __tablename__ = "user"
-    __table_args__ = (
-        UniqueConstraint("email", name="uq_user_email"),
-    )
+    __table_args__ = (UniqueConstraint("email", name="uq_user_email"),)
 
     user_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    username: Mapped[str] = mapped_column(String(120), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
 
@@ -27,6 +22,6 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
-
-from backend.app.models.uploaded_by import UploadedBy
-from backend.app.models.history import History
+# Import tardif pour éviter le circular import
+from .uploaded_by import UploadedBy
+from .history import History

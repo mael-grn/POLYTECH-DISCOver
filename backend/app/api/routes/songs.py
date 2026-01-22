@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
 
-from app.extensions import db
+from app.core.db import db
 from app.models.song import Song
 from app.schemas.song_schema import SongCreateSchema, SongReadSchema
 from sqlalchemy.exc import SQLAlchemyError
@@ -74,3 +74,21 @@ def list_songs():
         "count": len(songs),
         "items": songs_read_schema.dump(songs),
     }), 200
+
+@songs_bp.delete("/songs/<int:song_id>")
+def delete_song(song_id: int):
+    """
+    Supprime une chanson par son ID.
+    """
+    song = db.session.get(Song, song_id)
+    if song is None:
+        return jsonify({"error": "NotFound", "message": f"Song {song_id} not found"}), 404
+
+    try:
+        db.session.delete(song)
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": "DatabaseError", "message": str(e)}), 500
+
+    return jsonify({"message": f"Song {song_id} deleted successfully"}), 200

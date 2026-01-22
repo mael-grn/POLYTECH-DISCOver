@@ -1,5 +1,5 @@
 from .user import User
-from .song import Track
-from .history import SearchHistory
+from .song import Song
+from .history import History
 
-__all__ = ["User", "Track", "SearchHistory"]
+__all__ = ["User", "Song", "History"]

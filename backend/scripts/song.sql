@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS Songs;
+
 CREATE TABLE Songs (
     id int NOT NULL AUTO_INCREMENT,
     song_name varchar(255),
@@ -7,17 +9,18 @@ CREATE TABLE Songs (
     danceability float,
     energy float,
     instrumentalness float,
-    key int,
+    `key` int,
     liveness float,
     loudness float,
     audio_mode int,
     speechiness float,
     tempo float,
     time_signature int,
-    audio_valence float
+    audio_valence float,
+    PRIMARY KEY (id)
 );
 
-LOAD DATA INFILE '../../data/raw/song_data.csv'
+LOAD DATA LOCAL INFILE '~/POLYTECH-DISCOver/data/raw/song_data.csv'
 INTO TABLE Songs
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '"'

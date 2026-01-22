@@ -4,7 +4,7 @@ from __future__ import annotations
 from sqlalchemy import Integer, Float, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.db.base import Base
+from app.core.base import Base
 
 
 class Analyze(Base):
@@ -24,4 +24,4 @@ class Analyze(Base):
     )
 
 
-from backend.app.models.song import Song
+from .song import Song
