@@ -7,8 +7,6 @@ import 'package:discover/views/song/SongView.dart';
 import 'package:discover/views/song/searchSongView.dart';
 import 'package:discover/views/upload/UploadNewSongView.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-
 import '../exceptions/RequestException.dart';
 
 
@@ -17,11 +15,11 @@ class ExploreController with ChangeNotifier {
   ExploreController(this.songService);
   final SongService songService;
 
-  List<Song> trends = [];
+  List<Song> history = [];
 
   Future<void> initData() async {
     try {
-      trends = await songService.getSongs();
+      history = await songService.getHistory();
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (e) {
@@ -41,7 +39,7 @@ class ExploreController with ChangeNotifier {
   void onSongItemPressed(int index) async {
     DialogBuilder.loading();
     try {
-      Song song = await songService.getSongById(trends[index].id);
+      Song song = await songService.getSongById(history[index].id);
       DialogBuilder.closeCurrentDialog();
       CustomNavigator.pushFromBottom(SongView(song));
     } on NetworkException catch (e) {

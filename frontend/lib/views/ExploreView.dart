@@ -59,17 +59,17 @@ class _ExploreView extends State<ExploreView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                LordiconWidget("trends"),
+                LordiconWidget("clock"),
                 SizedBox(height: 10),
                 Text(
-                  "Trending songs",
+                  "History",
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 20),
-                controller.trends.isEmpty
+                controller.history.isEmpty
                     ? Text(
-                        "No song found ):",
+                        "No history yet",
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
                           fontSize: 18,
@@ -81,9 +81,9 @@ class _ExploreView extends State<ExploreView> {
                         separatorBuilder: (context, index) =>
                             SizedBox(height: 10),
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: controller.trends.length,
+                        itemCount: controller.history.length,
                         itemBuilder: (context, index) {
-                          final Song song = controller.trends[index];
+                          final Song song = controller.history[index];
                           return SongListItemWidget(
                             title: song.name,
                             onPressed: () =>

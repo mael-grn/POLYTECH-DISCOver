@@ -6,6 +6,7 @@ import '../core/global.dart';
 import '../core/theme/app_theme.dart';
 import '../enums/NetworkErrorEnum.dart';
 import '../widgets/animations/scale_animation_widget.dart';
+import '../widgets/ui/lordicon_widget.dart';
 
 class DialogBuilder {
   static final context = navigatorKey.currentContext;
@@ -80,6 +81,52 @@ class DialogBuilder {
     });
   }
 
+  static Future<void> _simpleLordiconDialog(
+      String title,
+      String content,
+      String lordicon, [
+        Function? onCLose,
+      ]) {
+    return _showDialog((BuildContext context) {
+      return ScaleAnimationWidget(
+          child: AlertDialog(
+            backgroundColor: backgroundVariantColor,
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  LordiconWidget(
+                    lordicon,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    title,
+                  ),
+                  SizedBox(height: 20),
+                  Text(textAlign: TextAlign.center, content),
+                ],
+              ),
+            ),
+
+            actions: <Widget>[
+              ButtonWidget(
+                  message: "Ok",
+                  icon: Icons.check,
+                  onPressed: () {
+                    closeCurrentDialog();
+                    if (onCLose != null) {
+                      onCLose();
+                    }
+                  }
+              )
+            ],
+          )
+      );
+    });
+  }
+
   static Future<void> success(
     String title,
     String content, {
@@ -113,38 +160,36 @@ class DialogBuilder {
         ],
         Function? onCLose,
       }) {
-    String image = "";
-    String title = "Une erreur s'est produite lors de la connexion au serveur";
+    String lordicon = "cloud-cross";
+    String title = "Something wrong happened";
     String detailedMessage = "";
     switch (error) {
       case NetworkErrorEnum.unauthorized:
         detailedMessage =
-            "Vous n'êtes pas autorisé à accéder à cette ressource. Veuillez vous connecter.";
-        image = "images/bodyguard.png";
+            "You are not allowed to access this resource. Please check your credentials and try again.";
         break;
       case NetworkErrorEnum.forbidden:
         detailedMessage =
-            "Accès refusé. Vous n'avez pas les autorisations nécessaires.";
-        image = "images/bodyguard.png";
+            "Access denied. Please check your credentials and try again.";
         break;
       case NetworkErrorEnum.notFound:
         detailedMessage =
-            "La ressource demandée est introuvable. Verifiez les mises à jour de l'application.";
-        image = "images/searching.png";
+            "We couldn't find what you were looking for.";
+        lordicon = "search";
         break;
       case NetworkErrorEnum.requestTimeout:
         detailedMessage =
-            "Le serveur a mis trop de temps à répondre. Veuillez réessayer plus tard.";
-        image = "images/timer.png";
+            "The server is taking too long to respond. Please try again later.";
+        lordicon = "clock";
       case NetworkErrorEnum.internalServerError:
         detailedMessage =
-            "Erreur interne du serveur. Veuillez réessayer plus tard.";
-        image = "images/broken_server.png";
+            "Internal server error. Please try again later.";
+        lordicon = "server";
         break;
       case _:
         detailedMessage =
-            "Une erreur s'est produite. Veuillez réessayer plus tard.";
-        image = "images/broken_phone.png";
+            "Something wrong happened. Please try again later.";
+        lordicon = "server";
     }
 
     for (var e in personalizedErrors) {
@@ -154,10 +199,10 @@ class DialogBuilder {
       }
     }
 
-    return _simpleImageDialog(
+    return _simpleLordiconDialog(
       title,
       "$detailedMessage (${error.code} : ${error.message})",
-      image,
+      lordicon,
       onCLose,
     );
   }

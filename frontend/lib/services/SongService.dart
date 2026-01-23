@@ -14,4 +14,11 @@ class SongService {
     final response = await Provider.sendRequest(route: "/songs/$id", method: HttpMethod.GET);
     return Song.fromJson(jsonDecode(response));
   }
+
+  Future<List<Song>> getHistory() async {
+    final response = await Provider.sendRequest(route: '/history', method: HttpMethod.GET);
+    final Map<String, dynamic> data = jsonDecode(response);
+    final List<dynamic> listData = data['items'];
+    return listData.map((item) => Song.fromJson(item)).toList();
+  }
 }
