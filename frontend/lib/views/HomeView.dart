@@ -1,6 +1,7 @@
 import 'package:discover/controllers/HomeController.dart';
 import 'package:discover/core/theme/app_theme.dart';
 import 'package:discover/widgets/animations/scale_animation_widget.dart';
+import 'package:discover/widgets/search/songListItemWidget.dart';
 import 'package:discover/widgets/ui/Container_widget.dart';
 import 'package:discover/widgets/ui/button_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -62,33 +63,30 @@ class _HomeView extends State<HomeView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                LordiconWidget("trends"),
+                SizedBox(height: 10,),
                 Text(
                   "Trends",
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
                 ),
                 SizedBox(height: 20),
-                ListView.builder(
+                ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      SizedBox(height: 10),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: controller.trends.length,
                   itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        SizedBox(height: 20),
-                        Row(
-                          children: [
-                            index == 0
-                                ? LordiconWidget("one", size: 100)
-                                : index == 1
-                                ? LordiconWidget("two", size: 100)
-                                : index == 2
-                                ? LordiconWidget("three", size: 100)
-                                : Text("$index - "),
-                            SizedBox(width: 10),
-                            Expanded(child: Text(controller.trends[index], style: TextStyle(fontWeight: index < 3 ? FontWeight.w600 : FontWeight.w400, fontSize: index < 3 ? 20 : 15))),
-                          ],
-                        ),
-                      ],
+                    return SongListItemWidget(
+                        cover: index == 0
+                            ? LordiconWidget("one", size: 100)
+                            : index == 1
+                            ? LordiconWidget("two", size: 100)
+                            : index == 2
+                            ? LordiconWidget("three", size: 100)
+                            : null,
+                        title: controller.trends[index].name,
+                        onPressed: () => controller.onSongItemPressed(index)
                     );
                   },
                 ),

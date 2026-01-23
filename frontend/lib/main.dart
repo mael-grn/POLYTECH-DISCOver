@@ -33,7 +33,7 @@ void main() async {
     MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => GestionPersonnExempleController(personneExempleService)),
-          ChangeNotifierProvider(create: (_) => HomeController(uploadService)),
+          ChangeNotifierProvider(create: (_) => HomeController(uploadService, songService)),
           ChangeNotifierProvider(create: (_) => SearchSongController()),
           ChangeNotifierProvider(create: (_) => UploadController(uploadService)),
           ChangeNotifierProvider(create: (_) => AccountController()),

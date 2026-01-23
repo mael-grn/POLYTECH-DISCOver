@@ -9,13 +9,13 @@ import '../../core/theme/app_theme.dart';
 class SongListItemWidget extends StatelessWidget {
   final String title;
   final String? subtitle;
-  final String? coverUrl;
+  final Widget? cover;
   final VoidCallback onPressed;
 
   const SongListItemWidget({
     required this.title,
     this.subtitle,
-    this.coverUrl,
+    this.cover,
     required this.onPressed,
     super.key,
   });
@@ -37,7 +37,7 @@ class SongListItemWidget extends StatelessWidget {
           width: double.infinity,
           child: Row(
             children: [
-              coverUrl == null
+              cover == null
                   ? Container(
                       width: 50,
                       height: 50,
@@ -53,7 +53,7 @@ class SongListItemWidget extends StatelessWidget {
                         ),
                       ),
                     )
-                  : Image.network(coverUrl!, width: 50, height: 50),
+                  : cover!,
               SizedBox(width: 15),
 
               Expanded(
