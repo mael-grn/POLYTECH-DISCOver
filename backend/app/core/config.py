@@ -8,10 +8,12 @@ class Config:
     JSON_SORT_KEYS = False
 
 class DevConfig(Config):
-    # base SQLite dans backend/dev.bd
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "SQLALCHEMY_DATABASE_URI",
-        f"sqlite:///{(BASE_DIR / 'dev.bd').as_posix()}",
-    )
+    # Récupération des variables d'environnement pour la base de données
 
+    DB_USER = os.getenv("MYSQL_USER", "mael")
+    DB_PASSWORD = os.getenv("MYSQL_PASSWORD", "mon_mot_de_passe_fort")
+    DB_HOST = os.getenv("MYSQL_HOST", "localhost")
+    DB_PORT = os.getenv("MYSQL_PORT", "3307")
+    DB_NAME = os.getenv("MYSQL_DATABASE", "discover_db")
 
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

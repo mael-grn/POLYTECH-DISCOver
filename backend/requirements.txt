@@ -19,15 +19,15 @@ app.models.history
 app.schemas.history_schema
 app.models.songs
 
-app.schemas.song_schema 
-sqlalchemy 
- 
-app.models.uploaded_by 
-app.schemas.song_list_schema 
-app.services.history_service 
-app.services.search_service 
+app.schemas.song_schema
+sqlalchemy
 
-app.schemas.uploaded_by_schema 
+app.models.uploaded_by
+app.schemas.song_list_schema
+app.services.history_service
+app.services.search_service
+
+app.schemas.uploaded_by_schema
 app.services.song_service
 app.model.user
 app.schemas.user_schema

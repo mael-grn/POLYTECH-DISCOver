@@ -1,0 +1,54 @@
+
+import csv
+import os
+from app import create_app
+from app.extensions import db
+from app.models.user import User
+from app.models.song import Song
+from app.models.analyze import Analyze
+from app.models.uploaded_by import UploadedBy
+from app.models.history import History
+
+
+app = create_app()
+
+CSV_PATH = './dataset.csv'
+
+with app.app_context():
+    db.create_all()
+    print("Base de données initialisée.")
+
+    if Song.query.first() is not None:
+        print("La table 'song' contient déjà des données. Importation annulée.")
+    else:
+        print(f"Début de l'importation depuis {CSV_PATH}...")
+        try:
+            with open(CSV_PATH, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                songs_to_add = []
+                
+                for row in reader:
+                    new_song = Song(
+                        song_name=row['song_name'],
+                        song_popularity=int(row['song_popularity']),
+                        song_duration_ms=int(row['song_duration_ms']),
+                        acousticness=float(row['acousticness']),
+                        danceability=float(row['danceability']),
+                        energy=float(row['energy']),
+                        instrumentalness=float(row['instrumentalness']),
+                        key=int(row['key']),
+                        liveness=float(row['liveness']),
+                        loudness=float(row['loudness']),
+                        is_in_data_set=True
+                    )
+                    songs_to_add.append(new_song)
+                
+                db.session.bulk_save_objects(songs_to_add)
+                db.session.commit()
+                print(f"Succès ! {len(songs_to_add)} chansons importées.")
+
+        except FileNotFoundError:
+            print(f"Erreur : Le fichier CSV est introuvable à l'adresse {CSV_PATH}")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Une erreur est survenue lors de l'insertion : {e}")
