@@ -1,8 +1,10 @@
 
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
+import 'package:discover/views/settings/ServerStatusView.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../core/Auth.dart';
+import '../core/CustomNavigator.dart';
 
 
 class AccountController with ChangeNotifier {
@@ -21,7 +23,7 @@ class AccountController with ChangeNotifier {
   }
 
   void onSeeServerStatusPressed() {
-    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+    CustomNavigator.pushFromRight(ServerStatusView());
   }
 
   void onDisplayPressed() {
