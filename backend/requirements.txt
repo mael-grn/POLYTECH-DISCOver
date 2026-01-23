@@ -2,9 +2,9 @@ Flask
 Flask-Cors
 Flask-SQLAlchemy
 python-dotenv
-
-
-
+flask_marshmallow
+marshmallow-sqlalchemy
+cryptography
 pymysql
 
 pandas
