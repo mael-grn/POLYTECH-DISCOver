@@ -1,16 +1,13 @@
-import 'package:discover/controllers/SearchSongController.dart';
 import 'package:discover/core/theme/app_theme.dart';
-import 'package:discover/validators/userValidators.dart';
-import 'package:discover/widgets/search/songListItemWidget.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
+import 'package:discover/validators/UserValidators.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:discover/widgets/ui/PageWidget.dart';
 import 'package:discover/widgets/ui/TextInputWidget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/registerController.dart';
-import '../../models/Song.dart';
-import '../../widgets/ui/button_widget.dart';
+import '../../controllers/auth/RegisterController.dart';
+import '../../widgets/ui/ButtonWidget.dart';
 
 class RegisterView extends StatefulWidget {
   RegisterView({super.key});

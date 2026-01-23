@@ -1,15 +1,15 @@
 
 import 'package:discover/controllers/AccountController.dart';
-import 'package:discover/controllers/ServerStatusController.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
+import 'package:discover/controllers/settings/ServerStatusController.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:discover/widgets/ui/PageWidget.dart';
-import 'package:discover/widgets/ui/listItemButton.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
+import 'package:discover/widgets/ui/ListItemButton.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../widgets/ui/button_widget.dart';
+import '../../widgets/ui/ButtonWidget.dart';
 
 
 class ServerStatusView extends StatefulWidget {

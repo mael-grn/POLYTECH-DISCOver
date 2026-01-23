@@ -1,12 +1,12 @@
 import 'package:discover/controllers/ExploreController.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Song.dart';
-import '../widgets/search/songListItemWidget.dart';
-import '../widgets/ui/button_widget.dart';
-import '../widgets/ui/lordicon_widget.dart';
+import '../widgets/search/SongListItemWidget.dart';
+import '../widgets/ui/ButtonWidget.dart';
+import '../widgets/ui/LordiconWidget.dart';
 
 class ExploreView extends StatefulWidget {
   ExploreView({super.key});

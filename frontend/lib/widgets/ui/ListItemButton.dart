@@ -1,5 +1,5 @@
-import 'package:discover/widgets/animations/scale_pop_animation_widget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
+import 'package:discover/widgets/animations/ScalePopAnimationWidget.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

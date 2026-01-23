@@ -1,8 +1,8 @@
 import 'package:discover/models/Song.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:discover/widgets/ui/PageWidget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
-import 'package:discover/widgets/ui/text_info_widget.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
+import 'package:discover/widgets/ui/TextInfoWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -1,17 +1,13 @@
-import 'package:discover/controllers/SearchSongController.dart';
-import 'package:discover/validators/userValidators.dart';
-import 'package:discover/widgets/search/songListItemWidget.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
+import 'package:discover/validators/UserValidators.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:discover/widgets/ui/PageWidget.dart';
 import 'package:discover/widgets/ui/TextInputWidget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/LoginController.dart';
-import '../../controllers/registerController.dart';
+import '../../controllers/auth/LoginController.dart';
 import '../../core/theme/app_theme.dart';
-import '../../models/Song.dart';
-import '../../widgets/ui/button_widget.dart';
+import '../../widgets/ui/ButtonWidget.dart';
 
 class LoginView extends StatefulWidget {
   LoginView({super.key});

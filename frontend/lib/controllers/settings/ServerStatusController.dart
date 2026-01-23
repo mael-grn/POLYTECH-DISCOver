@@ -3,7 +3,7 @@ import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/services/HealthService.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../exceptions/RequestException.dart';
+import '../../exceptions/RequestException.dart';
 
 class ServerStatusController with ChangeNotifier {
 

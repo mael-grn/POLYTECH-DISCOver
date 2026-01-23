@@ -1,23 +1,28 @@
 
 import 'package:discover/core/CustomNavigator.dart';
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
-import 'package:discover/services/AuthService.dart';
 import 'package:discover/services/UserService.dart';
-import 'package:discover/views/auth/RegisterView.dart';
+import 'package:discover/views/auth/LoginView.dart';
 import 'package:flutter/cupertino.dart';
-import '../exceptions/RequestException.dart';
+import '../../exceptions/RequestException.dart';
 
 
-class LoginController with ChangeNotifier {
+class RegisterController with ChangeNotifier {
 
-  LoginController(this.authService);
-  final AuthService authService;
+  RegisterController(this.userService);
+  final UserService userService;
+
   bool obscureTextPassword = true;
 
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   Future<void> initData() async {
+  }
+
+  void onLoginPressed() {
+    CustomNavigator.pushReplacementFromRight(LoginView());
   }
 
   void toggleObscureTextPassword() {
@@ -32,13 +37,14 @@ class LoginController with ChangeNotifier {
       return;
     }
 
+    String name = nameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
     DialogBuilder.loading();
 
     try {
-      await authService.login(email, password);
+      await userService.createUser(name, email, password);
       DialogBuilder.closeCurrentDialog();
       CustomNavigator.resetToHome();
     } on NetworkException catch (e) {
@@ -46,9 +52,5 @@ class LoginController with ChangeNotifier {
     } catch (e) {
       DialogBuilder.appError();
     }
-  }
-
-  void onRegisterPressed() {
-    CustomNavigator.pushReplacementFromRight(RegisterView());
   }
 }

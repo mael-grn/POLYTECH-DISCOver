@@ -1,4 +1,4 @@
-import 'package:discover/widgets/animations/scale_pop_animation_widget.dart';
+import 'package:discover/widgets/animations/ScalePopAnimationWidget.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../core/theme/app_theme.dart';
