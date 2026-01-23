@@ -1,12 +1,12 @@
 import 'package:discover/controllers/ExploreController.dart';
-import 'package:discover/widgets/search/searchItemWidget.dart';
 import 'package:discover/widgets/ui/Container_widget.dart';
-import 'package:discover/widgets/ui/TextInputWidget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Song.dart';
+import '../widgets/search/songListItemWidget.dart';
+import '../widgets/ui/button_widget.dart';
+import '../widgets/ui/lordicon_widget.dart';
 
 class ExploreView extends StatefulWidget {
   ExploreView({super.key});
@@ -32,61 +32,69 @@ class _ExploreView extends State<ExploreView> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          TextInputWidget(
-            controller: controller.searchQueryController,
-            hint: "Artists, songs, ...",
-            icon: Icons.search,
-            big: true,
-            onIconClick: () => controller.searchSongs(),
-          ),
-          const SizedBox(height: 40),
-
-          controller.searchResults.isEmpty
-              ? controller.hasSearched
-                    ? Center(
-                        child: ContainerWidget(
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "images/team/nahel-search.png",
-                                height: 200,
-                              ),
-                              const SizedBox(height: 15),
-                              const Text(
-                                "No song found",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : Center(
-                        child: ContainerWidget(
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              LordiconWidget("search"),
-                              const SizedBox(height: 15),
-                              const Text(
-                                "Start by searching for a song",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-              : ListView.builder(
-                  itemCount: controller.searchResults.length,
-                  itemBuilder: (context, index) {
-                    final Song song = controller.searchResults[index];
-                    return SearchItemWidget(
-                      title: song.name,
-                      subtitle: "${song.artist} • ${song.album}",
-                      onPressed: () => controller.onSearchResultPressed(index),
-                    );
-                  },
+          ContainerWidget(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LordiconWidget("search"),
+                SizedBox(height: 10),
+                Text(
+                  "Want to look for an existing song in our dataset?",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                  textAlign: TextAlign.center,
                 ),
+                SizedBox(height: 20),
+                ButtonWidget(
+                  message: "Start searching",
+                  icon: Icons.search,
+                  onPressed: controller.onSearchSongClicked,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          ContainerWidget(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LordiconWidget("trends"),
+                SizedBox(height: 10),
+                Text(
+                  "Trending songs",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                controller.trends.isEmpty
+                    ? Text(
+                        "No song found ):",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 10),
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: controller.trends.length,
+                        itemBuilder: (context, index) {
+                          final Song song = controller.trends[index];
+                          return SongListItemWidget(
+                            title: song.name,
+                            onPressed: () =>
+                                controller.onSongItemPressed(index),
+                          );
+                        },
+                      ),
+              ],
+            ),
+          ),
+          SizedBox(height: 120),
         ],
       ),
     );

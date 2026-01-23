@@ -1,45 +1,53 @@
+
+import 'package:discover/core/CustomNavigator.dart';
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
-import 'package:discover/exceptions/RequestException.dart';
+import 'package:discover/models/Song.dart';
+import 'package:discover/services/SongService.dart';
+import 'package:discover/views/song/SongView.dart';
+import 'package:discover/views/song/searchSongView.dart';
+import 'package:discover/views/upload/UploadNewSongView.dart';
 import 'package:flutter/cupertino.dart';
-import '../models/Song.dart';
-import '../services/SearchService.dart';
+import 'package:flutter/services.dart';
+
+import '../exceptions/RequestException.dart';
+
 
 class ExploreController with ChangeNotifier {
 
-  ExploreController();
+  ExploreController(this.songService);
+  final SongService songService;
 
-  final searchQueryController = TextEditingController();
-  List<Song> searchResults = [];
-  bool hasSearched = false;
+  List<Song> trends = [];
 
   Future<void> initData() async {
-    // Rien pour l'instant
-  }
-
-  Future<void> searchSongs() async {
-    final query = searchQueryController.text.trim();
-    if (query.isEmpty) {
-      DialogBuilder.warning("Not so fast!", "You must enter a query in the appropriate field to initiate a search.");
-      return;
-    }
-    DialogBuilder.loading();
     try {
-      searchResults = await SearchService.searchSongs(query);
-      hasSearched = true;
+      trends = await songService.getSongs();
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
-      searchResults = [];
-      hasSearched = false;
-    } catch (_) {
+    } catch (e) {
       DialogBuilder.appError();
-      searchResults = [];
-      hasSearched = false;
-    } finally {
-      notifyListeners();
     }
+    notifyListeners();
   }
 
-  void onSearchResultPressed(int songIndex) {
-    DialogBuilder.warning("Not so fast!", "Not implemented yet...");
+  void onSearchSongClicked() {
+    CustomNavigator.pushFromRight(SearchSongView());
+  }
+
+  void onUploadClicked() {
+    CustomNavigator.pushFromRight(UploadNewSongView());
+  }
+
+  void onSongItemPressed(int index) async {
+    DialogBuilder.loading();
+    try {
+      Song song = await songService.getSongById(trends[index].id);
+      DialogBuilder.closeCurrentDialog();
+      CustomNavigator.pushFromBottom(SongView(song));
+    } on NetworkException catch (e) {
+      DialogBuilder.networkError(e.networkError);
+    } catch (e) {
+      DialogBuilder.appError();
+    }
   }
 }

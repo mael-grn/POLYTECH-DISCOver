@@ -1,0 +1,17 @@
+import 'dart:convert';
+import 'package:discover/models/Song.dart';
+import '../core/provider.dart';
+
+class SongService {
+  Future<List<Song>> getSongs() async {
+    final response = await Provider.sendRequest(route: '/songs', method: HttpMethod.GET);
+    final Map<String, dynamic> data = jsonDecode(response);
+    final List<dynamic> listData = data['items'];
+    return listData.map((item) => Song.fromJson(item)).toList();
+  }
+
+  Future<Song> getSongById(int id) async {
+    final response = await Provider.sendRequest(route: "/songs/$id", method: HttpMethod.GET);
+    return Song.fromJson(jsonDecode(response));
+  }
+}

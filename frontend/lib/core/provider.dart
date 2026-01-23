@@ -19,7 +19,7 @@ class Provider {
   static final _client = http.Client();
   static final _cookieJar = CookieJar();
 
-  static const String _baseUrl = 'http://172.28.180.249:5000';
+  static const String _baseUrl = 'http://192.168.0.16:5000/api/v1';
 
   static Future<String> sendRequestWithCookies({required HttpMethod method, required String route, Map<String, String>? headers, Object? body}) async {
     // Récupère les cookies pour l'URL

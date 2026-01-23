@@ -23,27 +23,32 @@ class LordiconWidget extends StatefulWidget {
 class _LordiconWidgetState extends State<LordiconWidget> {
   late IconController _controller;
 
+  void _onStatusChanged(ControllerStatus status) {
+    if (!mounted) return;
+
+    if (status == ControllerStatus.ready) {
+      _controller.playFromBeginning();
+    }
+    if (status == ControllerStatus.completed) {
+      if (widget.loop) {
+        _controller.playFromBeginning();
+      } else {
+        _controller.goToFirstFrame();
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _controller = IconController.assets("icons/${widget.iconName}.json");
-
-    _controller.addStatusListener((status) {
-      if (status == ControllerStatus.ready) {
-        _controller.playFromBeginning();
-      }
-      if (status == ControllerStatus.completed) {
-        if (widget.loop) {
-          _controller.playFromBeginning();
-        } else {
-          _controller.goToFirstFrame();
-        }
-      }
-    });
+    _controller.addStatusListener(_onStatusChanged);
   }
 
   @override
   void dispose() {
+    _controller.removeStatusListener(_onStatusChanged);
+    _controller.clearStatusListeners();
     _controller.dispose();
     super.dispose();
   }
