@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:discover/widgets/ui/button_widget.dart';
 
+import '../core/global.dart';
 import '../core/theme/app_theme.dart';
 import '../enums/NetworkErrorEnum.dart';
-import '../main.dart';
 import '../widgets/animations/scale_animation_widget.dart';
 
 class DialogBuilder {
@@ -101,7 +101,7 @@ class DialogBuilder {
     return _simpleImageDialog(
       title,
       content,
-      "images/warning.png",
+      "images/team/cyprien-warning.png",
       onCLose,
     );
   }
@@ -166,7 +166,7 @@ class DialogBuilder {
     return _simpleImageDialog(
       "Erreur",
       "Une erreur s'est produite lors de la connexion aux serveurs. Veuillez réessayer plus tard",
-      "images/broken_server.png",
+      "images/team/marie-error.png",
       onCLose,
     );
   }
@@ -175,7 +175,7 @@ class DialogBuilder {
     return _simpleImageDialog(
       "Erreur",
       "Une erreur s'est produite dans l'application. Essayez de verifier les mises à jours. Si le problème persiste, vous pouvez contacter le support.",
-      "images/broken_phone.png",
+      "images/team/marie-error.png",
       onCLose,
     );
   }
@@ -184,14 +184,23 @@ class DialogBuilder {
     return _simpleImageDialog(
       title,
       content,
-      "images/error.png",
+      "images/team/marie-error.png",
       onCLose,
+    );
+  }
+
+  static Future<void> welcome() {
+    return _simpleImageDialog(
+      "Welcome!",
+      "You are on DISCOver, the best app ever!",
+      "images/team/mael-welcome.png",
     );
   }
 
   static Future<void> loading() {
     return _showDialog((BuildContext context) {
       return AlertDialog(
+        backgroundColor: backgroundVariantColor,
         content: SizedBox(
           width: 100,
           height: 100,

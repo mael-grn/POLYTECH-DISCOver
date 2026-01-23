@@ -1,7 +1,5 @@
 import 'package:discover/views/AccountView.dart';
 import 'package:discover/views/ExploreView.dart';
-import 'package:discover/views/UploadView.dart';
-import 'package:discover/widgets/ui/PageWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,8 +21,6 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
   late AnimationController _animationController;
   late Animation<double> _animation;
 
-  late final List<Widget> _pages;
-
   @override
   void initState() {
     super.initState();
@@ -36,16 +32,9 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
     _animation = Tween<double>(begin: 0, end: 0).animate(_animationController);
 
     _pageController = PageController(initialPage: currentPageIndex);
-    _pages = [
-      HomeView(key: PageStorageKey('HomeView')),
-      ExploreView(key: PageStorageKey('MoneyView')),
-      Uploadview(key: PageStorageKey('FriendsView')),
-      AccountView(key: PageStorageKey('MeView')),
-    ];
   }
 
   void _onItemTapped(int index) {
-    // Animation uniquement utile pour le style mobile, mais on la lance quand même
     _animation = Tween<double>(
       begin: currentPageIndex.toDouble(),
       end: index.toDouble(),
@@ -72,10 +61,8 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    // Utilisation de LayoutBuilder pour la réactivité
     return LayoutBuilder(
       builder: (context, constraints) {
-        // On considère "Desktop" si la largeur dépasse 800px (ajustable)
         bool isDesktop = constraints.maxWidth > 800;
 
         return Scaffold(
@@ -89,11 +76,15 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
               // Le corps de la page
               Padding(
                 // Moins de padding sur les côtés en version desktop pour profiter de l'espace
-                padding: EdgeInsets.fromLTRB(isDesktop ? 40 : 20, 20, isDesktop ? 40 : 20, isDesktop ? 40 : 100),
+                padding: EdgeInsets.fromLTRB(isDesktop ? 40 : 20, 20, isDesktop ? 40 : 20, isDesktop ? 40 : 0),
                 child: PageView(
                   controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(), // Empêche le swipe manuel si désiré
-                  children: _pages,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    HomeView(),
+                    ExploreView(),
+                    AccountView(),
+                  ]
                 ),
               ),
 
@@ -109,7 +100,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
                       height: 70,
                       child: Center(
                         child: Container(
-                            width: 280,
+                            width: 210,
                             height: 70,
                             decoration: BoxDecoration(
                               color: backgroundVariantColor,
@@ -139,8 +130,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
                                   children: [
                                     _buildMobileNavItem('icons/home.svg', 0),
                                     _buildMobileNavItem('icons/search.svg', 1),
-                                    _buildMobileNavItem('icons/upload.svg', 2),
-                                    _buildMobileNavItem('icons/account.svg', 3),
+                                    _buildMobileNavItem('icons/account.svg', 2),
                                   ],
                                 ),
                               ],
@@ -164,14 +154,20 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
       backgroundColor: backgroundColor,
       elevation: 0,
       scrolledUnderElevation: 0,
-      title: Text(
-        "DISCOver",
-        style: TextStyle(
-          color: foregroundColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 35,
-        ),
-      ),
+      title: Row(
+        children: [
+          Image.asset(width: 60, height: 60, "images/DISCOver.png"),
+          SizedBox(width: 10,),
+          Text(
+            "DISCOver",
+            style: TextStyle(
+              color: foregroundColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 35,
+            ),
+          ),
+        ],
+      )
     );
   }
 
@@ -204,12 +200,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           children: [
-            // Logo / Titre à gauche
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey[400]), // Placeholder pour le cercle du logo si besoin
-            ),
+            Image.asset(width: 100, height: 100, "images/DISCOver.png"),
             const SizedBox(width: 15),
             Text(
               "DISCOver",
@@ -229,9 +220,7 @@ class _GlobalLayoutState extends State<GlobalLayout> with TickerProviderStateMix
                 const SizedBox(width: 10),
                 _buildDesktopNavItem("SEARCH", 'icons/search.svg', 1),
                 const SizedBox(width: 10),
-                _buildDesktopNavItem("UPLOAD", 'icons/upload.svg', 2),
-                const SizedBox(width: 10),
-                _buildDesktopNavItem("ACCOUNT", 'icons/account.svg', 3),
+                _buildDesktopNavItem("ACCOUNT", 'icons/account.svg', 2),
               ],
             )
           ],

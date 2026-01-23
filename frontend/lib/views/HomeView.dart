@@ -1,10 +1,13 @@
-
 import 'package:discover/controllers/HomeController.dart';
 import 'package:discover/core/theme/app_theme.dart';
+import 'package:discover/widgets/animations/scale_animation_widget.dart';
+import 'package:discover/widgets/ui/Container_widget.dart';
 import 'package:discover/widgets/ui/button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/ui/lordicon_widget.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({super.key});
@@ -14,7 +17,6 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeView extends State<HomeView> {
-
   @override
   void initState() {
     super.initState();
@@ -28,25 +30,82 @@ class _HomeView extends State<HomeView> {
   Widget build(BuildContext context) {
     final controller = context.watch<HomeController>();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(width: 300, height: 200, "images/music_white.png"),
-        Text(
-          'Ready for the next era of music ?',
-          style: TextStyle(
-            color: foregroundColor,
-            fontSize: 30,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ContainerWidget(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LordiconWidget("doodle-music"),
+                SizedBox(height: 10),
+                Text(
+                  "No song recently uploaded",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                ButtonWidget(
+                  message: "Upload a song",
+                  icon: Icons.upload_rounded,
+                  onPressed: controller.onUploadSongClicked,
+                ),
+              ],
+            ),
           ),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(
-          height: 30,
-        ),
-        ButtonWidget(message: "Browse new songs", icon: Icons.music_note, onPressed: controller.onDiscoverNewSongsClicked),
+          SizedBox(height: 20),
 
-      ],
+          ContainerWidget(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Trends",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                ),
+                SizedBox(height: 20),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.trends.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            index == 0
+                                ? LordiconWidget("one", size: 100)
+                                : index == 1
+                                ? LordiconWidget("two", size: 100)
+                                : index == 2
+                                ? LordiconWidget("three", size: 100)
+                                : Text("$index - "),
+                            SizedBox(width: 10),
+                            Expanded(child: Text(controller.trends[index], style: TextStyle(fontWeight: index < 3 ? FontWeight.w600 : FontWeight.w400, fontSize: index < 3 ? 20 : 15))),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
+                ButtonWidget(
+                  message: "Discover some music",
+                  icon: Icons.arrow_forward_rounded,
+                  iconOnRight: true,
+                  onPressed: controller.onDiscoverSomeMusicCLicked,
+                  backgroundColor: secondaryColor,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 120,)
+        ],
+      ),
     );
   }
 }
