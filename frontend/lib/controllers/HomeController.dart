@@ -26,7 +26,8 @@ class HomeController with ChangeNotifier {
       song = await uploadService.getLastUploadedSongByUser();
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
-    } catch (_) {
+    } catch (e) {
+      print(e);
       DialogBuilder.appError();
     }
     notifyListeners();
