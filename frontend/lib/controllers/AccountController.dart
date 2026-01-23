@@ -1,12 +1,46 @@
 
+import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../core/Auth.dart';
 
 
 class AccountController with ChangeNotifier {
 
   AccountController();
 
-  Future<void> initData() async {
+  bool isLoggedIn = false;
 
+  Future<void> initData() async {
+    isLoggedIn = await Auth.isLoggedIn();
+    notifyListeners();
+  }
+
+  void onLoginPressed() {
+    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+  }
+
+  void onSeeServerStatusPressed() {
+    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+  }
+
+  void onDisplayPressed() {
+    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+  }
+
+  void onDevicesPressed() {
+    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+  }
+
+  void onAudioPressed() {
+    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+  }
+
+  void onManageUploadsPressed() {
+    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+  }
+
+  void onAboutPressed() {
+    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
   }
 }

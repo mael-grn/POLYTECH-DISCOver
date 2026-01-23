@@ -6,20 +6,25 @@ import '../models/User.dart';
 class Auth {
   static User? _connectedUser;
 
-  static getConnectedUser() {
-    if (_connectedUser == null) {
-      StorageUtils.load("user").then((value) {
-        if (value.isNotEmpty) {
-          _connectedUser = User.fromJson(JsonDecoder().convert(value));
-        } else {
-          throw AuthException();
-        }
-      });
+  static Future<User> getConnectedUser() async {
+    if (_connectedUser != null) {
+      return _connectedUser!;
     }
-    return _connectedUser;
+
+    final value = await StorageUtils.load("user");
+
+    if (value.isNotEmpty) {
+      _connectedUser = User.fromJson(jsonDecode(value));
+
+      if (_connectedUser != null) {
+        return _connectedUser!;
+      }
+    }
+
+    throw AuthException();
   }
 
-  static setConnectedUser(User user) {
+  static void setConnectedUser(User user) {
     _connectedUser = user;
     StorageUtils.save("user", JsonEncoder().convert(user.toJson()));
   }
@@ -29,11 +34,11 @@ class Auth {
     StorageUtils.remove("user");
   }
 
-  static isLoggedIn() {
+  static Future<bool> isLoggedIn() async {
     try {
-      getConnectedUser();
+      await getConnectedUser();
       return true;
-    } catch (e) {
+    } on AuthException catch (_) {
       return false;
     }
   }
