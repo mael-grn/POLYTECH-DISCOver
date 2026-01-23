@@ -54,7 +54,7 @@ def create_user():
 
     return jsonify({
         "user_id": user.user_id,
-        "username": user.username,
+        "username": user.name,
         "email": user.email
     }), 201
 

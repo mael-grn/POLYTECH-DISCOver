@@ -8,6 +8,10 @@ class TextInputWidget extends StatelessWidget {
   final VoidCallback? onIconClick;
   final bool big;
   final ValueChanged<String>? onSubmitted;
+  final FormFieldValidator<String>? validator;
+  final bool obscureText;
+  final Color? bgColor;
+
 
   const TextInputWidget({
     this.hint,
@@ -16,6 +20,9 @@ class TextInputWidget extends StatelessWidget {
     this.onIconClick,
     this.big = false,
     this.onSubmitted,
+    this.validator,
+    this.obscureText = false,
+    this.bgColor,
     super.key
   });
 
@@ -23,7 +30,9 @@ class TextInputWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 800,
-      child: TextField(
+      child: TextFormField(
+        obscureText: obscureText,
+        validator: validator,
         controller: controller,
         onChanged: (_) {
           if (onSubmitted != null) {
@@ -36,10 +45,10 @@ class TextInputWidget extends StatelessWidget {
           color: Colors.white,
           fontSize: big ? 22 : 17,
         ),
-        selectionControls: materialTextSelectionControls, // par défaut
+        selectionControls: materialTextSelectionControls,
         decoration: InputDecoration(
           filled: true,
-          fillColor: secondaryColor, // violet existant
+          fillColor: bgColor ?? backgroundColor,
           hintText: hint,
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
           contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),

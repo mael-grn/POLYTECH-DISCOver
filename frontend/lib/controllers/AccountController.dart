@@ -1,5 +1,6 @@
 
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
+import 'package:discover/views/auth/LoginView.dart';
 import 'package:discover/views/settings/ServerStatusView.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -19,7 +20,7 @@ class AccountController with ChangeNotifier {
   }
 
   void onLoginPressed() {
-    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+    CustomNavigator.pushFromRight(LoginView());
   }
 
   void onSeeServerStatusPressed() {

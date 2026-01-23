@@ -39,7 +39,9 @@ class PageWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 15),
-                  body,
+                  Center(
+                    child: body,
+                  ),
                   SizedBox(height: 100),
                 ],
               ),
