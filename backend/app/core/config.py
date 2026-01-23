@@ -13,3 +13,5 @@ class DevConfig(Config):
         "SQLALCHEMY_DATABASE_URI",
         f"sqlite:///{(BASE_DIR / 'dev.bd').as_posix()}",
     )
+
+

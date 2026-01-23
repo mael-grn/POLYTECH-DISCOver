@@ -37,10 +37,9 @@ pathlib
 flask_sqlalchemy
 flask_marshmallow
 
-__future__
+
 werkzeug.security
-.user_schema
-.analyze_schema 
+
 re
 app.core.config
 app.models.analyze

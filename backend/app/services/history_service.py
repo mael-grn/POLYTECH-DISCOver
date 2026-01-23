@@ -3,6 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.extensions import db
 from app.models.history import History
+from app.api.deps import *
 
 def touch_history(user_id: int, song_id: int) -> None:
     """
@@ -22,3 +23,14 @@ def touch_history(user_id: int, song_id: int) -> None:
         db.session.add(row)
     else:
         row.last_research = now
+def _require_user_id():
+    user_id = get_request_user_id()
+    if user_id is None:
+        return None, (
+            jsonify({
+                "error": "Unauthorized",
+                "message": "Missing X-User-Id"
+            }),
+            401,
+        )
+    return user_id, None

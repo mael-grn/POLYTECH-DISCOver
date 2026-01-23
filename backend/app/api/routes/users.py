@@ -1,21 +1,36 @@
+from __future__ import annotations
+
 from flask import Blueprint, jsonify, request
+from marshmallow import ValidationError
+
 from app.api.deps import get_request_user_id
 from app.extensions import db
-from app.models.user import User
 from app.schemas.user_schema import UserCreateSchema
-from marshmallow import ValidationError
-from sqlalchemy.exc import IntegrityError
+
+from app.crud.users_crud import (
+    get_user_by_id,
+    create_user_row,
+    list_users_basic,
+)
 
 users_bp = Blueprint("users", __name__)
 user_create_schema = UserCreateSchema()
 
-@users_bp.get("/users/me")
-def get_me():
+
+def _require_user_id():
     user_id = get_request_user_id()
     if user_id is None:
-        return jsonify({"error": "Unauthorized", "message": "Missing X-User-Id (dev auth)"}), 401
+        return None, (jsonify({"error": "Unauthorized", "message": "Missing X-User-Id (dev auth)"}), 401)
+    return user_id, None
 
-    user = db.session.get(User, user_id)
+
+@users_bp.get("/users/me")
+def get_me():
+    user_id, err = _require_user_id()
+    if err:
+        return err
+
+    user = get_user_by_id(db.session, user_id=user_id)
     if user is None:
         return jsonify({"error": "NotFound", "message": f"User {user_id} not found"}), 404
 
@@ -25,6 +40,7 @@ def get_me():
         "email": getattr(user, "email", None),
         "created_at": getattr(user, "created_at", None),
     }), 200
+
 
 @users_bp.post("/users")
 def create_user():
@@ -37,34 +53,30 @@ def create_user():
     except ValidationError as err:
         return jsonify({"error": "ValidationError", "messages": err.messages}), 422
 
-    user = User(
-        name=data["name"],
-        email=data.get("email")
-    )
-    user.set_password(data["password"])
 
-    try:
-        db.session.add(user)
-        db.session.commit()
-    except IntegrityError as e:
-        db.session.rollback()
-        return jsonify({"error": "IntegrityError",
-        "message": "User already exists (name or email must be unique).",
-                        "details": str(getattr(e, "orig", e))}), 409
+    user = create_user_row(
+        db.session,
+        name=data["name"],
+        password=data["password"],
+        email=data.get("email"),
+    )
+
 
     return jsonify({
         "user_id": user.user_id,
-        "username": user.username,
-        "email": user.email
+        "username": getattr(user, "username", getattr(user, "name", None)),
+        "name": getattr(user, "name", None),
+        "email": getattr(user, "email", None),
     }), 201
+
 
 @users_bp.get("/users")
 def list_users():
-    # dev: limite pour éviter de dump trop
     limit = request.args.get("limit", 50, type=int)
     limit = max(1, min(limit, 200))
 
-    users = db.session.query(User).order_by(User.user_id.asc()).limit(limit).all()
+    users = list_users_basic(db.session, limit=limit)
+
     return jsonify({
         "count": len(users),
         "items": [
