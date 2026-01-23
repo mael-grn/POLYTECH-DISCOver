@@ -47,3 +47,27 @@ def list_users_basic(
         .limit(limit)
         .all()
     )
+
+def get_user_by_email(db: Session, *, email: str) -> User | None:
+    return db.query(User).filter(User.email == email).first()
+
+def authenticate_user(session: Session, *, email: str, password: str) -> Optional[User]:
+
+    email = (email or "").strip().lower()
+    if not email or not password:
+        return None
+
+    user = get_user_by_email(session, email=email)
+    if not user:
+        return None
+
+    return user if user.check_password(password) else None
+
+
+def user_public_dict(user: User) -> Dict[str, Any]:
+
+    return {
+        "user_id": user.user_id,
+        "name": user.name,
+        "email": user.email,
+    }
