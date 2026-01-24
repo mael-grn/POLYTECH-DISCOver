@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:discover/enums/NetworkErrorEnum.dart';
+import 'package:discover/exceptions/RequestException.dart';
+
 import '../core/Auth.dart';
 import '../core/provider.dart';
 import '../models/User.dart';
@@ -12,13 +15,10 @@ class UserService {
       "email": email,
       "password": password
     });
-    final response = await Provider.sendRequest(route: "/users/me", method: HttpMethod.GET);
-    User user = User.fromJson(jsonDecode(response));
+    final response = await Provider.sendRequest(route: "/auth/me", method: HttpMethod.GET);
+    final data = jsonDecode(response);
+    if (data['logged_in'] == false) throw NetworkException(NetworkErrorEnum.networkAuthenticationRequired);
+    User user = User.fromJson(data['user']);
     Auth.setConnectedUser(user);
-  }
-
-  Future<User> getMe() async {
-    final response = await Provider.sendRequest(route: "/users/me", method: HttpMethod.GET);
-    return User.fromJson(jsonDecode(response));
   }
 }
