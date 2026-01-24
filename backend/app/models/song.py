@@ -24,7 +24,11 @@ class Song(db.Model):
     key: Mapped[int | None] = mapped_column(Integer, nullable=True)
     liveness: Mapped[float | None] = mapped_column(Float, nullable=True)
     loudness: Mapped[float | None] = mapped_column(Float, nullable=True)
-
+    tempo: Mapped[float | None] = mapped_column(Float, nullable=True)
+    audio_mode: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    speechiness: Mapped[float | None] = mapped_column(Float, nullable=True)
+    time_signature: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    audio_valence: Mapped[float | None] = mapped_column(Float, nullable=True)
     is_in_data_set: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     analyze: Mapped["Analyze | None"] = relationship(
@@ -43,6 +47,23 @@ class Song(db.Model):
         back_populates="song",
         cascade="all, delete-orphan",
     )
+
+    def to_features_dict(self) -> Dict[str, Any]:
+        return {
+            "song_duration_ms": self.song_duration_ms,
+            "acousticness": self.acousticness,
+            "danceability": self.danceability,
+            "energy": self.energy,
+            "instrumentalness": self.instrumentalness,
+            "key": self.key,
+            "liveness": self.liveness,
+            "loudness": self.loudness,
+            "audio_mode": self.audio_mode,
+            "speechiness": self.speechiness,
+            "tempo": self.tempo,
+            "time_signature": self.time_signature,
+            "audio_valence": self.audio_valence,
+        }
 
 
 from app.models.analyze import Analyze

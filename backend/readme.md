@@ -18,4 +18,5 @@ Vous pouvez modifier les valeurs de ces variables à votre convenance, mais cell
 1. initialiser la base de données : `docker compose up -d`.
 2. installer les dependances python : `pip install -r requirements.txt`.
 3. Initialiser la base de données : `python db_setup.py`.
-4. Executer l'app : `python main.py`.
+4. Remplissez votre table analyse en lancant le ml sur le dataset avec la commande suivante : `python ml_backfill_analyze.py`.
+5. Executer l'app : `python main.py`.
