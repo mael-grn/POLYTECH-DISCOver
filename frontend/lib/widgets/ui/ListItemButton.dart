@@ -10,10 +10,12 @@ class ListItemButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
   final IconData? icon;
+  final Color bgColor;
   const ListItemButton({
     required this.title,
     required this.onPressed,
     this.icon,
+    this.bgColor = backgroundColor,
     super.key,
   });
 
@@ -28,7 +30,7 @@ class ListItemButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: bgColor,
             borderRadius: BorderRadius.circular(20),
           ),
           width: double.infinity,

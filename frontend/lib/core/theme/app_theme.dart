@@ -8,7 +8,7 @@ const Color backgroundVariantColor = Color(0xFF202020);
 const Color foregroundColor = Color(0xFFF1F4F6);
 const Color foregroundVariantColor = Color(0xFFC9DAEA);
 
-const Color invalidColor = Colors.redAccent;
+const Color invalidColor = Color(0xFF7A2828);
 const Color validColor = Color(0xFF58AC88);
 
 final MaterialColor customColor = MaterialColor(

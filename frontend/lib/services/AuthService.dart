@@ -4,6 +4,7 @@ import '../core/provider.dart';
 import '../enums/NetworkErrorEnum.dart';
 import '../exceptions/RequestException.dart';
 import '../models/User.dart';
+import '../utils/StorageUtils.dart';
 
 class AuthService {
 
@@ -22,6 +23,7 @@ class AuthService {
 
   Future<void> logout() async {
     await Provider.sendRequest(route: "/auth/logout", method: HttpMethod.POST);
+    StorageUtils.remove("token");
     Auth.logout();
   }
 

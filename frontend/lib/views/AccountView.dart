@@ -1,6 +1,6 @@
-
 import 'package:discover/controllers/AccountController.dart';
 import 'package:discover/core/Auth.dart';
+import 'package:discover/core/theme/app_theme.dart';
 import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:discover/widgets/ui/PageWidget.dart';
 import 'package:discover/widgets/ui/ListItemButton.dart';
@@ -19,7 +19,6 @@ class AccountView extends StatefulWidget {
 }
 
 class _AccountView extends State<AccountView> {
-
   @override
   void initState() {
     super.initState();
@@ -37,49 +36,81 @@ class _AccountView extends State<AccountView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Column(
+            children: [
+              LordiconWidget(
+                controller.isLoggedIn ? "eye" : "cloud-user",
+                loop: true,
+                key: ValueKey(controller.isLoggedIn),
+              ),
+              Text(
+                controller.isLoggedIn
+                    ? controller.user?.name ?? "Who are you?"
+                    : "You are not logged in",
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                textAlign: TextAlign.center,
+              ),
+              if (!controller.isLoggedIn) SizedBox(height: 20),
+              if (!controller.isLoggedIn) ButtonWidget(
+                message: "Login",
+                icon: Icons.login,
+                onPressed: controller.onLoginPressed,
+              ),
+            ],
+          ),
 
-          if (controller.isLoggedIn)
-            Text("How the hell did you logged in?")
-          else
-            Column(
-              children: [
-                LordiconWidget("cloud-user"),
-                Text(
-                  "You are not logged in",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                ButtonWidget(
-                  message: "Login",
-                  icon: Icons.login,
-                  onPressed: controller.onLoginPressed,
-                ),
-              ],
-            ),
-
-
-          SizedBox(height: 20,),
+          SizedBox(height: 20),
 
           ContainerWidget(
             Column(
               children: [
-                ListItemButton(title: "Server status", onPressed: controller.onSeeServerStatusPressed, icon: Icons.network_check,),
-                SizedBox(height: 10,),
-                ListItemButton(title: "Display", onPressed: controller.onDisplayPressed, icon: Icons.display_settings,),
-                SizedBox(height: 10,),
-                ListItemButton(title: "Device", onPressed: controller.onDevicesPressed, icon: Icons.devices,),
-                SizedBox(height: 10,),
-                ListItemButton(title: "Audio", onPressed: controller.onAudioPressed, icon: Icons.audiotrack,),
-                SizedBox(height: 10,),
-                ListItemButton(title: "Manage uploads", onPressed: controller.onManageUploadsPressed, icon: Icons.upload_rounded,),
-                SizedBox(height: 10,),
-                ListItemButton(title: "About", onPressed: controller.onAboutPressed, icon: Icons.question_mark,),
+                ListItemButton(
+                  title: "Server status",
+                  onPressed: controller.onSeeServerStatusPressed,
+                  icon: Icons.network_check,
+                ),
+                SizedBox(height: 10),
+                ListItemButton(
+                  title: "Display",
+                  onPressed: controller.onDisplayPressed,
+                  icon: Icons.display_settings,
+                ),
+                SizedBox(height: 10),
+                ListItemButton(
+                  title: "Device",
+                  onPressed: controller.onDevicesPressed,
+                  icon: Icons.devices,
+                ),
+                SizedBox(height: 10),
+                ListItemButton(
+                  title: "Audio",
+                  onPressed: controller.onAudioPressed,
+                  icon: Icons.audiotrack,
+                ),
+                SizedBox(height: 10),
+                ListItemButton(
+                  title: "Manage uploads",
+                  onPressed: controller.onManageUploadsPressed,
+                  icon: Icons.upload_rounded,
+                ),
+                SizedBox(height: 10),
+                ListItemButton(
+                  title: "About",
+                  onPressed: controller.onAboutPressed,
+                  icon: Icons.question_mark,
+                ),
+                if (controller.isLoggedIn) SizedBox(height: 10),
+                if (controller.isLoggedIn) ListItemButton(
+                  bgColor: invalidColor,
+                  title: "Logout",
+                  onPressed: controller.onLogoutPressed,
+                  icon: Icons.logout,
+                ),
               ],
-            )
+            ),
           ),
 
-          SizedBox(height: 120,)
+          SizedBox(height: 120),
         ],
       ),
     );
