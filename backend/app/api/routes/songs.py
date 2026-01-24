@@ -7,7 +7,8 @@ from app.api.deps import get_request_user_id
 from app.extensions import db
 from app.schemas.song_schema import SongCreateSchema, SongReadSchema
 from app.schemas.song_list_schema import SongListItemSchema
-
+from flask import g
+from app.core.guards import require_auth
 
 from app.crud.songs_crud import (
     create_song_row,
@@ -25,11 +26,7 @@ songs_list_schema = SongListItemSchema(many=True)
 songs_me_schema = SongListItemSchema(many=True)
 
 
-def _require_user_id():
-    user_id = get_request_user_id()
-    if user_id is None:
-        return None, (jsonify({"error": "Unauthorized", "message": "Missing X-User-Id"}), 401)
-    return user_id, None
+
 
 
 
@@ -52,8 +49,9 @@ def create_song():
 
 
 @songs_bp.get("/songs/<int:song_id>")
+@require_auth
 def get_song(song_id: int):
-    maybe_user_id = get_request_user_id()
+    maybe_user_id =  g.user_id
 
 
     song = get_song_with_private_guard(
@@ -68,8 +66,9 @@ def get_song(song_id: int):
 
 
 @songs_bp.get("/songs")
+@require_auth
 def list_songs():
-    maybe_user_id = get_request_user_id()
+    maybe_user_id = g.user_id
 
     try:
         skip = int(request.args.get("skip", 0))
@@ -107,10 +106,9 @@ def list_songs():
 
 
 @songs_bp.get("/songs/me")
+@require_auth
 def list_my_songs():
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id =g.user_id
 
     try:
         skip = int(request.args.get("skip", 0))
@@ -148,10 +146,9 @@ def list_my_songs():
 
 
 @songs_bp.delete("/songs/<int:song_id>")
+@require_auth
 def delete_song(song_id: int):
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     delete_uploaded_song_for_owner(
         db.session,

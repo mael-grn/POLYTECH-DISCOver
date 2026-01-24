@@ -10,7 +10,8 @@ from app.schemas.uploaded_by_schema import (
     UploadReadSchema,
     UploadUpdateSchema,
 )
-
+from flask import g
+from app.core.guards import require_auth
 
 from app.crud.uploads_crud import (
     create_upload_for_user,
@@ -27,18 +28,14 @@ upload_read_schema = UploadReadSchema()
 upload_update_schema = UploadUpdateSchema()
 
 
-def _require_user_id():
-    user_id = get_request_user_id()
-    if user_id is None:
-        return None, (jsonify({"error": "Unauthorized", "message": "Missing X-User-Id"}), 401)
-    return user_id, None
+
 
 
 @uploads_bp.post("/uploads")
+@require_auth
 def create_upload():
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
+
 
     payload = request.get_json(silent=True)
     if payload is None:
@@ -61,10 +58,9 @@ def create_upload():
 
 
 @uploads_bp.patch("/uploads/<int:song_id>")
+@require_auth
 def patch_upload(song_id: int):
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     payload = request.get_json(silent=True)
     if payload is None:
@@ -89,10 +85,9 @@ def patch_upload(song_id: int):
 
 
 @uploads_bp.get("/uploads/<int:song_id>")
+@require_auth
 def get_upload(song_id: int):
-    # Règle métier: si private -> seulement owner
-    # On laisse le CRUD appliquer ce guard proprement.
-    user_id = get_request_user_id()  # peut être None ici (public)
+    user_id = g.user_id
     upload = get_upload_by_song_id_with_private_guard(
         db.session,
         song_id=song_id,
@@ -102,10 +97,9 @@ def get_upload(song_id: int):
 
 
 @uploads_bp.get("/uploads/me")
+@require_auth
 def get_my_uploads():
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     skip = request.args.get("skip", 0, type=int)
     limit = request.args.get("limit", 50, type=int)
