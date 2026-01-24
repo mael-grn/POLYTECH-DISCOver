@@ -1,7 +1,8 @@
 # backend/app/services/audio_service.py
-import librosa
-import numpy as np
 import os
+import numpy as np
+import librosa
+from pathlib import Path
 from app.models.song import Song
 
 
@@ -9,94 +10,95 @@ class AudioAnalysisService:
     def __init__(self):
         pass
 
+    @staticmethod
+    def _estimate_mode_major_minor(chroma_mean: np.ndarray) -> int | None:
+
+        major = np.array([6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88])
+        minor = np.array([6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17])
+
+
+        c = chroma_mean / (np.linalg.norm(chroma_mean) + 1e-9)
+        maj = major / np.linalg.norm(major)
+        minr = minor / np.linalg.norm(minor)
+
+
+        best_maj = -1e9
+        best_min = -1e9
+        for shift in range(12):
+            maj_s = np.roll(maj, shift)
+            min_s = np.roll(minr, shift)
+            best_maj = max(best_maj, float(np.dot(c, maj_s)))
+            best_min = max(best_min, float(np.dot(c, min_s)))
+
+        return 1 if best_maj >= best_min else 0
+
     def analyze_file(self, file_path: str, song_title: str = None) -> Song | None:
-        """
-        Analyse un fichier audio local (.mp3, .wav) et retourne un objet Song.
-        """
         if not os.path.exists(file_path):
             print(f"Fichier introuvable : {file_path}")
             return None
 
         try:
-            # 1. Chargement du fichier audio
-            y, sr = librosa.load(file_path)
 
-            # ---Récupération des données---
+            y, sr = librosa.load(file_path, mono=True)
 
-            # Durée en ms
+            if y is None or len(y) < sr * 1:
+                print("Audio trop court ou vide.")
+                return None
+
+
             duration_sec = librosa.get_duration(y=y, sr=sr)
             duration_ms = int(duration_sec * 1000)
 
-            # Loudness (dB)
-            # On calcule l'énergie moyenne (RMS) et on convertit en dB
-            rms = librosa.feature.rms(y=y)
-            loudness = float(librosa.amplitude_to_db(rms).mean())
 
-            # Tempo (BPM)
-            tempo_array, _ = librosa.beat.beat_track(y=y, sr=sr)
-            # beat_track peut retourner un float ou un array, on sécurise
-            bpm = float(tempo_array) if np.isscalar(tempo_array) else float(tempo_array[0])
+            tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
+            bpm = float(tempo) if np.isscalar(tempo) else float(tempo[0])
 
-            # Key (Tonalité)
-            # Chromagramme pour détecter la note dominante
+
             chroma = librosa.feature.chroma_stft(y=y, sr=sr)
-            # On fait la moyenne pour trouver la classe de note dominante (0=Do, 1=Do#, etc.)
-            key = int(np.argmax(np.mean(chroma, axis=1)))
+            chroma_mean = np.mean(chroma, axis=1)
+            key = int(np.argmax(chroma_mean))
+            audio_mode = self._estimate_mode_major_minor(chroma_mean)
 
-            # ---Estimation des features (Heuristiques)---
 
-            # Energy (0.0 à 1.0)
-            # On normalise le RMS. Supposons qu'un RMS de 0.2 est une énergie max "standard"
-            raw_energy = float(np.mean(rms))
-            energy = min(raw_energy * 5, 1.0)  # Facteur *5 arbitraire pour échelonner
+            rms = librosa.feature.rms(y=y)[0]
+            rms_mean = float(np.mean(rms))
+            loudness_db = float(20.0 * np.log10(max(rms_mean, 1e-9)))
 
-            # Danceability (0.0 à 1.0)
-            # Basé sur la stabilité du rythme. Plus le rythme est clair, plus c'est dansant.
-            onset_env = librosa.onset.onset_strength(y=y, sr=sr)
-            pulse = librosa.beat.plp(onset_envelope=onset_env, sr=sr)
-            # Si le tempo est entre 90 et 130 BPM (pop/dance), on booste le score
-            dance_score = pulse.mean()
-            if 90 < bpm < 140:
-                dance_score *= 1.2
-            danceability = min(dance_score, 1.0)
 
-            # Acousticness / Instrumentalness / Liveness
-            # Difficile à calculer
-            # On met des valeurs par défaut ou des calculs très simples (Spectral Rolloff)
-            # Le spectral rolloff est bas pour les sons acoustiques/sombres
-            rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr).mean()
-            # Normalisation très brute : plus le son est "brillant" (hautes fréquences), moins il est acoustique
-            acousticness = max(0.0, 1.0 - (rolloff / 3000))
-            audio_mode = None
-            speechiness = None
             time_signature = 4
+
+
+            acousticness = None
+            danceability = None
+            energy = None
+            instrumentalness = None
+            liveness = None
+            speechiness = None
             audio_valence = None
-            # --- Création de l'objet Song ---
 
-            # Si aucun titre n'est fourni, on prend le nom du fichier
-            final_title = song_title if song_title else os.path.basename(file_path)
+            final_title = song_title if song_title else Path(file_path).stem
 
-            new_song = Song(
+            return Song(
                 song_name=final_title,
-                song_popularity=None,  # Inconnu car pas encore sorti
+                song_popularity=None,
                 song_duration_ms=duration_ms,
 
-                acousticness=round(acousticness, 3),
-                danceability=round(danceability, 3),
-                energy=round(energy, 3),
-                instrumentalness=0.0,  # Trop dur à deviner avec librosa
+                acousticness=acousticness,
+                danceability=danceability,
+                energy=energy,
+                instrumentalness=instrumentalness,
                 key=key,
-                liveness=0.0,  # Trop dur à deviner avec librosa
-                loudness=round(loudness, 3),
+                liveness=liveness,
+                loudness=round(loudness_db, 3),
+
                 audio_mode=audio_mode,
-                tempo=round(bpm, 3),
                 speechiness=speechiness,
+                tempo=round(bpm, 3),
                 time_signature=time_signature,
                 audio_valence=audio_valence,
+
                 is_in_data_set=False
             )
-
-            return new_song
 
         except Exception as e:
             print(f"Erreur lors de l'analyse audio : {e}")

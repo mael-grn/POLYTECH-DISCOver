@@ -1,0 +1,8 @@
+[
+  "song_duration_ms",
+  "tempo",
+  "loudness",
+  "key",
+  "audio_mode",
+  "time_signature"
+]

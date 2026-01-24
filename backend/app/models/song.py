@@ -51,18 +51,11 @@ class Song(db.Model):
     def to_features_dict(self) -> Dict[str, Any]:
         return {
             "song_duration_ms": self.song_duration_ms,
-            "acousticness": self.acousticness,
-            "danceability": self.danceability,
-            "energy": self.energy,
-            "instrumentalness": self.instrumentalness,
-            "key": self.key,
-            "liveness": self.liveness,
-            "loudness": self.loudness,
-            "audio_mode": self.audio_mode,
-            "speechiness": self.speechiness,
             "tempo": self.tempo,
+            "loudness": self.loudness,
+            "key": self.key,
+            "audio_mode": self.audio_mode,
             "time_signature": self.time_signature,
-            "audio_valence": self.audio_valence,
         }
 
 
