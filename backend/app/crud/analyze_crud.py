@@ -2,8 +2,18 @@ from sqlalchemy.orm import Session
 from app.models.analyze import Analyze
 from app.models.song import Song
 
-# Création ou mise à jour d'une analyse pour une chanson
 def upsert_analyze_for_song(session: Session, *, song_id: int, score_0_100: float) -> Analyze:
+    """
+    Création ou mise à jour de l'analyse d'une chanson avec un score de popularité.
+
+    - session : instance SQLAlchemy Session
+    - song_id : identifiant de la chanson à analyser
+    - score_0_100 : score de popularité
+    - retourne :
+        - l'objet Analyze correspondant à la chanson, créé ou mis à jour
+    - exceptions :
+        - AttributeError si l'objet Analyze ne contient ni "predicted_popularity" ni "popularity_probability"
+    """
     # Recherche si l'analyse d'une certaine chanson existe
     analyze = session.query(Analyze).filter_by(id_song=song_id).first()
     # Si l'analyse n'existe pas
@@ -28,12 +38,35 @@ def upsert_analyze_for_song(session: Session, *, song_id: int, score_0_100: floa
     # Retourne l'analyse
     return analyze
 
-# Récupère l'analyse par l'identifiant d'une chanson
 def get_analyze_by_song_id(session: Session, *, song_id: int) -> Analyze | None:
+    """
+    Récupération de l'analyse d'une chanson donnée par son identifiant.
+
+    - session : instance SQLAlchemy Session
+    - song_id : identifiant de la chanson à rechercher
+    - retourne :
+        - l'objet Analyze correspondant à la chanson si trouvé
+        - None si aucune analyse n'existe pour cette chanson
+    """
     return session.query(Analyze).filter_by(id_song=song_id).first()
 
-# Liste nos analyses avec leurs chansons
 def list_my_analyzes_with_song(session: Session, *, user_id: int, skip: int, limit: int):
+    """
+    Récupération des uploads d'un utilisateur avec leurs chansons et analyses associées.
+
+    - session : instance SQLAlchemy Session
+    - user_id : identifiant de l'utilisateur dont on liste les uploads
+    - skip : nombre d'éléments à ignorer pour la pagination
+    - limit : nombre maximal d'éléments à retourner
+    - retourne:
+        - liste de dictionnaires contenant pour chaque upload :
+            - song_id : identifiant de la chanson
+            - song_name : nom de la chanson
+            - private : bool indiquant si l'upload est privé
+            - analyze : dictionnaire avec les informations d'analyse ou None si aucune analyse
+                - predicted_popularity : score de popularité entre 0 et 100 si existant
+                - popularity_probability : probabilité de popularité entre 0 et 1 si existante
+    """
     from app.models.uploaded_by import UploadedBy
     # Requête récupérant les uploads, les analyses et les chansons d'un utilisateur quelconque
     rows = (

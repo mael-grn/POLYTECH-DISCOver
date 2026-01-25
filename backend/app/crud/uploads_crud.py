@@ -10,8 +10,21 @@ from app.models.uploaded_by import UploadedBy
 from app.models.song import Song
 from app.core.errors import NotFoundError, ForbiddenError
 
-# Création d'un upload pour un utilisateur
 def create_upload_for_user(session: Session, *, user_id: int, song_id: int, private: bool) -> tuple[UploadedBy, bool]:
+    """
+    Création ou mise à jour d'un upload pour un utilisateur et une chanson donnée.
+
+    - session : instance SQLAlchemy Session
+    - user_id : identifiant de l'utilisateur créant ou mettant à jour l'upload
+    - song_id : identifiant de la chanson associée à l'upload
+    - private : booléen indiquant si l'upload doit être privé
+    - retourne :
+        - tuple(upload, created)
+            - upload : instance UploadedBy correspondante
+            - created : booléen indiquant si l'upload a été créé ou existait déjà
+    - exceptions :
+        - ConflictError : si un upload identique existe déjà et provoque une erreur d'intégrité
+    """
     # Récupération de l'upload
     upload = (
         session.query(UploadedBy)
@@ -45,21 +58,37 @@ def create_upload_for_user(session: Session, *, user_id: int, song_id: int, priv
     # Renvoie l'upload et le booléen de création
     return upload, created
 
-# Récupère un upload en fonction d'une chanson
 def get_upload_by_song_id(session: Session, *, song_id: int) -> Optional[UploadedBy]:
+    """
+    Récupération du premier upload correspondant à une chanson donnée.
+
+    - session : instance SQLAlchemy Session
+    - song_id : identifiant de la chanson dont on cherche l'upload
+    - retourne: 
+        - une instance UploadedBy si un upload existe pour cette chanson
+        - None si aucun upload n'est trouvé
+    """
     return (
         session.query(UploadedBy)
         .filter(UploadedBy.song_id == song_id)
         .first()
     )
 
-# Récupère un upload en fonction d'une chanson et de sa privacité
 def get_upload_by_song_id_with_private_guard(
     session: Session,
     *,
     song_id: int,
     maybe_user_id: Optional[int],
 ) -> UploadedBy:
+    """
+    Récupération d'un upload pour une chanson donnée et vérification des droits d'accès.
+
+    - session : instance SQLAlchemy Session
+    - song_id : identifiant de la chanson dont on cherche l'upload
+    - maybe_user_id : identifiant de l'utilisateur effectuant la requête, ou None si non connecté
+    - retourne :
+        - l'objet UploadedBy correspondant à l'upload si l'accès est autorisé.
+    """
     # Récupère l'upload
     upload = get_upload_by_song_id(session, song_id=song_id)
     # Si l'upload est vide, renvoyer une erreur
@@ -75,7 +104,6 @@ def get_upload_by_song_id_with_private_guard(
     # Retourne l'upload
     return upload
 
-# Change la privacité de l'upload pour le propriétaire
 def set_upload_private_for_owner(
     session: Session,
     *,
@@ -83,6 +111,16 @@ def set_upload_private_for_owner(
     song_id: int,
     private: bool,
 ) -> UploadedBy:
+    """
+    Mise à jour de la privacité d'un upload pour son propriétaire.
+
+    - session : instance SQLAlchemy Session
+    - user_id : identifiant de l'utilisateur tentant de modifier l'upload
+    - song_id : identifiant de la chanson associée à l'upload
+    - private : booléen indiquant si l'upload doit être privé ou public
+    - retourne:
+        - l'objet UploadedBy mis à jour.
+    """
     # Récupère l'upload
     upload = get_upload_by_song_id(session, song_id=song_id)
     # Si l'upload est vide, lève une erreur
@@ -98,7 +136,6 @@ def set_upload_private_for_owner(
     # Retourne l'upload
     return upload
 
-# Liste nos uploads avec nos chansons
 def list_my_uploads_with_song(
     session: Session,
     *,
@@ -106,6 +143,21 @@ def list_my_uploads_with_song(
     skip: int = 0,
     limit: int = 50,
 ) -> List[Dict[str, Any]]:
+    """
+    Liste des uploads d'un utilisateur avec les informations des chansons associées.
+
+    - session : instance SQLAlchemy Session
+    - user_id : identifiant de l'utilisateur dont on souhaite lister les uploads.
+    - skip : nombre d'éléments à ignorer pour la pagination
+    - limit : nombre maximal d'éléments à retourner
+    - retourne :
+        - Une liste de dictionnaires contenant pour chaque upload :
+            - "song_id" : identifiant de la chanson
+            - "song_name" : nom de la chanson
+            - "song_duration_ms" : durée de la chanson en millisecondes
+            - "private" : booléen indiquant si l'upload est privé
+            - "uploaded_at" : date de l'upload
+    """
     # Récupère skip s'il est positif (0 sinon)
     skip = max(0, int(skip))
     # Récupère limit s'il est entre 1 et 100 (1 ou 100 sinon)
@@ -134,8 +186,17 @@ def list_my_uploads_with_song(
         for upload, song in rows
     ]
 
-# Création d'un lien d'upload
 def create_upload_link(session: Session, *, user_id: int, song_id: int, private: bool) -> UploadedBy:
+    """
+    Création d'un lien d'upload entre un utilisateur et une chanson.
+
+    - session : instance SQLAlchemy Session
+    - user_id : identifiant de l'utilisateur qui upload la chanson
+    - song_id : identifiant de la chanson à lier à l'utilisateur
+    - private : booléen indiquant si l'upload doit être privé ou public
+    - retourne :
+        - l'objet `UploadedBy` créé, représentant le lien d'upload
+    """
     # Créé un lien d'upload
     link = UploadedBy(user_id=user_id, song_id=song_id, private=private)
     # Ajoute ce lien

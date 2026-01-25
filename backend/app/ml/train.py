@@ -35,19 +35,37 @@ MP3_COMPAT_FEATURES = [
     "time_signature",
 ]
 
-# Fonction permettant de forcer le retour dans l'intervalle [0 ; 100]
 def clamp_0_100(x: float) -> float:
+    """
+    Force une valeur à rester dans l'intervalle [0 ; 100].
+
+    - x : entrée
+    - retourne :
+        - 0 si x < 0
+        - 100 si x > 100
+        - x sinon
+    """
     return max(0.0, min(100.0, float(x)))
 
-# Fonction permettant de retourner un nombre réel via une probabilité
 def logit_scaled_popularity(y: np.ndarray) -> np.ndarray:
+    """
+    Applique une transformation logit à des pourcentage.
+
+    - y : tableau NumPy de valeurs dans l'intervalle [0 ; 100]
+    - retourne : tableau NumPy de nombres réels
+    """
     # Division par 100 pour obtenir une probabilité entre 0 et 1
     y01 = np.clip(y / 100.0, 1e-4, 1.0 - 1e-4)
     # Fonction logit permettant d'avoir n'importe quel nombre réel
     return np.log(y01 / (1.0 - y01))
 
-# Fonction permettant de retourner un nombre entre 0 et 100 (utile pour des probabilité)
 def inv_logit_to_0_100(z: np.ndarray) -> np.ndarray:
+    """
+    Transforme des valeurs via la fonction sigmoïde en pourcentages [0 ; 100].
+
+    - z : tableau NumPy de valeurs
+    - retourne : tableau NumPy de nombres contenus entre 0 et 100
+    """
     # Fonction sigmoïde permettant de retourner un nombre entre 0 et 1
     y01 = 1.0 / (1.0 + np.exp(-z))
     # Multiplication par 100 pour obtenir un pourcentage

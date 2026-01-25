@@ -27,9 +27,18 @@ song_read_schema = SongReadSchema()
 songs_list_schema = SongListItemSchema(many=True)
 songs_me_schema = SongListItemSchema(many=True)
 
-# Gestion de la route "/songs" via post (Créé une chanson)
+# Gestion de la route "/songs"
 @songs_bp.post("/songs")
 def create_song():
+    """
+    Création d'une nouvelle chanson dans la base de données.
+
+    - méthode : POST
+    - retourne :
+        - 201 et JSON de la chanson créée si succès
+        - 400 si JSON manquant ou invalide
+        - 422 si échec de validation
+    """
     # Lecture du JSON de la requête
     payload = request.get_json(silent=True)
     # S'il n'y a pas de JSON valide, renvoie une erreur
@@ -49,10 +58,17 @@ def create_song():
     # Renvoie la chanson
     return jsonify(song_read_schema.dump(song)), 201
 
-# Gestion de la route "/songs/<int:song_it>" via get (Indique une chanson)
+# Gestion de la route "/songs/<int:song_it>"
 @songs_bp.get("/songs/<int:song_id>")
 @require_auth
 def get_song(song_id: int):
+    """
+    Récupération d'une chanson spécifique par son identifiant.
+
+    - méthode : GET
+    - song_id : identifiant de la chanson à récupérer
+    - retourne : 200 et JSON de la chanson si accès autorisé
+    """
     # Récupère l'identifiant de l'utilisateur
     maybe_user_id =  g.user_id
 
@@ -67,7 +83,7 @@ def get_song(song_id: int):
     # Retourne la chanson
     return jsonify(song_read_schema.dump(song)), 200
 
-# Gestion de la route "/songs" via get (Indique les chansons d'une recherche)
+# Gestion de la route "/songs"
 @songs_bp.get("/songs")
 @require_auth
 def list_songs():
@@ -118,10 +134,22 @@ def list_songs():
         "items": songs_list_schema.dump(items),
     }), 200
 
-# Gestion de la route "/songs/me" (Indique la recherche de nos chansons)
+# Gestion de la route "/songs/me"
 @songs_bp.get("/songs/me")
 @require_auth
 def list_my_songs():
+    """
+    Liste les chansons avec pagination et recherche avancée.
+
+    - méthode : GET
+    - retourne :
+        - 200 et JSON contenant :
+            - skip : valeur utilisée pour passer certaines choses dans la pagination
+            - limit : valeur utilisée pour limiter la pagination
+            - count : nombre d'éléments retournés
+            - items : liste des chansons
+        - 422 si skip ou limit invalide ou paramètres de recherche incorrects
+    """
     # Récupère l'identifiant d'utilisateur
     user_id =g.user_id
 
@@ -169,10 +197,17 @@ def list_my_songs():
         "items": songs_me_schema.dump(items),
     }), 200
 
-# Gestion de la route "/songs/<int:song_it>" via delete (Supprime une chanson)
+# Gestion de la route "/songs/<int:song_it>"
 @songs_bp.delete("/songs/<int:song_id>")
 @require_auth
 def delete_song(song_id: int):
+    """
+    Suppression d'une chanson uploadée par l'utilisateur connecté.
+
+    - méthode : DELETE
+    - song_id : identifiant de la chanson à supprimer
+    - retourne : 200 et JSON {"status": "deleted", "song_id": song_id} si suppression réussie
+    """
     # Récupération de l'identifiant d'utilisateur
     user_id = g.user_id
 

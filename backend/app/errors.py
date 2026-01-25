@@ -5,8 +5,19 @@ from app.core.errors import NotFoundError, ForbiddenError
 from app.extensions import db
 from app.core.errors import ConflictError
 
-# Gestionnaire d'erreurs
 def register_error_handlers(app: Flask):
+    """
+    Enregistre des gestionnaires d'erreurs.
+
+    - app : instance Flask
+    - erreurs gérées :
+        - IntegrityError (contrainte d'intégrité violée) -> 409
+        - SQLAlchemyError (erreur base de données) -> 500
+        - NotFoundError (ressource introuvable) -> 404
+        - ForbiddenError (accès interdit) -> 403
+        - ConflictError (conflit) -> 409
+    - retourne : None
+    """
     # Erreurs d'intégrité
     @app.errorhandler(IntegrityError)
     def handle_integrity_error(error):

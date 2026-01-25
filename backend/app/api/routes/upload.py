@@ -42,10 +42,21 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 # MP3 uniquement autorisés
 ALLOWED_EXT = {".mp3"}
 
-# Gestion de la route "/uploads" (Créé un upload)
+# Gestion de la route "/uploads"
 @uploads_bp.post("/uploads")
 @require_auth
 def create_upload():
+    """
+    Création d'un nouvel upload de chanson pour l'utilisateur connecté.
+
+    - méthode : POST
+    - retourne :
+        - une erreur 400 si le JSON est manquant ou invalide
+        - une erreur 422 si la validation échoue
+        - 201 si l'upload est créé pour la première fois
+        - 200 si l'upload existait déjà
+        - l'upload via `upload_read_schema`
+    """
     # Récupère l'identifiant de l'utilisateur
     user_id = g.user_id
 
@@ -75,10 +86,20 @@ def create_upload():
     # Retourne l'upload
     return jsonify(upload_read_schema.dump(upload)), status
 
-# Gestion de la route "/uploads/<int:song_it>" via patch (Créé un upload privé ou public)
+# Gestion de la route "/uploads/<int:song_it>"
 @uploads_bp.patch("/uploads/<int:song_id>")
 @require_auth
 def patch_upload(song_id: int):
+    """
+    Mise à jour d'un upload existant pour l'utilisateur connecté.
+
+    - méthode : PATCH
+    - song_id : identifiant de la chanson uploadée à modifier
+    - retourne :
+        - 200 et JSON de l'upload modifié si succès
+        - 400 si JSON manquant ou invalide
+        - 422 si validation échoue ou champ "private" absent
+    """
     # Récupère l'identifiant de l'utilisateur
     user_id = g.user_id
 
@@ -110,10 +131,17 @@ def patch_upload(song_id: int):
     # Retourne l'upload
     return jsonify(upload_read_schema.dump(upload)), 200
 
-# Gestion de la route "/uploads/<int:song_it>" via get (Indique un upload)
+# Gestion de la route "/uploads/<int:song_it>""
 @uploads_bp.get("/uploads/<int:song_id>")
 @require_auth
 def get_upload(song_id: int):
+    """
+    Récupération d'un upload spécifique par son identifiant de chanson.
+
+    - mééthode : GET
+    - song_id : identifiant de la chanson uploadée à récupérer
+    - retourne : 200 et JSON de l'upload si accès autorisé
+    """
     # Récupère l'identifiant de l'utilisateur
     user_id = g.user_id
     # Récupère l'upload
@@ -129,6 +157,15 @@ def get_upload(song_id: int):
 @uploads_bp.get("/uploads/me")
 @require_auth
 def get_my_uploads():
+    """
+    Récupération des uploads de l'utilisateur connecté avec les chansons associées.
+
+    - méthode : GET
+    - retourne :
+        - 200 et JSON contenant :
+            - count : nombre d'uploads retournés
+            - items : liste des uploads avec les informations des chansons
+    """
     # Récupère l'identifiant d'utilisateur
     user_id = g.user_id
 
@@ -153,10 +190,25 @@ def get_my_uploads():
         "items": items,
     }), 200
 
-# Gestion de la route "/uploads/file" (Upload un fichier)
+# Gestion de la route "/uploads/file"
 @uploads_bp.post("/uploads/file")
 @require_auth
 def upload_audio_file():
+    """
+    Uploader d'un fichier audio, analyse, création de chanson, association à l'utilisateur.
+
+    - méthode : POST
+    - retourne :
+        - 201 et JSON contenant :
+            - song_id : identifiant de la chanson créée
+            - song_name : nom de la chanson
+            - predicted_popularity : score de popularité arrondi
+            - private : booléen indiquant si l'upload est privé
+            - stored_file : chemin du fichier stocké
+        - 400 si le fichier est manquant ou vide
+        - 415 si le type de fichier n'est pas supporté
+        - 500 si l'analyse audio échoue
+    """
     # Récupère l'identifiant d'utilisateur
     user_id = g.user_id
 

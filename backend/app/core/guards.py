@@ -2,8 +2,16 @@ from functools import wraps
 from flask import request, jsonify, g
 from app.core.jwt_auth import verify_access_token, COOKIE_NAME
 
-# Nécessarisation authentification
 def require_auth(fn):
+    """
+    Nécessarisation d'une authentification par cookie JWT.
+
+    - fn : fonction Flask
+    - retourne :
+        - le résultat de la fonction si authentification réussie
+        - JSON {"error": "Unauthorized"} et code 401 si cookie manquant ou invalide
+    """
+
     # Création wrapper
     @wraps(fn)
     def wrapper(*args, **kwargs):

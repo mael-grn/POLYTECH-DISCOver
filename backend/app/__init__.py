@@ -7,6 +7,12 @@ from app.errors import *
 
 # Enregistrement de hooks pour chaque requête
 def register_db_hooks(app: Flask) -> None:
+    """
+    Enregistre des hooks pour chaque requête
+
+    - app : instance Flask
+    - retourne : None
+    """
     # Gestion des exceptions
     @app.teardown_request
     def _db_session_teardown(exception=None):
@@ -31,7 +37,11 @@ def register_db_hooks(app: Flask) -> None:
             db.session.remove()
 
 def create_app() -> Flask:
-    # Création de l'application Flask
+    """
+    Crée et configure l'application Flask.
+
+    - retourne : instance Flask configurée
+    """
     app = Flask(__name__)
     # Chargement de la configuration
     app.config.from_object(DevConfig)

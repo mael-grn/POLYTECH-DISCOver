@@ -8,10 +8,19 @@ from app.crud.uploads_crud import get_upload_by_song_id_with_private_guard
 # Création d'un module pour les routes dérivant de analyze
 analyze_bp = Blueprint("analyze", __name__)
 
-# Gestion de la route "/analyze/<int:song_id>" (Récupération de l'analyse d'une chanson)
+# Gestion de la route "/analyze/<int:song_id>"
 @analyze_bp.get("/analyze/<int:song_id>")
 @require_auth
 def get_analyze(song_id: int):
+    """
+    Récupération de l'analyse d'une chanson spécifique.
+
+    - méthode: GET
+    - song_id : identifiant de la chanson à analyser
+    - retourne : JSON + code HTTP
+        - 200 si succès
+        - 404 si analyse introuvable
+    """
     # Récupération de l'identifiant utilisateur
     user_id = g.user_id
 
@@ -35,10 +44,19 @@ def get_analyze(song_id: int):
         "popularity_probability": getattr(analyze, "popularity_probability", None),
     }), 200
 
-# Gestion de la route "/analyze/me" (Récupération de l'analyse de notre personne)
+# Gestion de la route "/analyze/me"
 @analyze_bp.get("/analyze/me")
 @require_auth
 def get_my_analyzes():
+    """
+    Récupération des analyses des chansons uploadées par l'utilisateur connecté.
+
+    - méthode: GET
+    - retourne : JSON avec :
+        - count : nombre d'éléments renvoyés
+        - items : liste des uploads
+    - code HTTP : 200 si succès
+    """
     # Récupération de l'identifiant d'utilisateur
     user_id = g.user_id
     # Lecture du paramètre d'URL "skip"

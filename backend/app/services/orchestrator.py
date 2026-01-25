@@ -7,6 +7,18 @@ _audio = AudioAnalysisService()
 
 # Calcul du score de popularité d'un fichier audio
 def score_audio_file(file_path: str, title: str | None = None, save_to_db: bool = False) -> dict:
+    """
+    Analyse d'un fichier audio et prédiction de sa popularité.
+
+    - file_path : chemin vers le fichier audio à analyser
+    - title : nom de la chanson à utiliser
+    - save_to_db : Indique si la chanson et son score doivent être sauvegardés dans la base de données
+    - retourne:
+        - dictionnaire contenant :
+            - "title" : le nom de la chanson
+            - "predicted_popularity" : popularité prédite entre 0 et 100
+            - "error" : présent si l'analyse audio a échoué
+    """
     # Analyse de la chanson
     song = _audio.analyze_file(file_path, song_title=title)
     # Si la chanson n'est pas présente, renvoyer une erreur

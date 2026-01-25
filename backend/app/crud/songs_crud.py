@@ -14,8 +14,14 @@ from app.services.history_service import touch_history
 from app.services.search_service import apply_rich_search
 from app.core.errors import NotFoundError, ForbiddenError
 
-# Création de chanson
 def create_song_row(session: Session, *, data: dict) -> Song:
+    """
+    Création d'une nouvelle entrée de chanson dans la base de données.
+
+    - session : instance SQLAlchemy Session
+    - data : dictionnaire contenant les champs et valeurs pour la création de la chanson
+    - retourne : l'objet Song créé
+    """
     # Créé une chanson
     song = Song(**data)
     # Ajoute cette chanson
@@ -23,7 +29,6 @@ def create_song_row(session: Session, *, data: dict) -> Song:
     # Retourne cette chanson
     return song
 
-# Récupère une chanson dépendamment de sa privacité
 def get_song_with_private_guard(
     session: Session,
     *,
@@ -31,6 +36,18 @@ def get_song_with_private_guard(
     maybe_user_id: Optional[int],
     should_touch_history: bool = True,
 ) -> Song:
+    """
+    Récupération d'une chanson en appliquant les restrictions d'accès aux uploads privés.
+
+    - session : instance SQLAlchemy Session
+    - song_id : identifiant de la chanson à récupérer
+    - maybe_user_id : identifiant de l'utilisateur effectuant la requête, ou None si non connecté
+    - should_touch_history : booléen indiquant si l'historique de l'utilisateur doit être mis à jour
+    - retourne : l'objet Song correspondant à la chanson demandée
+    - exceptions :
+        - NotFoundError : si la chanson n'existe pas
+        - ForbiddenError : si la chanson est privée et que l'utilisateur n'a pas le droit d'accès
+    """
     # Récupère une chanson
     song = session.get(Song, song_id)
     # Si la chanson est introuvable, retourne une erreur
@@ -57,7 +74,6 @@ def get_song_with_private_guard(
     # Retourne la chanson
     return song
 
-# Liste nos chansons via upload et recherche
 def list_songs_with_upload_guard_and_search(
     session: Session,
     *,
@@ -67,6 +83,20 @@ def list_songs_with_upload_guard_and_search(
     search: str,
     mode: str,  # "any" | "all"
 ) -> List[Dict[str, Any]]:
+    """
+    Récupération d'une liste de chansons avec gestion des uploads privés et recherche avancée.
+
+    - session : instance SQLAlchemy Session
+    - maybe_user_id : identifiant de l'utilisateur effectuant la requête, ou None si non connecté
+    - skip : nombre d'éléments à ignorer pour la pagination
+    - limit : nombre maximal d'éléments à retourner
+    - search : texte de recherche
+    - mode : mode de recherche avancée
+    - retourne :
+        - liste de dictionnaires contenant les informations des chansons et uploads visibles
+            - champs de chanson : song_id, song_name, song_duration_ms, song_popularity, acousticness, danceability, energy
+            - champ upload : None ou dictionnaire {user_id, private, date}
+    """
     # Récupère skip s'il est positif (0 sinon)
     skip = max(0, int(skip))
     # Récupère limit s'il est entre 1 et 100 (1 ou 100 sinon)
@@ -138,7 +168,6 @@ def list_songs_with_upload_guard_and_search(
     # Retour du tableau
     return items
 
-# Liste nos chansons via recherche
 def list_my_songs_with_search(
     session: Session,
     *,
@@ -148,6 +177,20 @@ def list_my_songs_with_search(
     search: str,
     mode: str,  # "any" | "all"
 ) -> List[Dict[str, Any]]:
+    """
+    Récupération de la liste des chansons uploadées par un utilisateur avec recherche avancée.
+
+    - session : instance SQLAlchemy Session
+    - user_id : identifiant de l'utilisateur dont on liste les chansons
+    - skip : nombre d'éléments à ignorer pour la pagination
+    - limit : nombre maximal d'éléments à retourner
+    - search : texte de recherche sur le nom de la chanson
+    - mode: mode de recherche avancée
+    - retourne :
+        - liste de dictionnaires contenant les informations des chansons et de leur upload
+            - champs de chanson : song_id, song_name, song_duration_ms, song_popularity, acousticness, danceability, energy
+            - champ upload : dictionnaire {user_id, private, date}
+    """
     # Récupère skip s'il est positif (0 sinon)
     skip = max(0, int(skip))
     # Récupère limit s'il est entre 1 et 100 (1 ou 100 sinon)
@@ -195,7 +238,6 @@ def list_my_songs_with_search(
     # Retour du tableau
     return items
 
-# Suppression d'une chanson privée uploadée
 def delete_uploaded_song_for_owner(
     session: Session,
     *,
@@ -203,10 +245,14 @@ def delete_uploaded_song_for_owner(
     song_id: int,
 ) -> None:
     """
-    :param session:
-    :param user_id:
-    :param song_id:
-    :return:
+    Suppression d'ne chanson uploadée par un utilisateur, ainsi que son upload et son historique.
+
+    - session: instance SQLAlchemy Session pour effectuer les requêtes
+    - user_id: identifiant de l'utilisateur tentant de supprimer la chanson
+    - song_id: identifiant de la chanson à supprimer
+    - exceptions :
+        - ForbiddenError : si la chanson fait partie du dataset ou n'appartient pas à l'utilisateur.
+        - NotFoundError : si la chanson n'existe pas.
     """
     # Création d'un upload
     upload = (
@@ -238,7 +284,6 @@ def delete_uploaded_song_for_owner(
     # Supprime la chanson
     session.delete(song)
 
-# Création d'une chanson via ses caractéristiques
 def create_song_from_features(
         session: Session,
         *,
@@ -246,6 +291,15 @@ def create_song_from_features(
         features: dict,
         is_in_data_set: bool = False
 ) -> Song:
+    """
+    Création d'une instance de Song avec des caractéristiques audio et ajout à la session.
+
+    - session : instance SQLAlchemy Session
+    - song_name : nom de la chanson
+    - features : dictionnaire contenant les caractéristiques audio
+    - is_in_data_set : indique si la chanson fait partie du dataset
+    - retourne : instance Song créée et ajoutée à la session
+    """
     # Créé une chanson avec des caractéristiques
     song = Song(
         song_name=song_name,

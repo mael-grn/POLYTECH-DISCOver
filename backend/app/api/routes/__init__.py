@@ -9,8 +9,13 @@ from app.api.routes.dev import dev_bp
 from app.api.routes.auth import auth_bp
 from app.api.routes.analyze import analyze_bp
 
-# Création des différentes routes
 def register_routes(app: Flask) -> None:
+    """
+    Enregistre toutes les routes de l'application
+
+    - app : instance Flask
+    - retourne: None (modifie l'application en place)
+    """
     # Récupération du préfixe commun
     prefix = "/api/"
 

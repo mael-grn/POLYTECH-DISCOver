@@ -11,9 +11,16 @@ class AudioAnalysisService:
     def __init__(self):
         pass
 
-    # Estimation tonalité chanson
     @staticmethod
     def _estimate_mode_major_minor(chroma_mean: np.ndarray) -> int | None:
+        """
+        Estimation de la tonalité majeure ou mineure d'une chanson à partir de son chroma moyen.
+
+        - chroma_mean : Vecteur représentant l'intensité moyenne.
+        - retourne :
+            - 1 si la chanson est estimée en tonalité majeure,
+            - 0 si la chanson est estimée en tonalité mineure.
+        """
         # Tonalité majeure
         major = np.array([6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88])
         # Tonalité mineure
@@ -44,8 +51,16 @@ class AudioAnalysisService:
         # Retourne 1 si la chanson est plus de tonalité majeure, et 0 sinon
         return 1 if best_maj >= best_min else 0
 
-    # Analyse fichier audio
     def analyze_file(self, file_path: str, song_title: str = None) -> Song | None:
+        """
+        Analyse d'un fichier audio et extraction de ses caractéristiques musicales.
+
+        - file_path : chemin vers le fichier audio à analyser
+        - song_title : nom de la chanson à utiliser
+        - retourne :
+            - Un objet Song contenant les caractéristiques extraites si l'analyse réussit
+            - None si le fichier est invalide, trop court, ou si une erreur se produit.
+        """
         # Si le fichier n'existe pas dans l'OS, arrêter la fonction
         if not os.path.exists(file_path):
             print(f"Fichier introuvable : {file_path}")

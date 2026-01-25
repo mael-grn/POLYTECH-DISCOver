@@ -11,9 +11,18 @@ from app.core.jwt_auth import create_access_token, verify_access_token, COOKIE_N
 # Création d'un module pour les routes dérivant de auth
 auth_bp = Blueprint("auth", __name__)
 
-# Gestion de la route "/auth/login" (Authentification)
+# Gestion de la route "/auth/login"
 @auth_bp.post("/auth/login")
 def login():
+    """
+    Authentification d'un utilisateur et création d'un token JWT.
+
+    - méthode : POST
+    - retourne :
+        - 200 et JSON {"ok": True} si succès
+        - 400 si email ou mot de passe manquant
+        - 401 si échec de l'authentification
+    """
     # Récupération des différentes données
     data = request.get_json(silent=True) or {}
 
@@ -52,6 +61,12 @@ def login():
 # Gestion de la route "/auth/logout" (Déconnexion)
 @auth_bp.post("/auth/logout")
 def logout():
+    """
+    Déconnexion d'un utilisateur en supprimant son cookie d'authentification.
+
+    - méthode : POST
+    - retourne : JSON {"ok": True} avec code HTTP 200
+    """
     # Création de la réponse HTTP
     resp = make_response(jsonify({"ok": True}), 200)
     # Suppression du cookie
@@ -59,9 +74,17 @@ def logout():
     # Retourne la réponse
     return resp
 
-# Gestion de la route "/auth/me" (Notre profil)
+# Gestion de la route "/auth/me"
 @auth_bp.get("/auth/me")
 def me():
+    """
+    Récupération des informations de l'utilisateur connecté via le cookie JWT.
+
+    - méthode : GET
+    - retourne :
+        - 200 avec JSON {"logged_in": False} si non connecté
+        - 200 avec JSON {"logged_in": True, "user": user} si connecté
+    """
     # Récupération du cookie
     token = request.cookies.get(COOKIE_NAME)
     # S'il n'y a pas de cookie, cela indique la non-connexion

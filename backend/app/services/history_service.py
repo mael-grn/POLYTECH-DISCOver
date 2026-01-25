@@ -7,9 +7,10 @@ from app.api.deps import *
 
 def touch_history(user_id: int, song_id: int) -> None:
     """
-    Crée ou met à jour une ligne d'historique pour (user_id, song_id).
-    - si existe : update last_research
-    - sinon : create date + last_research
+    Création ou mise à jour d'une entrée d'historique pour un utilisateur et une chanson donnés.
+
+    - user_id : identifiant de l'utilisateur
+    - song_id : identifiant de la chanson
     """
     # Date du moment
     now = datetime.now(timezone.utc)
@@ -32,6 +33,14 @@ def touch_history(user_id: int, song_id: int) -> None:
 
 # Récupère l'identifiant utilisateur
 def _require_user_id():
+    """
+    Récupération de l'identifiant utilisateur à partir des headers ou des paramètres de requête.
+
+    - retourne :
+        - le premier élément est l'identifiant utilisateur (int) si trouvé
+        - le second élément est une réponse HTTP (Flask Response) d'erreur 401 si l'identifiant est manquant
+        - None sinon
+    """
     # Récupère l'identifiant utilisateur
     user_id = get_request_user_id()
     # Si l'utilisateur est vide, retourne un message d'erreur

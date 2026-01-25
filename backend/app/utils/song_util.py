@@ -1,8 +1,26 @@
 from app.models.song import Song
 
-# Fonction renvoyant un dictionnaire basé sur les caractéristiques d'une chanson
 def song_to_features(song: Song) -> dict:
-    # Retourne un dictionnaire basé sur les caractéristiques d'une chanson
+    """
+    Transforme un objet Song en dictionnaire de ses caractéristiques audio.
+
+    - song : instance de Song dont on veut extraire les caractéristiques
+    - retourne :
+        - dict contenant les caractéristiques audio suivantes :
+            - song_duration_ms
+            - acousticness
+            - danceability
+            - energy
+            - instrumentalness
+            - key
+            - liveness
+            - loudness
+            - audio_mode
+            - speechiness
+            - tempo
+            - time_signature
+            - audio_valence
+    """
     return {
         "song_duration_ms": song.song_duration_ms,
         "acousticness": song.acousticness,

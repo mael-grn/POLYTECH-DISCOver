@@ -17,19 +17,38 @@ MODEL_PATH = BASE_DIR / "ml" / "artifacts" / "popularity_model.joblib"
 # Chemin du fichier JSON contenant les colonnes utilisées par le modèle
 FEATURES_JSON_PATH = BASE_DIR / "ml" / "feature_columns.json"
 
-# Fonction permettant de forcer le retour dans l'intervalle [0 ; 100]
 def clamp_0_100(x: float) -> float:
+    """
+    Force une valeur à rester dans l'intervalle [0 ; 100].
+
+    - x : entrée
+    - retourne :
+        - 0 si x < 0
+        - 100 si x > 100
+        - x sinon
+    """
     return max(0.0, min(100.0, float(x)))
 
-# Fonction permettant de retourner un nombre entre 0 et 100 (utile pour des probabilité)
 def inv_logit_to_0_100(z: np.ndarray) -> np.ndarray:
+    """
+    Transforme des valeurs via la fonction sigmoïde en pourcentages [0 ; 100].
+
+    - z : tableau NumPy de valeurs
+    - retourne : tableau NumPy de nombres contenus entre 0 et 100
+    """
     # Fonction sigmoïde permettant de retourner un nombre entre 0 et 1
     y01 = 1.0 / (1.0 + np.exp(-z))
     # Multiplication par 100 pour obtenir un pourcentage
     return np.clip(y01 * 100.0, 0.0, 100.0)
 
-# Fonction construisant un DataFrame par rapport à une chanson
 def build_row_from_song(song: Song, feature_cols: list[str]) -> pd.DataFrame:
+    """
+    Construit un DataFrame Pandas à partir des caractéristiques d'une chanson.
+
+    - song : objet Song contenant les données de la chanson
+    - feature_cols : liste des caractéristiques attendues
+    - retourne : DataFrame Pandas correspondant à la chanson
+    """
     # Récupération des caractéristiques d'une chanson
     feats = song.to_features_dict()
     # Récupération de toutes les données d'une chanson (avec éventuellement None si la chanson n'a pas une caractéristique quelconque)
@@ -37,8 +56,14 @@ def build_row_from_song(song: Song, feature_cols: list[str]) -> pd.DataFrame:
     # Retourne le DataFrame avec toutes les données d'une chanson
     return pd.DataFrame([row])
 
-# Fonction mettant à jour la popularité
 def set_analyze_fields(analyze: Analyze, score_0_100: float) -> None:
+    """
+    Met à jour la popularité d'un objet Analyze à partir d'un score dans l'intervalle [0 ; 100].
+
+    - analyze : instance de Analyze
+    - score_0_100 : score de popularité dans [0 ; 100]
+    - retourne : None
+    """
     # Garantie d'une valeur entre 0 et 100
     score_0_100 = clamp_0_100(score_0_100)
 
@@ -54,12 +79,15 @@ def set_analyze_fields(analyze: Analyze, score_0_100: float) -> None:
             "Analyze n'a ni 'predicted_popularity' ni 'popularity_probability'."
         )
 
-# Prédiction du score de popularité (entre 0 et 100)
 def predict_score_0_100(model_bundle, X: pd.DataFrame) -> float:
     """
-    Supporte:
-    - ancien format: Pipeline sklearn -> predict directement (0..100)
-    - nouveau format: dict bundle {pipeline, calibrator} avec sortie logit -> inverse logit -> calibrator
+    Prédit un score de popularité dans [0 ; 100]
+
+    - model_bundle : modèle ou bundle utilisé pour la prédiction
+        - ancien format: Pipeline sklearn -> predict directement (0..100)
+        - nouveau format: dict bundle {pipeline, calibrator} avec sortie logit -> inverse logit -> calibrator
+    - X : DataFrame Pandas contenant les caractéristiques des chansons
+    - retourne : score float entre 0 et 100
     """
     # Nouveau bundle
     if isinstance(model_bundle, dict) and "pipeline" in model_bundle:

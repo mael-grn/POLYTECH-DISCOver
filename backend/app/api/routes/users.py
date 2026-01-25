@@ -21,10 +21,22 @@ users_bp = Blueprint("users", __name__)
 # Initialisation du schéma de création
 user_create_schema = UserCreateSchema()
 
-# Gestion de la route "/users/me" (Indique nous-même)
+# Gestion de la route "/users/me"
 @users_bp.get("/users/me")
 @require_auth
 def get_me():
+    """
+    Récupération des informations de l'utilisateur connecté.
+
+    - méthode : GET
+    - retourne :
+        - 200 et JSON contenant :
+            - user_id : identifiant de l'utilisateur
+            - name : nom de l'utilisateur
+            - email : email de l'utilisateur
+            - created_at : date de création du compte
+        - 404 si l'utilisateur n'existe pas
+    """
     # Récupère l'identifiant d'utilisateur
     user_id = g.user_id
 
@@ -42,9 +54,22 @@ def get_me():
         "created_at": getattr(user, "created_at", None),
     }), 200
 
-# Gestion de la route "/users" via post (Créé un utilisateur)
+# Gestion de la route "/users"
 @users_bp.post("/users")
 def create_user():
+    """
+    Création d'un nouvel utilisateur.
+
+    - méthode : POST
+    - retourne :
+        - 201 et JSON contenant :
+            - user_id : identifiant de l'utilisateur créé
+            - username : pseudo ou nom de l'utilisateur
+            - name : nom complet de l'utilisateur
+            - email : email de l'utilisateur
+        - 400 si JSON manquant ou invalide
+        - 422 si validation échoue
+    """
     # Lecture du JSON de la requête
     payload = request.get_json(silent=True)
     # S'il n'y a pas de JSON valide, renvoie une erreur
@@ -74,9 +99,21 @@ def create_user():
         "email": getattr(user, "email", None),
     }), 201
 
-# Gestion de la route "/users" via get (Indique les utilisateurs)
+# Gestion de la route "/users"
 @users_bp.get("/users")
 def list_users():
+    """
+    Liste des utilisateurs existants
+
+    - méthode : GET
+    - retourne :
+        - 200 et JSON contenant :
+            - count : nombre d'utilisateurs retournés
+            - items : liste des utilisateurs contenant :
+                - user_id : identifiant de l'utilisateur
+                - name : nom de l'utilisateur
+                - email : email de l'utilisateur
+    """
     # Récupération de limit via l'URL (50 sinon)
     limit = request.args.get("limit", 50, type=int)
     # Récupère limit s'il est entre 1 et 200 (1 ou 200 sinon)

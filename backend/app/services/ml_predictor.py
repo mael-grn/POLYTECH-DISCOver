@@ -14,12 +14,25 @@ FEATURES_JSON_PATH = BASE_DIR / "ml" / "feature_columns.json"
 _BUNDLE = joblib.load(MODEL_PATH)
 FEATURES_ORDER = json.loads(FEATURES_JSON_PATH.read_text(encoding="utf-8"))
 
-# Fonction permettant de forcer le retour dans l'intervalle [0 ; 100]
 def _clamp_0_100(x: float) -> float:
+    """
+    Force une valeur à rester dans l'intervalle [0 ; 100].
+
+    - x : entrée
+    - retourne :
+        - 0 si x < 0
+        - 100 si x > 100
+        - x sinon
+    """
     return max(0.0, min(100.0, float(x)))
 
-# Fonction permettant de retourner un nombre entre 0 et 100 (utile pour des probabilité)
 def _inv_logit_to_0_100(z: np.ndarray) -> np.ndarray:
+    """
+    Transforme des valeurs via la fonction sigmoïde en pourcentages [0 ; 100].
+
+    - z : tableau NumPy de valeurs
+    - retourne : tableau NumPy de nombres contenus entre 0 et 100
+    """
     # Fonction sigmoïde permettant de retourner un nombre entre 0 et 1
     y01 = 1.0 / (1.0 + np.exp(-z))
     # Multiplication par 100 pour obtenir un pourcentage
