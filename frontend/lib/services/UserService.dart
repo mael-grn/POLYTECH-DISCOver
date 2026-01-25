@@ -21,4 +21,16 @@ class UserService {
     User user = User.fromJson(data['user']);
     Auth.setConnectedUser(user);
   }
+
+  Future<void> updateUser(int id, String email, String name) async {
+    await Provider.sendRequest(route: "/users/$id", method: HttpMethod.PUT, body: {
+      "name": name,
+      "email": email,
+    });
+    final response = await Provider.sendRequest(route: "/auth/me", method: HttpMethod.GET);
+    final data = jsonDecode(response);
+    if (data['logged_in'] == false) throw NetworkException(NetworkErrorEnum.networkAuthenticationRequired);
+    User user = User.fromJson(data['user']);
+    Auth.setConnectedUser(user);
+  }
 }

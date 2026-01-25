@@ -14,6 +14,7 @@ class UploadController with ChangeNotifier {
 
   String? selectedFilePath;
   String? selectedFileName;
+  bool private = false;
   final Uploadservice uploadService;
 
   UploadController(this.uploadService);
@@ -24,6 +25,11 @@ class UploadController with ChangeNotifier {
 
   bool hasSelectedFile() {
     return selectedFilePath != null && selectedFileName != null;
+  }
+
+  void setPrivate(bool? value) {
+    private = value ?? false;
+    notifyListeners();
   }
 
 
@@ -50,7 +56,7 @@ class UploadController with ChangeNotifier {
     }
     DialogBuilder.loading();
     try {
-      await uploadService.uploadSong(selectedFilePath!, selectedFileName!);
+      await uploadService.uploadSong(selectedFilePath!, selectedFileName!, private);
       CustomNavigator.pushZoom(Uploadsuccessview());
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);

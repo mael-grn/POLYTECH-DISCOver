@@ -19,7 +19,7 @@ class Provider {
   static final _client = http.Client();
   static final _cookieJar = CookieJar();
 
-  static const String _baseUrl = 'http://10.151.221.189:5000/api';
+  static const String _baseUrl = 'http://10.92.68.189:5000/api';
 
   //static const String _baseUrl = 'http://localhost:5000/api';
 
@@ -80,6 +80,37 @@ class Provider {
         String token = setCookie.split(';').first.split('=').last;
         StorageUtils.save('token', token);
       }
+      return response.body;
+    } else {
+      throw NetworkException(NetworkErrorEnum.fromCode(response.statusCode));
+    }
+  }
+
+  static Future<String> sendMultipartRequest({
+    required String route,
+    required String filePath,
+    String fileKey = 'file',
+    Map<String, String>? fields,
+  }) async {
+    final url = Uri.parse('$_baseUrl$route');
+    final token = await StorageUtils.load("token");
+    final tokenExists = await StorageUtils.itemExists("token");
+    var request = http.MultipartRequest('POST', url);
+
+    if (tokenExists) {
+      request.headers['Cookie'] = 'access_token=$token';
+    }
+
+    request.files.add(await http.MultipartFile.fromPath(fileKey, filePath));
+
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode.toString().startsWith('2')) {
       return response.body;
     } else {
       throw NetworkException(NetworkErrorEnum.fromCode(response.statusCode));

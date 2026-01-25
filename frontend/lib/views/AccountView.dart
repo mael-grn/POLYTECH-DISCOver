@@ -38,11 +38,7 @@ class _AccountView extends State<AccountView> {
         children: [
           Column(
             children: [
-              LordiconWidget(
-                controller.isLoggedIn ? "eye" : "cloud-user",
-                loop: true,
-                key: ValueKey(controller.isLoggedIn),
-              ),
+              Image.asset(width: 200, height: 200, "images/DISCOver.png"),
               Text(
                 controller.isLoggedIn
                     ? controller.user?.name ?? "Who are you?"
@@ -68,6 +64,12 @@ class _AccountView extends State<AccountView> {
                   title: "Server status",
                   onPressed: controller.onSeeServerStatusPressed,
                   icon: Icons.network_check,
+                ),
+                if (controller.isLoggedIn) SizedBox(height: 10),
+                if (controller.isLoggedIn) ListItemButton(
+                  title: "User data",
+                  onPressed: controller.onManageAccountPressed,
+                  icon: Icons.person,
                 ),
                 SizedBox(height: 10),
                 ListItemButton(

@@ -2,6 +2,7 @@
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/views/auth/LoginView.dart';
 import 'package:discover/views/settings/ServerStatusView.dart';
+import 'package:discover/views/settings/UserDataView.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../core/Auth.dart';
@@ -52,6 +53,9 @@ class AccountController with ChangeNotifier {
     DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
   }
 
+  void onManageAccountPressed() {
+    CustomNavigator.pushFromRight(UserDataView());
+  }
   void onLogoutPressed() {
     Auth.logout();
     CustomNavigator.resetToHome();
