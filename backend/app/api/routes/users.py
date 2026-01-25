@@ -85,3 +85,41 @@ def list_users():
             for u in users
         ]
     }), 200
+
+@users_bp.patch("/users/me")
+@require_auth
+def update_me():
+    user_id = g.user_id
+
+    payload = request.get_json(silent=True)
+    if payload is None:
+        return jsonify({"error": "InvalidOrMissingJSON"}), 400
+
+    allowed_fields = {"name", "email", "password"}
+    data = {k: v for k, v in payload.items() if k in allowed_fields}
+
+    if not data:
+        return jsonify({
+            "error": "ValidationError",
+            "message": "Provide at least one of: name, email, password"
+        }), 422
+
+    user = get_user_by_id(db.session, user_id=user_id)
+    if user is None:
+        return jsonify({"error": "NotFound"}), 404
+
+    from app.crud.users_crud import update_user
+
+    user = update_user(
+        db.session,
+        user=user,
+        name=data.get("name"),
+        email=data.get("email"),
+        password=data.get("password"),
+    )
+
+    return jsonify({
+        "user_id": user.user_id,
+        "name": user.name,
+        "email": user.email,
+    }), 200
