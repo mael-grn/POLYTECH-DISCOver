@@ -127,19 +127,6 @@ class DialogBuilder {
     });
   }
 
-  static Future<void> success(
-    String title,
-    String content, {
-        Function? onCLose,
-      }) {
-    return _simpleImageDialog(
-      title,
-      content,
-      "images/thumbs_up.png",
-      onCLose,
-    );
-  }
-
   static Future<void> warning(
     String title,
     String content, {
@@ -234,10 +221,10 @@ class DialogBuilder {
     );
   }
 
-  static Future<void> welcome() {
+  static Future<void> success(String title, String content) {
     return _simpleImageDialog(
-      "Welcome!",
-      "You are on DISCOver, the best app ever!",
+      title,
+      content,
       "images/team/mael-welcome.png",
     );
   }

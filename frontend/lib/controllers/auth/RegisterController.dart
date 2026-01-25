@@ -45,8 +45,7 @@ class RegisterController with ChangeNotifier {
 
     try {
       await userService.createUser(name, email, password);
-      DialogBuilder.closeCurrentDialog();
-      CustomNavigator.resetToHome();
+      DialogBuilder.success("Well done!", "You have successfully created an account. You may now login.");
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (e) {
