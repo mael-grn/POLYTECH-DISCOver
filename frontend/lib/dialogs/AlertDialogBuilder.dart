@@ -161,12 +161,12 @@ class DialogBuilder {
         Function? onCLose,
       }) {
     String lordicon = "cloud-cross";
-    String title = "Something wrong happened";
+    String title = "Sorry...";
     String detailedMessage = "";
     switch (error) {
       case NetworkErrorEnum.unauthorized:
         detailedMessage =
-            "You are not allowed to access this resource. Please check your credentials and try again.";
+            "It seems that you are not connected. Please login to access this resource.";
         break;
       case NetworkErrorEnum.forbidden:
         detailedMessage =

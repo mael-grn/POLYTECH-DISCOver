@@ -27,7 +27,6 @@ class HomeController with ChangeNotifier {
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (e) {
-      print(e);
       DialogBuilder.appError();
     }
     notifyListeners();
@@ -41,8 +40,9 @@ class HomeController with ChangeNotifier {
     DialogBuilder.loading();
     try {
       Song song = await songService.getSongById(trends[index].id);
+      double? analyze = await songService.getAnalyzeBySongId(song.id);
       DialogBuilder.closeCurrentDialog();
-      CustomNavigator.pushFromBottom(SongView(song));
+      CustomNavigator.pushFromBottom(SongView(song, analyze));
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (e) {

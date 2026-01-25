@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:discover/models/Song.dart';
 import '../core/provider.dart';
+import '../exceptions/RequestException.dart';
 
 class SongService {
   Future<List<Song>> getSongs() async {
@@ -20,6 +21,19 @@ class SongService {
   Future<Song> getSongById(int id) async {
     final response = await Provider.sendRequest(route: "/songs/$id", method: HttpMethod.GET);
     return Song.fromJson(jsonDecode(response));
+  }
+
+  Future<double?> getAnalyzeBySongId(int id) async {
+    try {
+      final response = await Provider.sendRequest(route: "/analyze/$id", method: HttpMethod.GET);
+      final Map<String, dynamic> data = jsonDecode(response);
+      return (data["popularity_probability"] ?? 0.0).toDouble();
+    } on NetworkException catch (e) {
+      if (e.networkError.code == 404) {
+        return null;
+      }
+      rethrow;
+    }
   }
 
   Future<List<Song>> getHistory() async {

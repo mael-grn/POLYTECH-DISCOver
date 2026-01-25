@@ -77,8 +77,8 @@ class _ManageUploadsView extends State<ManageUploadsView> {
                   final Upload upload = controller.userUploads[index];
                   return UploadListItemWidget(
                     upload: upload,
-                    onDeletePressed: () =>
-                        controller.onDeleteUploadPressed(index),                  );
+                    onItemPressed: () =>
+                        controller.onUploadPressed(index),                  );
                 },
               ),
             ),

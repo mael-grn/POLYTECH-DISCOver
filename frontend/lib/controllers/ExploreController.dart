@@ -40,8 +40,9 @@ class ExploreController with ChangeNotifier {
     DialogBuilder.loading();
     try {
       Song song = await songService.getSongById(history[index].id);
+      double? analyze = await songService.getAnalyzeBySongId(song.id);
       DialogBuilder.closeCurrentDialog();
-      CustomNavigator.pushFromBottom(SongView(song));
+      CustomNavigator.pushFromBottom(SongView(song, analyze));
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (e) {

@@ -48,8 +48,9 @@ class SearchSongController with ChangeNotifier {
     DialogBuilder.loading();
     try {
       Song song = await songService.getSongById(searchResults[songIndex].id);
+      double? analyze = await songService.getAnalyzeBySongId(song.id);
       DialogBuilder.closeCurrentDialog();
-      CustomNavigator.pushFromBottom(SongView(song));
+      CustomNavigator.pushFromBottom(SongView(song, analyze));
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (e) {

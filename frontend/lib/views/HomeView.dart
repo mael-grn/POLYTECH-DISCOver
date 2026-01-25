@@ -78,11 +78,11 @@ class _HomeView extends State<HomeView> {
                   itemBuilder: (context, index) {
                     return SongListItemWidget(
                         cover: index == 0
-                            ? LordiconWidget("one", size: 100)
+                            ? LordiconWidget("one", size: 70)
                             : index == 1
-                            ? LordiconWidget("two", size: 100)
+                            ? LordiconWidget("two", size: 70)
                             : index == 2
-                            ? LordiconWidget("three", size: 100)
+                            ? LordiconWidget("three", size: 70)
                             : null,
                         title: controller.trends[index].name,
                         onPressed: () => controller.onSongItemPressed(index)

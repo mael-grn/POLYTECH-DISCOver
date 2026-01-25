@@ -14,6 +14,8 @@ class TextInfoWidget extends StatelessWidget {
         children: [
           Text(
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
             labelText,
           ),
           SizedBox(width: 5),

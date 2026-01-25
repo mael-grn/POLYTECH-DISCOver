@@ -52,7 +52,7 @@ void main() async {
           ChangeNotifierProvider(create: (_) => RegisterController(userService)),
           ChangeNotifierProvider(create: (_) => EditUserDataController(userService, authService)),
           ChangeNotifierProvider(create: (_) => ViewUserDataController(authService)),
-          ChangeNotifierProvider(create: (_) => ManageUploadsController(uploadService)),
+          ChangeNotifierProvider(create: (_) => ManageUploadsController(uploadService, songService)),
 
         ],
         child: MaterialApp(
