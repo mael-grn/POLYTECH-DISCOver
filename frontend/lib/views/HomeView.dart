@@ -1,14 +1,14 @@
 import 'package:discover/controllers/HomeController.dart';
 import 'package:discover/core/theme/app_theme.dart';
-import 'package:discover/widgets/animations/scale_animation_widget.dart';
-import 'package:discover/widgets/search/songListItemWidget.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
-import 'package:discover/widgets/ui/button_widget.dart';
+import 'package:discover/widgets/animations/ScaleAnimationWidget.dart';
+import 'package:discover/widgets/search/SongListItemWidget.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
+import 'package:discover/widgets/ui/ButtonWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/ui/lordicon_widget.dart';
+import '../widgets/ui/LordiconWidget.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({super.key});

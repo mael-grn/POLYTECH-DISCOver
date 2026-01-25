@@ -1,8 +1,8 @@
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/exceptions/RequestException.dart';
 import 'package:flutter/cupertino.dart';
-import '../models/Song.dart';
-import '../services/SearchService.dart';
+import '../../models/Song.dart';
+import '../../services/SearchService.dart';
 
 class SearchSongController with ChangeNotifier {
 

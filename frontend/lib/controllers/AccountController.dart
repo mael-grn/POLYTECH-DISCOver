@@ -1,10 +1,12 @@
 
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
+import 'package:discover/views/auth/LoginView.dart';
 import 'package:discover/views/settings/ServerStatusView.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../core/Auth.dart';
 import '../core/CustomNavigator.dart';
+import '../models/User.dart';
 
 
 class AccountController with ChangeNotifier {
@@ -12,14 +14,18 @@ class AccountController with ChangeNotifier {
   AccountController();
 
   bool isLoggedIn = false;
+  User? user;
 
   Future<void> initData() async {
     isLoggedIn = await Auth.isLoggedIn();
+    if (isLoggedIn) {
+      user = await Auth.getConnectedUser();
+    }
     notifyListeners();
   }
 
   void onLoginPressed() {
-    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+    CustomNavigator.pushFromRight(LoginView());
   }
 
   void onSeeServerStatusPressed() {
@@ -44,5 +50,10 @@ class AccountController with ChangeNotifier {
 
   void onAboutPressed() {
     DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+  }
+
+  void onLogoutPressed() {
+    Auth.logout();
+    CustomNavigator.resetToHome();
   }
 }

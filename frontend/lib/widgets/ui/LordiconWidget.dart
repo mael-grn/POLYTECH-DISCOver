@@ -49,7 +49,7 @@ class _LordiconWidgetState extends State<LordiconWidget> {
   void dispose() {
     _controller.removeStatusListener(_onStatusChanged);
     _controller.clearStatusListeners();
-    _controller.dispose();
+    //_controller.dispose();
     super.dispose();
   }
 

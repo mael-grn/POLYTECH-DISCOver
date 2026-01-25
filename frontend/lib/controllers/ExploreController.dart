@@ -4,7 +4,7 @@ import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/models/Song.dart';
 import 'package:discover/services/SongService.dart';
 import 'package:discover/views/song/SongView.dart';
-import 'package:discover/views/song/searchSongView.dart';
+import 'package:discover/views/song/SearchSongView.dart';
 import 'package:discover/views/upload/UploadNewSongView.dart';
 import 'package:flutter/cupertino.dart';
 import '../exceptions/RequestException.dart';

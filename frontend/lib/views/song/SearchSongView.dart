@@ -1,9 +1,9 @@
-import 'package:discover/controllers/SearchSongController.dart';
-import 'package:discover/widgets/search/songListItemWidget.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
+import 'package:discover/controllers/song/SearchSongController.dart';
+import 'package:discover/widgets/search/SongListItemWidget.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:discover/widgets/ui/PageWidget.dart';
 import 'package:discover/widgets/ui/TextInputWidget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/Song.dart';

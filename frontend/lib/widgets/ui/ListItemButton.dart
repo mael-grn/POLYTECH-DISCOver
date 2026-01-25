@@ -1,5 +1,5 @@
-import 'package:discover/widgets/animations/scale_pop_animation_widget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
+import 'package:discover/widgets/animations/ScalePopAnimationWidget.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +10,12 @@ class ListItemButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
   final IconData? icon;
+  final Color bgColor;
   const ListItemButton({
     required this.title,
     required this.onPressed,
     this.icon,
+    this.bgColor = backgroundColor,
     super.key,
   });
 
@@ -28,7 +30,7 @@ class ListItemButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: bgColor,
             borderRadius: BorderRadius.circular(20),
           ),
           width: double.infinity,

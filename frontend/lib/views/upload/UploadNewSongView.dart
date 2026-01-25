@@ -1,8 +1,8 @@
 import 'package:discover/controllers/upload/UploadController.dart';
 import 'package:discover/core/theme/app_theme.dart';
-import 'package:discover/widgets/ui/Container_widget.dart';
-import 'package:discover/widgets/ui/button_widget.dart';
-import 'package:discover/widgets/ui/lordicon_widget.dart';
+import 'package:discover/widgets/ui/ContainerWidget.dart';
+import 'package:discover/widgets/ui/ButtonWidget.dart';
+import 'package:discover/widgets/ui/LordiconWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

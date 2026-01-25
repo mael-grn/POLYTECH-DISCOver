@@ -49,40 +49,37 @@ class ButtonWidget extends StatelessWidget {
       if (iconOnRight) Icon(icon, size: 22, color: foregroundColor),
     ];
 
-    return Hero(
-        tag: tag ?? "hero-$message",
-        child: ElevatedButton(
+    return ElevatedButton(
 
-          style: ElevatedButton.styleFrom(
-            backgroundColor: disabled ? backgroundVariantColor : backgroundColor,
-            foregroundColor: foregroundColor,
-            elevation: 4,
-            shadowColor: primaryColor.withAlpha((0.3 * 255).round()),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            ),
-            padding: padding,
-            textStyle: TextStyle(
-              color: foregroundColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              fontFamily: 'Poppins',
-            ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: disabled ? backgroundVariantColor : backgroundColor,
+          foregroundColor: foregroundColor,
+          elevation: 4,
+          shadowColor: primaryColor.withAlpha((0.3 * 255).round()),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
           ),
-          onPressed: () {
-            if (!disabled) {
-              HapticFeedback.mediumImpact();
-              onPressed();
-            }
-          },
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Flex(
-              direction: Axis.horizontal,
-              mainAxisSize: MainAxisSize.min,
-              children: children,
-            ),
-          )
+          padding: padding,
+          textStyle: TextStyle(
+            color: foregroundColor,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        onPressed: () {
+          if (!disabled) {
+            HapticFeedback.mediumImpact();
+            onPressed();
+          }
+        },
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Flex(
+            direction: Axis.horizontal,
+            mainAxisSize: MainAxisSize.min,
+            children: children,
+          ),
         )
     );
   }
