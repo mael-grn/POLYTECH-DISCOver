@@ -1,6 +1,7 @@
 import 'package:discover/controllers/AccountController.dart';
 import 'package:discover/controllers/ExploreController.dart';
 import 'package:discover/controllers/settings/EditUserDataController.dart';
+import 'package:discover/controllers/settings/ManageUploadsController.dart';
 import 'package:discover/controllers/settings/ViewUserDataController.dart';
 import 'package:discover/controllers/song/SearchSongController.dart';
 import 'package:discover/controllers/HomeController.dart';
@@ -41,7 +42,7 @@ void main() async {
     MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => HomeController(uploadService, songService)),
-          ChangeNotifierProvider(create: (_) => SearchSongController()),
+          ChangeNotifierProvider(create: (_) => SearchSongController(songService)),
           ChangeNotifierProvider(create: (_) => UploadController(uploadService)),
           ChangeNotifierProvider(create: (_) => AccountController()),
           ChangeNotifierProvider(create: (_) => UploadSuccessController()),
@@ -51,6 +52,7 @@ void main() async {
           ChangeNotifierProvider(create: (_) => RegisterController(userService)),
           ChangeNotifierProvider(create: (_) => EditUserDataController(userService, authService)),
           ChangeNotifierProvider(create: (_) => ViewUserDataController(authService)),
+          ChangeNotifierProvider(create: (_) => ManageUploadsController(uploadService)),
 
         ],
         child: MaterialApp(

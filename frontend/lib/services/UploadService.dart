@@ -1,5 +1,9 @@
 
+import 'dart:convert';
+
 import 'package:discover/models/Song.dart';
+import 'package:discover/models/Upload.dart';
+import 'package:discover/models/UploadedResult.dart';
 
 import '../core/provider.dart';
 
@@ -10,8 +14,8 @@ class Uploadservice {
     return null;
   }
 
-  Future<void> uploadSong(String filepath, String filename, bool private) async {
-    await Provider.sendMultipartRequest(
+  Future<UploadedResult> uploadSong(String filepath, String filename, bool private) async {
+    final response = await Provider.sendMultipartRequest(
       route: '/upload/file',
       filePath: filepath,
       fields: {
@@ -19,6 +23,14 @@ class Uploadservice {
         'name': filename,
       },
     );
+    return UploadedResult.fromJson(jsonDecode(response));
+  }
+
+  Future<List<Upload>> getMyUploads() async {
+    final response = await Provider.sendRequest(route: '/uploads/me', method: HttpMethod.GET);
+    final Map<String, dynamic> data = jsonDecode(response);
+    final List<dynamic> listData = data['items'];
+    return listData.map((item) => Upload.fromJson(item)).toList();
   }
 
 }

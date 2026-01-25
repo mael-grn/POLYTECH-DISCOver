@@ -6,6 +6,7 @@ import '../../views/GlobalLayout.dart';
 class UploadSuccessController with ChangeNotifier {
 
 
+
   UploadSuccessController();
 
   Future<void> initData() async {

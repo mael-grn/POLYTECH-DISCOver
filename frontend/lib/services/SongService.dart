@@ -10,6 +10,13 @@ class SongService {
     return listData.map((item) => Song.fromJson(item)).toList();
   }
 
+  Future<List<Song>> searchSongs(String q) async {
+    final response = await Provider.sendRequest(route: '/songs?q=$q', method: HttpMethod.GET);
+    final Map<String, dynamic> data = jsonDecode(response);
+    final List<dynamic> listData = data['items'];
+    return listData.map((item) => Song.fromJson(item)).toList();
+  }
+
   Future<Song> getSongById(int id) async {
     final response = await Provider.sendRequest(route: "/songs/$id", method: HttpMethod.GET);
     return Song.fromJson(jsonDecode(response));
@@ -19,6 +26,11 @@ class SongService {
     final response = await Provider.sendRequest(route: '/history', method: HttpMethod.GET);
     final Map<String, dynamic> data = jsonDecode(response);
     final List<dynamic> listData = data['items'];
-    return listData.map((item) => Song.fromJson(item)).toList();
+    List<Song> songs = [];
+    for (var item in listData) {
+      Song song = await getSongById(item['song_id']);
+      songs.add(song);
+    }
+    return songs;
   }
 }

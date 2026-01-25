@@ -71,6 +71,12 @@ class _AccountView extends State<AccountView> {
                   onPressed: controller.onManageAccountPressed,
                   icon: Icons.person,
                 ),
+                if (controller.isLoggedIn) SizedBox(height: 10),
+                if (controller.isLoggedIn) ListItemButton(
+                  title: "Manage uploads",
+                  onPressed: controller.onManageUploadsPressed,
+                  icon: Icons.upload_rounded,
+                ),
                 SizedBox(height: 10),
                 ListItemButton(
                   title: "Display",
@@ -88,12 +94,6 @@ class _AccountView extends State<AccountView> {
                   title: "Audio",
                   onPressed: controller.onAudioPressed,
                   icon: Icons.audiotrack,
-                ),
-                SizedBox(height: 10),
-                ListItemButton(
-                  title: "Manage uploads",
-                  onPressed: controller.onManageUploadsPressed,
-                  icon: Icons.upload_rounded,
                 ),
                 SizedBox(height: 10),
                 ListItemButton(

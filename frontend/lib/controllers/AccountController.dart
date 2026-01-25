@@ -1,6 +1,8 @@
 
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/views/auth/LoginView.dart';
+import 'package:discover/views/settings/AboutView.dart';
+import 'package:discover/views/settings/ManageUploadsView.dart';
 import 'package:discover/views/settings/ServerStatusView.dart';
 import 'package:discover/views/settings/UserDataView.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,11 +48,11 @@ class AccountController with ChangeNotifier {
   }
 
   void onManageUploadsPressed() {
-    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+    CustomNavigator.pushFromRight(ManageUploadsView());
   }
 
   void onAboutPressed() {
-    DialogBuilder.warning("Not so fast!", "This functionality is not implemented yet");
+    CustomNavigator.pushFromRight(AboutView());
   }
 
   void onManageAccountPressed() {

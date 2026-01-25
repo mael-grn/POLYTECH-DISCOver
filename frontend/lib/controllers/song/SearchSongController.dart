@@ -1,12 +1,16 @@
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/exceptions/RequestException.dart';
 import 'package:flutter/cupertino.dart';
+import '../../core/CustomNavigator.dart';
 import '../../models/Song.dart';
-import '../../services/SearchService.dart';
+import '../../services/SongService.dart';
+import '../../views/song/SongView.dart';
 
 class SearchSongController with ChangeNotifier {
 
-  SearchSongController();
+  SearchSongController(this.songService);
+
+  final SongService songService;
 
   final searchQueryController = TextEditingController();
   List<Song> searchResults = [];
@@ -24,8 +28,9 @@ class SearchSongController with ChangeNotifier {
     }
     DialogBuilder.loading();
     try {
-      searchResults = await SearchService.searchSongs(query);
+      searchResults = await songService.searchSongs(query);
       hasSearched = true;
+      DialogBuilder.closeCurrentDialog();
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
       searchResults = [];
@@ -39,7 +44,16 @@ class SearchSongController with ChangeNotifier {
     }
   }
 
-  void onSearchResultPressed(int songIndex) {
-    DialogBuilder.warning("Not so fast!", "Not implemented yet...");
+  void onSearchResultPressed(int songIndex) async {
+    DialogBuilder.loading();
+    try {
+      Song song = await songService.getSongById(searchResults[songIndex].id);
+      DialogBuilder.closeCurrentDialog();
+      CustomNavigator.pushFromBottom(SongView(song));
+    } on NetworkException catch (e) {
+      DialogBuilder.networkError(e.networkError);
+    } catch (e) {
+      DialogBuilder.appError();
+    }
   }
 }

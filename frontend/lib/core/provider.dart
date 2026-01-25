@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../enums/NetworkErrorEnum.dart';
 import '../exceptions/RequestException.dart';
 import '../utils/StorageUtils.dart';
+import 'Auth.dart';
 
 class ProviderResponse {
   final int statusCode;
@@ -19,7 +20,7 @@ class Provider {
   static final _client = http.Client();
   static final _cookieJar = CookieJar();
 
-  static const String _baseUrl = 'http://10.92.68.189:5000/api';
+  static const String _baseUrl = 'http://192.168.0.16:5000/api';
 
   //static const String _baseUrl = 'http://localhost:5000/api';
 
@@ -81,6 +82,9 @@ class Provider {
         StorageUtils.save('token', token);
       }
       return response.body;
+    } else if (response.statusCode == 401) {
+      Auth.logout();
+      throw NetworkException(NetworkErrorEnum.fromCode(response.statusCode));
     } else {
       throw NetworkException(NetworkErrorEnum.fromCode(response.statusCode));
     }

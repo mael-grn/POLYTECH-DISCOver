@@ -31,6 +31,7 @@ class Auth {
 
   static void logout() {
     _connectedUser = null;
+    StorageUtils.remove("token");
     StorageUtils.remove("user");
   }
 

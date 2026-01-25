@@ -56,8 +56,8 @@ class UploadController with ChangeNotifier {
     }
     DialogBuilder.loading();
     try {
-      await uploadService.uploadSong(selectedFilePath!, selectedFileName!, private);
-      CustomNavigator.pushZoom(Uploadsuccessview());
+      final upload = await uploadService.uploadSong(selectedFilePath!, selectedFileName!, private);
+      CustomNavigator.pushZoom(Uploadsuccessview(upload));
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (_) {
