@@ -53,6 +53,8 @@ class _UploadNewSongView extends State<UploadNewSongView> {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: 10),
+                  Checkbox(value: controller.private, onChanged: controller.setPrivate),
                   SizedBox(height: 20),
                   ButtonWidget(
                     message: "Select a file",
