@@ -42,11 +42,11 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final children = <Widget>[
-      if (!iconOnRight) Icon(icon, size: 22, color: Colors.white),
+      if (!iconOnRight) Icon(icon, size: 22, color: foregroundColor),
       if (!iconOnRight) SizedBox(width: 10),
       Text(message, style: TextStyle(color: foregroundColor),),
       if (iconOnRight) SizedBox(width: 10),
-      if (iconOnRight) Icon(icon, size: 22, color: Colors.white),
+      if (iconOnRight) Icon(icon, size: 22, color: foregroundColor),
     ];
 
     return Hero(
@@ -59,7 +59,7 @@ class ButtonWidget extends StatelessWidget {
             elevation: 4,
             shadowColor: primaryColor.withAlpha((0.3 * 255).round()),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(50),
             ),
             padding: padding,
             textStyle: TextStyle(

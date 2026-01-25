@@ -1,16 +1,21 @@
 import 'package:discover/controllers/AccountController.dart';
 import 'package:discover/controllers/ExploreController.dart';
+import 'package:discover/controllers/SearchSongController.dart';
 import 'package:discover/controllers/HomeController.dart';
-import 'package:discover/controllers/UploadController.dart';
+import 'package:discover/controllers/upload/UploadController.dart';
 import 'package:discover/controllers/gestionPersonneExempleController.dart';
+import 'package:discover/controllers/upload/UploadSuccessController.dart';
+import 'package:discover/services/HealthService.dart';
 import 'package:discover/services/PersonneExempleService.dart';
+import 'package:discover/services/SongService.dart';
+import 'package:discover/services/UploadService.dart';
 import 'package:discover/views/GlobalLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'controllers/ServerStatusController.dart';
+import 'core/global.dart';
 import 'core/theme/app_theme.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
 
@@ -22,15 +27,22 @@ void main() async {
   ));
 
   final personneExempleService = PersonneExampleService();
+  final uploadService = Uploadservice();
+  final songService = SongService();
+  final healthService = Healthservice();
+
 
   runApp(
     MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => GestionPersonnExempleController(personneExempleService)),
-          ChangeNotifierProvider(create: (_) => HomeController()),
-          ChangeNotifierProvider(create: (_) => ExploreController()),
-          ChangeNotifierProvider(create: (_) => UploadController()),
+          ChangeNotifierProvider(create: (_) => HomeController(uploadService, songService)),
+          ChangeNotifierProvider(create: (_) => SearchSongController()),
+          ChangeNotifierProvider(create: (_) => UploadController(uploadService)),
           ChangeNotifierProvider(create: (_) => AccountController()),
+          ChangeNotifierProvider(create: (_) => UploadSuccessController()),
+          ChangeNotifierProvider(create: (_) => ExploreController(songService)),
+          ChangeNotifierProvider(create: (_) => ServerStatusController(healthService)),
         ],
         child: MaterialApp(
           title: 'DISCOver',

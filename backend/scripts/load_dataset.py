@@ -3,14 +3,14 @@ from mysql.connector import Error
 import csv
 import os
 
-# Chemin absolu vers le CSV
+# Chemin absolu du CSV
 csv_path = '/home/etudiant/POLYTECH-DISCOver/data/raw/song_data.csv'
 
-# Configuration de la connexion
+# Configuration pour la connextion
 config = {
     'host': 'localhost',
-    'user': 'pythonuser',         # ton utilisateur MySQL
-    'password': 'MotDePasse123',  # son mot de passe
+    'user': 'pythonuser',
+    'password': 'MotDePasse123',
     'database': 'songs_db',
     'use_pure': True
 }
@@ -18,6 +18,7 @@ config = {
 try:
     # Connexion à MySQL
     conn = mysql.connector.connect(**config)
+    # Récupération du curseur
     cursor = conn.cursor()
     print("Connexion à MySQL réussie !")
 
@@ -43,11 +44,14 @@ try:
         PRIMARY KEY (id)
     );
     """
+    # Exécution de la requête
     cursor.execute(create_table)
 
-    # Import CSV ligne par ligne
+    # Importation du CSV
     with open(csv_path, 'r', encoding='utf-8') as f:
+        # Lecture du CSV
         reader = csv.DictReader(f)
+        # Insertion de toutes les données du CSV dans la table
         for row in reader:
             cursor.execute("""
                 INSERT INTO Songs (
@@ -62,16 +66,19 @@ try:
                 row['speechiness'], row['tempo'], row['time_signature'], row['audio_valence']
             ))
 
+    # Enregistrement global
     conn.commit()
     print("Table créée et CSV importé avec succès !")
 
+# Gestion d'erreur
 except Error as e:
     print("Erreur MySQL :", e)
 
 finally:
-    # Fermeture sûre
+    # Si le curseur est encore présent, le fermer
     if 'cursor' in locals() and cursor:
         cursor.close()
+    # Si la connection est encore présente, la fermer
     if 'conn' in locals() and conn.is_connected():
         conn.close()
         print("Connexion MySQL fermée.")

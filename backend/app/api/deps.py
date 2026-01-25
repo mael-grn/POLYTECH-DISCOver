@@ -1,20 +1,17 @@
-# backend/app/api/deps.py
-from typing import Optional
 from flask import request
 
-def get_request_user_id() -> Optional[int]:
+# Fonction récupérant l'identifiant de l'utilisateur dans une requête
+def get_request_user_id() -> int | None:
     """
-    Récupère l'ID de l'utilisateur depuis l'en-tête HTTP X-User-Id.
-    Utilisé pour l'authentification dev (mode développement).
-
-    Retourne:
-        - int : ID utilisateur si présent et valide
-        - None : sinon (non authentifié)
     """
-    user_id = request.headers.get("X-User-Id")
-    if user_id is None:
+    # Récupération de l'identifiant de l'utilisateur
+    raw = request.headers.get("X-User-Id") or request.args.get("user_id")
+    # S'il n'y en a pas, retourne None
+    if not raw:
         return None
+    # Retourne l'identifiant sous forme entière
     try:
-        return int(user_id)
+        return int(raw)
+    # Si une erreur apparaît, retourne None
     except ValueError:
         return None

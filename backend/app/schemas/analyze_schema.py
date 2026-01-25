@@ -1,6 +1,5 @@
 from marshmallow import Schema, fields
 
-
 class AnalyzeUpsertSchema(Schema):
     """
     Cette classe defini ce qu"on a besoin pour mettre a jour ou cree une analyze
