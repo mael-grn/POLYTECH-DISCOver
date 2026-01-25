@@ -1,6 +1,5 @@
 import 'package:discover/controllers/HomeController.dart';
 import 'package:discover/core/theme/app_theme.dart';
-import 'package:discover/widgets/animations/ScaleAnimationWidget.dart';
 import 'package:discover/widgets/search/SongListItemWidget.dart';
 import 'package:discover/widgets/ui/ContainerWidget.dart';
 import 'package:discover/widgets/ui/ButtonWidget.dart';

@@ -27,6 +27,7 @@ class HomeController with ChangeNotifier {
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
     } catch (e) {
+      print(e);
       DialogBuilder.appError();
     }
     notifyListeners();

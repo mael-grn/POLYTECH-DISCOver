@@ -85,4 +85,44 @@ class Provider {
       throw NetworkException(NetworkErrorEnum.fromCode(response.statusCode));
     }
   }
+
+  static Future<String> sendMultipartRequest({
+    required String route,
+    required String filePath,
+    String fileKey = 'file', // Le nom du champ attendu par votre API
+    Map<String, String>? fields, // Pour envoyer d'autres données texte si besoin
+  }) async {
+    final url = Uri.parse('$_baseUrl$route');
+    final token = await StorageUtils.load("token");
+
+    // 1. Créer la requête Multipart
+    var request = http.MultipartRequest('POST', url);
+
+    // 2. Ajouter le token dans les headers (comme dans votre méthode standard)
+    if (token != null) {
+      request.headers['Cookie'] = 'access_token=$token';
+    }
+
+    // 3. Ajouter le fichier
+    request.files.add(await http.MultipartFile.fromPath(
+      fileKey,
+      filePath,
+    ));
+
+    // 4. Ajouter d'éventuels champs texte supplémentaires
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    // 5. Envoyer la requête
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    // 6. Gérer la réponse (même logique que votre méthode existante)
+    if (response.statusCode.toString().startsWith('2')) {
+      return response.body;
+    } else {
+      throw NetworkException(NetworkErrorEnum.fromCode(response.statusCode));
+    }
+  }
 }
