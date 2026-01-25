@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
-
+from app.core.guards import optional_auth
 from app.api.deps import get_request_user_id
 from app.extensions import db
 from app.schemas.song_schema import SongCreateSchema, SongReadSchema
@@ -49,7 +49,7 @@ def create_song():
 
 
 @songs_bp.get("/songs/<int:song_id>")
-@require_auth
+@optional_auth
 def get_song(song_id: int):
     maybe_user_id =  g.user_id
 
@@ -66,7 +66,7 @@ def get_song(song_id: int):
 
 
 @songs_bp.get("/songs")
-@require_auth
+@optional_auth
 def list_songs():
     maybe_user_id = g.user_id
 
