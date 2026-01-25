@@ -22,8 +22,8 @@ class UserService {
     Auth.setConnectedUser(user);
   }
 
-  Future<void> updateUser(int id, String email, String name) async {
-    await Provider.sendRequest(route: "/users/$id", method: HttpMethod.PUT, body: {
+  Future<void> updateUser(String email, String name) async {
+    await Provider.sendRequest(route: "/users/me", method: HttpMethod.PATCH, body: {
       "name": name,
       "email": email,
     });

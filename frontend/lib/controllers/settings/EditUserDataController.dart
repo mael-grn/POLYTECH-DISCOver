@@ -51,7 +51,7 @@ class EditUserDataController with ChangeNotifier {
     DialogBuilder.loading();
 
     try {
-      await userService.updateUser(user!.id, name, email);
+      await userService.updateUser(email, name);
       user = await authService.recoverUser();
       DialogBuilder.closeCurrentDialog();
       CustomNavigator.back();
