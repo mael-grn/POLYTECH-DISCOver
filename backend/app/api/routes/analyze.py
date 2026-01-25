@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request, g
 from app.core.guards import require_auth
 from app.extensions import db
-
+from app.core.guards import optional_auth
 from app.crud.analyze_crud import get_analyze_by_song_id
 from app.crud.uploads_crud import get_upload_by_song_id_with_private_guard
+from app.crud.songs_crud import get_song_with_private_guard
+from app.services.ml_predictor import predict_popularity_score
 
 analyze_bp = Blueprint("analyze", __name__)
 
@@ -64,3 +66,30 @@ def get_my_analyzes():
         })
 
     return jsonify({"count": len(enriched), "items": enriched}), 200
+
+@analyze_bp.get("/analyze/<int:song_id>/preview")
+@optional_auth
+def preview_analyze(song_id: int):
+    """
+    Rejoue le modèle ML sur une musique existante
+    SANS mettre à jour l'analyse stockée.
+    """
+    user_id = g.user_id
+
+    song = get_song_with_private_guard(
+        db.session,
+        song_id=song_id,
+        maybe_user_id=user_id,
+        should_touch_history=False,  # 🔑 important
+    )
+
+
+    features = song.to_features_dict()
+    score = predict_popularity_score(features)
+
+    return jsonify({
+        "song_id": song.song_id,
+        "song_name": song.song_name,
+        "predicted_popularity_preview": round(float(score), 1),
+        "saved": False,
+    }), 200

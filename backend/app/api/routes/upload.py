@@ -11,6 +11,7 @@ from app.schemas.uploaded_by_schema import (
     UploadUpdateSchema,
 )
 import uuid
+from app.core.guards import optional_auth
 from pathlib import Path
 from flask import g
 from app.core.guards import require_auth
@@ -130,7 +131,7 @@ def get_my_uploads():
 
 
 @uploads_bp.post("/uploads/file")
-@require_auth
+@optional_auth
 def upload_audio_file():
     user_id = g.user_id
 
@@ -163,7 +164,12 @@ def upload_audio_file():
     song = create_song_from_features(db.session, song_name=analyzed_song.song_name, features=features, is_in_data_set=False)
 
     upsert_analyze_for_song(db.session, song_id=song.song_id, score_0_100=score)
-    create_upload_link(db.session, user_id=user_id, song_id=song.song_id, private=private)
+    if user_id is not None:
+        private_raw = request.form.get("private", "true").lower().strip()
+        private = private_raw in ("1", "true", "yes", "on")
+        create_upload_link(db.session, user_id=user_id, song_id=song.song_id, private=private)
+    else:
+        private = False
 
     return jsonify({
         "song_id": song.song_id,
