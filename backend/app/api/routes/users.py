@@ -12,23 +12,20 @@ from app.crud.users_crud import (
     create_user_row,
     list_users_basic,
 )
-
+from flask import g
+from app.core.guards import require_auth
 users_bp = Blueprint("users", __name__)
 user_create_schema = UserCreateSchema()
 
 
-def _require_user_id():
-    user_id = get_request_user_id()
-    if user_id is None:
-        return None, (jsonify({"error": "Unauthorized", "message": "Missing X-User-Id (dev auth)"}), 401)
-    return user_id, None
+
 
 
 @users_bp.get("/users/me")
+@require_auth
 def get_me():
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
+
 
     user = get_user_by_id(db.session, user_id=user_id)
     if user is None:

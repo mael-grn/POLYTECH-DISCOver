@@ -14,6 +14,8 @@ from app.crud.history_crud import (
     delete_all_for_user,
     delete_one_for_user,
 )
+from flask import g
+from app.core.guards import require_auth
 
 history_bp = Blueprint("history", __name__)
 
@@ -24,10 +26,9 @@ history_list_schema = HistoryReadSchema(many=True)
 
 
 @history_bp.post("/history")
+@require_auth
 def create_history():
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     payload = request.get_json(silent=True)
     if payload is None:
@@ -55,10 +56,9 @@ def create_history():
 
 
 @history_bp.get("/history")
+@require_auth
 def list_history():
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     try:
         skip = int(request.args.get("skip", 0))
@@ -89,10 +89,9 @@ def list_history():
 
 
 @history_bp.get("/history/<int:song_id>")
+@require_auth
 def get_history(song_id: int):
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     row = get_one_for_user(
         db.session,
@@ -111,10 +110,9 @@ def get_history(song_id: int):
 
 
 @history_bp.delete("/history")
+@require_auth
 def clear_history():
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     deleted = delete_all_for_user(
         db.session,
@@ -129,10 +127,9 @@ def clear_history():
 
 
 @history_bp.delete("/history/<int:song_id>")
+@require_auth
 def delete_history(song_id: int):
-    user_id, err = _require_user_id()
-    if err:
-        return err
+    user_id = g.user_id
 
     ok = delete_one_for_user(
         db.session,

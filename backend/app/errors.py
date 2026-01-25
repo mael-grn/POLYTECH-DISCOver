@@ -3,6 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from app.core.errors import NotFoundError, ForbiddenError
 from app.extensions import db
+from app.core.errors import ConflictError
 
 
 def register_error_handlers(app: Flask):
@@ -39,3 +40,7 @@ def register_error_handlers(app: Flask):
             "error": "Forbidden",
             "message": e.message
         }), 403
+
+    @app.errorhandler(ConflictError)
+    def handle_conflict(e):
+        return jsonify({"error": "Conflict", "message": e.message}), 409

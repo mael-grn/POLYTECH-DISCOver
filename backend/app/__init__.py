@@ -29,6 +29,7 @@ def create_app() -> Flask:
     db.init_app(app)
     ma.init_app(app)
     register_db_hooks(app)
+    register_error_handlers(app)
     from app.api.routes import register_routes
     register_routes(app)
 

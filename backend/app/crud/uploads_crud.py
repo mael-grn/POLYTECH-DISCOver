@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Optional, List, Dict, Any
-
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.uploaded_by import UploadedBy
@@ -15,17 +15,30 @@ from app.core.errors import NotFoundError, ForbiddenError
 
 
 
-def create_upload_for_user(
-    session: Session,
-    *,
-    user_id: int,
-    song_id: int,
-    private: bool,
-) -> UploadedBy:
+def create_upload_for_user(session: Session, *, user_id: int, song_id: int, private: bool) -> tuple[UploadedBy, bool]:
 
-    row = UploadedBy(song_id=song_id, user_id=user_id, private=private)
-    session.add(row)
-    return row
+    upload = (
+        session.query(UploadedBy)
+        .filter_by(song_id=song_id, user_id=user_id)
+        .first()
+    )
+
+    created = False
+    if upload is None:
+        upload = UploadedBy(song_id=song_id, user_id=user_id, private=private)
+        session.add(upload)
+        created = True
+    else:
+        upload.private = private
+
+
+    try:
+        session.flush()
+    except IntegrityError:
+        session.rollback()
+        raise ConflictError(message="Upload already exists")
+
+    return upload, created
 
 
 def get_upload_by_song_id(session: Session, *, song_id: int) -> Optional[UploadedBy]:
@@ -103,3 +116,10 @@ def list_my_uploads_with_song(
         }
         for upload, song in rows
     ]
+
+
+def create_upload_link(session: Session, *, user_id: int, song_id: int, private: bool) -> UploadedBy:
+    link = UploadedBy(user_id=user_id, song_id=song_id, private=private)
+    session.add(link)
+    session.flush()
+    return link

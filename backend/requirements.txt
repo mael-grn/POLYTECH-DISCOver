@@ -23,10 +23,11 @@ pathlib
 flask_sqlalchemy
 flask_marshmallow
 cryptography
-
+numpy
 werkzeug
-
+scikit-learn
+joblib
 pymysql
-
+librosa
 mysql.connector
 PyJWT

@@ -208,3 +208,32 @@ def delete_uploaded_song_for_owner(
 
     session.delete(upload)
     session.delete(song)
+
+def create_song_from_features(
+        session: Session,
+        *,
+        song_name: str,
+        features: dict,
+        is_in_data_set: bool = False
+) -> Song:
+    song = Song(
+        song_name=song_name,
+        song_popularity=None,
+        song_duration_ms=features.get("song_duration_ms"),
+        acousticness=features.get("acousticness"),
+        danceability=features.get("danceability"),
+        energy=features.get("energy"),
+        instrumentalness=features.get("instrumentalness"),
+        key=features.get("key"),
+        liveness=features.get("liveness"),
+        loudness=features.get("loudness"),
+        tempo=features.get("tempo"),
+        audio_mode=features.get("audio_mode"),
+        speechiness=features.get("speechiness"),
+        time_signature=features.get("time_signature"),
+        audio_valence=features.get("audio_valence"),
+        is_in_data_set=is_in_data_set,
+    )
+    session.add(song)
+    session.flush()
+    return song

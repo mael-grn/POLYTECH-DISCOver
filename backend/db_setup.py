@@ -39,6 +39,14 @@ with app.app_context():
                         key=int(row['key']),
                         liveness=float(row['liveness']),
                         loudness=float(row['loudness']),
+                        audio_mode=int(row['audio_mode']) if row.get('audio_mode') not in (None, "", "NA") else None,
+                        speechiness=float(row['speechiness']) if row.get('speechiness') not in (
+                        None, "", "NA") else None,
+                        tempo=float(row['tempo']) if row.get('tempo') not in (None, "", "NA") else None,
+                        time_signature=int(row['time_signature']) if row.get('time_signature') not in (
+                        None, "", "NA") else None,
+                        audio_valence=float(row['audio_valence']) if row.get('audio_valence') not in (
+                        None, "", "NA") else None,
                         is_in_data_set=True
                     )
                     songs_to_add.append(new_song)
