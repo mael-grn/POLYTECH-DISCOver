@@ -1,24 +1,36 @@
 from flask import Flask
-from .core.config import settings
-from .core.db import db
-from app.extensions import db, ma
 
-def create_app():
+from app.core.config import DevConfig
+from app.extensions import db, ma
+from app.api.routes import register_routes
+from app.errors import *
+
+def register_db_hooks(app: Flask) -> None:
+    @app.teardown_request
+    def _db_session_teardown(exception=None):
+        # Si une exception a eu lieu pendant la requête => rollback
+        if exception is not None:
+            db.session.rollback()
+            db.session.remove()
+            return
+
+        try:
+            db.session.commit()
+        except SQLAlchemyError:
+            db.session.rollback()
+            raise
+        finally:
+            db.session.remove()
+
+def create_app() -> Flask:
     app = Flask(__name__)
-    app.config["DEBUG"] = settings.DEBUG
-    app.config["SQLALCHEMY_DATABASE_URI"] = settings.SQLALCHEMY_DATABASE_URI
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = settings.SQLALCHEMY_TRACK_MODIFICATIONS
-    app.config["SECRET_KEY"] = settings.SECRET_KEY
-    app.config.from_object(settings)
+    app.config.from_object(DevConfig)
 
     db.init_app(app)
     ma.init_app(app)
+    register_db_hooks(app)
+    register_error_handlers(app)
+    from app.api.routes import register_routes
     register_routes(app)
-
-    from backend.app.api.routes.songs import tracks_bp
-    from backend.app.api.routes.users import users_bp
-
-    app.register_blueprint(tracks_bp, url_prefix="/api/tracks")
-    app.register_blueprint(users_bp, url_prefix="/api/users")
 
     return app

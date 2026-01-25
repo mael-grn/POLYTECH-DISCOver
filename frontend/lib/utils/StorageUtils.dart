@@ -12,6 +12,11 @@ class StorageUtils {
     return prefs.getString(key) ?? "";
   }
 
+  static Future<bool> itemExists(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key) != null;
+  }
+
   static Future<void> remove(String key) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(key);

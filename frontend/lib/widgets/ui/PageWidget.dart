@@ -11,6 +11,7 @@ class PageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: foregroundColor,
         backgroundColor: backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -22,7 +23,7 @@ class PageWidget extends StatelessWidget {
           style: TextStyle(
             color: foregroundColor,
             fontWeight: FontWeight.w600,
-            fontSize: 35,
+            fontSize: 25,
           ),
         ),
       ),
@@ -38,7 +39,9 @@ class PageWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 15),
-                  body,
+                  Center(
+                    child: body,
+                  ),
                   SizedBox(height: 100),
                 ],
               ),

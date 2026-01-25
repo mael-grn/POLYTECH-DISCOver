@@ -3,10 +3,31 @@ Flask-Cors
 Flask-SQLAlchemy
 python-dotenv
 
-
+datetime
+marshmallow
 
 pymysql
 
 pandas
 librosa
 scikit-learn
+
+
+sqlalchemy
+
+
+
+
+sqlalchemy.orm
+pathlib
+flask_sqlalchemy
+flask_marshmallow
+cryptography
+numpy
+werkzeug
+scikit-learn
+joblib
+pymysql
+librosa
+mysql.connector
+PyJWT

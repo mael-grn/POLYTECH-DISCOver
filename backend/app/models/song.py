@@ -4,10 +4,10 @@ from __future__ import annotations
 from sqlalchemy import String, Integer, Float, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.db.base import Base
+from app.extensions import db
 
 
-class Song(Base):
+class Song(db.Model):
     __tablename__ = "song"
 
     song_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -24,7 +24,11 @@ class Song(Base):
     key: Mapped[int | None] = mapped_column(Integer, nullable=True)
     liveness: Mapped[float | None] = mapped_column(Float, nullable=True)
     loudness: Mapped[float | None] = mapped_column(Float, nullable=True)
-
+    tempo: Mapped[float | None] = mapped_column(Float, nullable=True)
+    audio_mode: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    speechiness: Mapped[float | None] = mapped_column(Float, nullable=True)
+    time_signature: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    audio_valence: Mapped[float | None] = mapped_column(Float, nullable=True)
     is_in_data_set: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     analyze: Mapped["Analyze | None"] = relationship(
@@ -44,7 +48,17 @@ class Song(Base):
         cascade="all, delete-orphan",
     )
 
+    def to_features_dict(self) -> Dict[str, Any]:
+        return {
+            "song_duration_ms": self.song_duration_ms,
+            "tempo": self.tempo,
+            "loudness": self.loudness,
+            "key": self.key,
+            "audio_mode": self.audio_mode,
+            "time_signature": self.time_signature,
+        }
 
-from backend.app.models.analyze import Analyze
-from backend.app.models.uploaded_by import UploadedBy
-from backend.app.models.history import History
+
+from app.models.analyze import Analyze
+from app.models.uploaded_by import UploadedBy
+from app.models.history import History

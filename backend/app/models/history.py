@@ -4,10 +4,10 @@ from __future__ import annotations
 from sqlalchemy import Integer, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.base import Base
+from app.extensions import db
 
 
-class History(Base):
+class History(db.Model):
     __tablename__ = "history"
 
     song_id: Mapped[int] = mapped_column(
@@ -28,5 +28,5 @@ class History(Base):
     user: Mapped["User"] = relationship(back_populates="history_entries")
 
 
-from backend.app.models.song import Song
-from backend.app.models.user import User
+from app.models.song import Song
+from app.models.user import User
