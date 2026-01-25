@@ -54,7 +54,14 @@ class _UploadNewSongView extends State<UploadNewSongView> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 10),
-                  Checkbox(value: controller.private, onChanged: controller.setPrivate),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Private"),
+                      SizedBox(width: 10),
+                      Checkbox(value: controller.private, onChanged: controller.setPrivate),
+                    ],
+                  ),
                   SizedBox(height: 20),
                   ButtonWidget(
                     message: "Select a file",

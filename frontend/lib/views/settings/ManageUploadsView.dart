@@ -67,17 +67,20 @@ class _ManageUploadsView extends State<ManageUploadsView> {
                     ButtonWidget(message: "Start uploading", icon: Icons.upload, onPressed: controller.onAddUploadPressed)
                   ]
               )
-                  : ListView.builder(
-                      itemCount: controller.userUploads.length,
-                      itemBuilder: (context, index) {
-                        final Upload upload = controller.userUploads[index];
-                        return UploadListItemWidget(
-                          upload: upload,
-                          onDeletePressed: () =>
-                              controller.onDeleteUploadPressed(index),
-                        );
-                      },
-                    ),
+                  : ListView.separated(
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: 10),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: controller.userUploads.length,
+                itemBuilder: (context, index) {
+                  final Upload upload = controller.userUploads[index];
+                  return UploadListItemWidget(
+                    upload: upload,
+                    onDeletePressed: () =>
+                        controller.onDeleteUploadPressed(index),                  );
+                },
+              ),
             ),
           ],
         ),

@@ -36,16 +36,20 @@ class UploadController with ChangeNotifier {
   Future<void> selectFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['mp3', 'wav', 'm4a', 'flac'],
+      allowedExtensions: ['mp3'],
       allowMultiple: false,
     );
 
-    if (result != null) {
+    if (result == null) {
+      DialogBuilder.warning("You haven't selected any file", "To upload a new song to your library, please select a file.");
+      return;
+    } else if (result.files.single.extension != 'mp3') {
+      DialogBuilder.warning("Please select a mp3 file", "Our system is only able to analyze mp3 files.");
+      return;
+    } else {
       selectedFilePath = result.files.single.path;
       selectedFileName = result.files.single.name;
       notifyListeners();
-    } else {
-      DialogBuilder.warning("You haven't selected any file", "To upload a new song to your library, please select a file.");
     }
   }
 
@@ -60,7 +64,7 @@ class UploadController with ChangeNotifier {
       CustomNavigator.pushZoom(Uploadsuccessview(upload));
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
-    } catch (_) {
+    } catch (e) {
       DialogBuilder.appError();
     }
 

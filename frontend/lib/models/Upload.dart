@@ -5,11 +5,10 @@ class Upload {
   final String songName;
   final int songDuration;
   final bool private;
-  final String date;
-  final double predictedPopularity;
+  final int predictedPopularity;
 
 
-  const Upload(this.songId, this.songName, this.songDuration, this.private, this.date, this.predictedPopularity);
+  const Upload(this.songId, this.songName, this.songDuration, this.private, this.predictedPopularity);
 
   factory Upload.fromJson(Map<String, dynamic> json) {
     return Upload(
@@ -17,8 +16,7 @@ class Upload {
       json['song_name'],
       json['song_duration_ms'],
       json['private'],
-      json['date'],
-      json['analyze']['predicted_popularity'],
+      ((json['analyze']['popularity_probability'] ?? 0.0).toDouble()*100).round(),
     );
   }
 

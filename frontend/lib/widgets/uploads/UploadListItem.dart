@@ -45,6 +45,7 @@ class UploadListItemWidget extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(width: 10,),
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -72,6 +73,8 @@ class UploadListItemWidget extends StatelessWidget {
                 ],
               ),
             ),
+            SizedBox(width: 10,),
+
             Text(
               "${upload.predictedPopularity}%",
               overflow: TextOverflow.ellipsis,

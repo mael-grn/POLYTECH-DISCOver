@@ -21,8 +21,9 @@ class ManageUploadsController with ChangeNotifier {
       userUploads = await uploadService.getMyUploads();
     } on NetworkException catch (e) {
       DialogBuilder.networkError(e.networkError);
-    } catch (_) {
-      DialogBuilder.appError();
+    } catch (e) {
+      print(e)
+;      DialogBuilder.appError();
     }
   }
 
