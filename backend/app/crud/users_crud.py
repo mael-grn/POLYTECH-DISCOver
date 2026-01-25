@@ -71,3 +71,22 @@ def user_public_dict(user: User) -> Dict[str, Any]:
         "name": user.name,
         "email": user.email,
     }
+def update_user(
+    session: Session,
+    *,
+    user: User,
+    name: str | None = None,
+    email: str | None = None,
+    password: str | None = None,
+) -> User:
+    if name is not None:
+        user.name = name
+
+    if email is not None:
+        user.email = email
+
+    if password is not None:
+        user.set_password(password)
+
+    session.flush()
+    return user
