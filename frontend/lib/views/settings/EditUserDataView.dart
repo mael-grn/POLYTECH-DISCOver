@@ -78,6 +78,7 @@ class _EditUserDataView extends State<EditUserDataView> {
                           )
                       )
                   ),
+                  SizedBox(height: 20,),
                   ButtonWidget(
                     message: "Edit my data",
                     icon: Icons.loop,

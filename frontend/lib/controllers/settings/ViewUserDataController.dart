@@ -1,9 +1,11 @@
 
+import 'package:discover/core/CustomNavigator.dart';
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/models/User.dart';
 import 'package:discover/services/AuthService.dart';
 import 'package:discover/services/HealthService.dart';
 import 'package:discover/services/UserService.dart';
+import 'package:discover/views/settings/EditUserDataView.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../exceptions/RequestException.dart';
@@ -28,6 +30,6 @@ class ViewUserDataController with ChangeNotifier {
   }
 
   void onEditDataPressed() {
-
+    CustomNavigator.pushFromRight(EditUserDataView());
   }
 }

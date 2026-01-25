@@ -1,5 +1,7 @@
 import 'package:discover/controllers/AccountController.dart';
 import 'package:discover/controllers/ExploreController.dart';
+import 'package:discover/controllers/settings/EditUserDataController.dart';
+import 'package:discover/controllers/settings/ViewUserDataController.dart';
 import 'package:discover/controllers/song/SearchSongController.dart';
 import 'package:discover/controllers/HomeController.dart';
 import 'package:discover/controllers/upload/UploadController.dart';
@@ -47,6 +49,8 @@ void main() async {
           ChangeNotifierProvider(create: (_) => ServerStatusController(healthService)),
           ChangeNotifierProvider(create: (_) => LoginController(authService)),
           ChangeNotifierProvider(create: (_) => RegisterController(userService)),
+          ChangeNotifierProvider(create: (_) => EditUserDataController(userService, authService)),
+          ChangeNotifierProvider(create: (_) => ViewUserDataController(authService)),
 
         ],
         child: MaterialApp(
