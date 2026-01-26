@@ -8,6 +8,7 @@ import 'package:discover/services/UploadService.dart';
 import 'package:discover/views/upload/UploadNewSongView.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../enums/NetworkErrorEnum.dart';
 import '../exceptions/RequestException.dart';
 import '../views/song/SongView.dart';
 
@@ -27,7 +28,9 @@ class HomeController with ChangeNotifier {
       final uploadLst = await uploadService.getMyUploads();
       upload = uploadLst.isNotEmpty ? uploadLst.first : null;
     } on NetworkException catch (e) {
-      DialogBuilder.networkError(e.networkError);
+      if (e.networkError != NetworkErrorEnum.unauthorized) {
+        DialogBuilder.networkError(e.networkError);
+      }
     } catch (e) {
       DialogBuilder.appError();
     }
