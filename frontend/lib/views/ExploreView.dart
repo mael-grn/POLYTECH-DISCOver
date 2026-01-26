@@ -53,8 +53,8 @@ class _ExploreView extends State<ExploreView> {
               ],
             ),
           ),
-          SizedBox(height: 20),
-          ContainerWidget(
+          if (controller.showHistory) SizedBox(height: 20),
+          if (controller.showHistory) ContainerWidget(
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

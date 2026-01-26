@@ -11,16 +11,9 @@ analyze_bp = Blueprint("analyze", __name__)
 
 
 @analyze_bp.get("/analyze/<int:song_id>")
-@require_auth
+@optional_auth
 def get_analyze(song_id: int):
     user_id = g.user_id
-
-
-    get_upload_by_song_id_with_private_guard(
-        db.session,
-        song_id=song_id,
-        maybe_user_id=user_id,
-    )
 
     analyze = get_analyze_by_song_id(db.session, song_id=song_id)
     if analyze is None:
@@ -80,8 +73,7 @@ def preview_analyze(song_id: int):
         db.session,
         song_id=song_id,
         maybe_user_id=user_id,
-        should_touch_history=False,  # 🔑 important
-    )
+        should_touch_history=False,  )
 
 
     features = song.to_features_dict()

@@ -29,7 +29,7 @@ class _Uploadsuccessview extends State<Uploadsuccessview> {
 
 
     return PageWidget(
-      showBackBtn: false,
+      showBackBtn: true,
         title: "Song successfully uploaded",
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
