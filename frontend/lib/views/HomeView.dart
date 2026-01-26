@@ -40,9 +40,15 @@ class _HomeView extends State<HomeView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 LordiconWidget("doodle-music"),
+                if (controller.upload != null) SizedBox(height: 10),
+                if (controller.upload != null) Text(
+                  "Recent upload",
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(height: 10),
                 Text(
-                  "No song recently uploaded",
+                  controller.upload == null ? "No song recently uploaded" : controller.upload!.songName,
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
                   textAlign: TextAlign.center,
                 ),
