@@ -7,17 +7,29 @@ from app.core.errors import ConflictError
 
 
 def register_error_handlers(app: Flask):
+     """
+    Enregistre des gestionnaires d'erreurs.
 
-
+    - app : instance Flask
+    - erreurs gérées :
+        - IntegrityError (contrainte d'intégrité violée) -> 409
+        - SQLAlchemyError (erreur base de données) -> 500
+        - NotFoundError (ressource introuvable) -> 404
+        - ForbiddenError (accès interdit) -> 403
+        - ConflictError (conflit) -> 409
+    - retourne : None
+    """
+    # Erreurs d'intégrité
     @app.errorhandler(IntegrityError)
     def handle_integrity_error(error):
         db.session.rollback()
+        # Retourne une erreur d'intégrité
         return jsonify({
             "error": "IntegrityError",
             "message": "Contrainte d'intégrité violée (clé étrangère manquante ou doublon)."
         }), 409
 
-
+    # Erreur accès base de données
     @app.errorhandler(SQLAlchemyError)
     def handle_sqlalchemy_error(error):
         db.session.rollback()
@@ -26,7 +38,7 @@ def register_error_handlers(app: Flask):
             "message": "Une erreur est survenue lors de l'accès à la base de données"
         }), 500
 
-
+    # Erreur "introuvable"
     @app.errorhandler(NotFoundError)
     def handle_not_found(e):
         return jsonify({
