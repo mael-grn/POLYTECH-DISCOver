@@ -4,6 +4,7 @@ from .analyze_schema import AnalyzeUpsertSchema, AnalyzeReadSchema
 from .uploaded_by_schema import UploadCreateSchema, UploadUpdateSchema, UploadReadSchema
 from .history_schema import HistoryCreateSchema, HistoryReadSchema
 
+# Récupère tous les schémas
 __all__ = [
     "UserCreateSchema", "UserLoginSchema", "UserReadSchema",
     "SongCreateSchema", "SongUpdateSchema", "SongReadSchema",
