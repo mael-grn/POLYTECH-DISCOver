@@ -33,6 +33,15 @@ def _load_bundle():
 
 
 def _clamp_0_100(x: float) -> float:
+    """
+    Force une valeur à rester dans l'intervalle [0 ; 100].
+
+    - x : entrée
+    - retourne :
+        - 0 si x < 0
+        - 100 si x > 100
+        - x sinon
+    """
     return max(0.0, min(100.0, float(x)))
 
 
