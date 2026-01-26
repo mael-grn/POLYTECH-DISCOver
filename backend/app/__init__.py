@@ -5,6 +5,7 @@ from app.extensions import db, ma
 from app.api.routes import register_routes
 from app.errors import *
 
+# Enregistrement de hooks pour chaque requête
 def register_db_hooks(app: Flask) -> None:
     """
     Enregistre des hooks pour chaque requête
