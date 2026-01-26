@@ -91,7 +91,7 @@ def create_upload():
 @uploads_bp.patch("/uploads/<int:song_id>")
 @require_auth
 def patch_upload(song_id: int):
-<<<<<<< HEAD
+
     """
     Mise à jour d'un upload existant pour l'utilisateur connecté.
 
@@ -106,21 +106,20 @@ def patch_upload(song_id: int):
     user_id = g.user_id
 
     # Lecture du JSON de la requête
-=======
+
     # 1) "auth" dev: user_id obligatoire
     user_id = g.user_id
     # 2) récupérer payload
->>>>>>> refs/remotes/origin/commentaires
+
     payload = request.get_json(silent=True)
     # S'il n'y a pas de JSON valide, renvoie une erreur
     if payload is None:
         return jsonify({"error": "InvalidOrMissingJSON", "message": "Invalid or missing JSON body"}), 400
-<<<<<<< HEAD
 
-    # Conversion du JSON en dictionnaire Python
-=======
+
+
     # 3) valider
->>>>>>> refs/remotes/origin/commentaires
+
     try:
         data = upload_update_schema.load(payload)
     # Renvoie une erreur si ça ne fonctionne pas
@@ -130,12 +129,9 @@ def patch_upload(song_id: int):
     # Si le champ "private" n'existe pas, retourne une erreur
     if "private" not in data:
         return jsonify({"error": "ValidationError", "message": "Provide 'private' (true/false)."}), 422
-<<<<<<< HEAD
 
-    # Rend la chanson privée ou non par rapport à l'utilisateur
-=======
+
     # 4) récupérer upload
->>>>>>> refs/remotes/origin/commentaires
     upload = set_upload_private_for_owner(
         db.session,
         user_id=user_id,

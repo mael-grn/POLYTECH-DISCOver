@@ -102,7 +102,6 @@ def create_user():
 # Gestion de la route "/users"
 @users_bp.get("/users")
 def list_users():
-<<<<<<< HEAD
     """
     Liste des utilisateurs existants
 
@@ -116,9 +115,8 @@ def list_users():
                 - email : email de l'utilisateur
     """
     # Récupération de limit via l'URL (50 sinon)
-=======
-    # dev: limite pour éviter de dump trop
->>>>>>> refs/remotes/origin/commentaires
+
+
     limit = request.args.get("limit", 50, type=int)
     # Récupère limit s'il est entre 1 et 200 (1 ou 200 sinon)
     limit = max(1, min(limit, 200))
