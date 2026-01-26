@@ -32,7 +32,7 @@ def register_db_hooks(app: Flask) -> None:
         except SQLAlchemyError:
             db.session.rollback()
             raise
-        # Supprimer la session
+
         finally:
             db.session.remove()
 
@@ -46,11 +46,9 @@ def create_app() -> Flask:
     # Chargement de la configuration
     app.config.from_object(DevConfig)
 
-    # Initialisation de la base de données
+    # Initialisation de la base des modules nécessaires (marshmallow, db)
     db.init_app(app)
-    # Initialisation de Marshmallow
     ma.init_app(app)
-    # Enregistrement des hooks
     register_db_hooks(app)
     # Gestion des erreurs
     register_error_handlers(app)
@@ -58,5 +56,4 @@ def create_app() -> Flask:
     # Enregistrement des routes
     register_routes(app)
 
-    # Retourne l'application
     return app

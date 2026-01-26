@@ -21,7 +21,6 @@ def register_error_handlers(app: Flask):
     # Erreurs d'intégrité
     @app.errorhandler(IntegrityError)
     def handle_integrity_error(error):
-        # Annule toutes les modifications non-enregistrées
         db.session.rollback()
         # Retourne une erreur d'intégrité
         return jsonify({

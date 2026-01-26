@@ -13,7 +13,6 @@ def apply_rich_search(query, search: str, columns, mode: str = "any", max_tokens
     """
     # Récupération des tokens (morceau de texte)
     tokens = [t for t in re.split(r"\s+", (search or "").strip()) if t]
-    # S'il n'y a pas de token, retourne la requête
     if not tokens:
         return query
 
@@ -23,11 +22,9 @@ def apply_rich_search(query, search: str, columns, mode: str = "any", max_tokens
 
     # Création du tableau contenant toutes les conditions de requête pour chaque token
     per_token = []
-    # Boucle sur chaque token
     for tok in tokens:
-        # Fait en sorte qu'un token puisse apparaître à n'importe quel moment dans le titre
+        # on fait en sorte qu'un token puisse apparaître à n'importe quel moment dans le titre
         like = f"%{tok}%"
-        # Ajoute la condition précédente au tableau
         per_token.append(or_(*[col.ilike(like) for col in columns]))
 
     # Retourne la requête filtrée pour tous les token si le mode est "all", sinon par token si le mode est "any"

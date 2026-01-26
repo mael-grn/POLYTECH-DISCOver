@@ -3,10 +3,10 @@ from mysql.connector import Error
 import csv
 import os
 
-# Chemin absolu du CSV
+# Chemin de la base de données CSV
 csv_path = '/home/etudiant/POLYTECH-DISCOver/data/raw/song_data.csv'
 
-# Configuration pour la connextion
+# Config connexion
 config = {
     'host': 'localhost',
     'user': 'pythonuser',
@@ -16,9 +16,7 @@ config = {
 }
 
 try:
-    # Connexion à MySQL
-    conn = mysql.connector.connect(**config)
-    # Récupération du curseur
+    conn = mysql.connector.connect(**config) # connexionn mySQL
     cursor = conn.cursor()
     print("Connexion à MySQL réussie !")
 
@@ -49,7 +47,6 @@ try:
 
     # Importation du CSV
     with open(csv_path, 'r', encoding='utf-8') as f:
-        # Lecture du CSV
         reader = csv.DictReader(f)
         # Insertion de toutes les données du CSV dans la table
         for row in reader:
@@ -66,7 +63,6 @@ try:
                 row['speechiness'], row['tempo'], row['time_signature'], row['audio_valence']
             ))
 
-    # Enregistrement global
     conn.commit()
     print("Table créée et CSV importé avec succès !")
 

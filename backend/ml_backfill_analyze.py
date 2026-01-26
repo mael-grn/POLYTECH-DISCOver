@@ -10,11 +10,9 @@ from app.extensions import db
 from app.models.song import Song
 from app.models.analyze import Analyze
 
-# Chemin du dossier app
+#chemins des fichiers nécessaires 
 BASE_DIR = Path(__file__).resolve().parent / "app"
-# Chemin du modèle
 MODEL_PATH = BASE_DIR / "ml" / "artifacts" / "popularity_model.joblib"
-# Chemin du fichier JSON contenant les colonnes utilisées par le modèle
 FEATURES_JSON_PATH = BASE_DIR / "ml" / "feature_columns.json"
 
 def clamp_0_100(x: float) -> float:
@@ -36,10 +34,8 @@ def inv_logit_to_0_100(z: np.ndarray) -> np.ndarray:
     - z : tableau NumPy de valeurs
     - retourne : tableau NumPy de nombres contenus entre 0 et 100
     """
-    # Fonction sigmoïde permettant de retourner un nombre entre 0 et 1
     y01 = 1.0 / (1.0 + np.exp(-z))
-    # Multiplication par 100 pour obtenir un pourcentage
-    return np.clip(y01 * 100.0, 0.0, 100.0)
+    return np.clip(y01 * 100.0, 0.0, 100.0)     #retour des valeurs entre 0 et 100
 
 def build_row_from_song(song: Song, feature_cols: list[str]) -> pd.DataFrame:
     """
@@ -51,7 +47,6 @@ def build_row_from_song(song: Song, feature_cols: list[str]) -> pd.DataFrame:
     """
     # Récupération des caractéristiques d'une chanson
     feats = song.to_features_dict()
-    # Récupération de toutes les données d'une chanson (avec éventuellement None si la chanson n'a pas une caractéristique quelconque)
     row = {col: feats.get(col, None) for col in feature_cols}
     # Retourne le DataFrame avec toutes les données d'une chanson
     return pd.DataFrame([row])
@@ -64,13 +59,12 @@ def set_analyze_fields(analyze: Analyze, score_0_100: float) -> None:
     - score_0_100 : score de popularité dans [0 ; 100]
     - retourne : None
     """
-    # Garantie d'une valeur entre 0 et 100
     score_0_100 = clamp_0_100(score_0_100)
 
     # Si la table Analyze a "predicted_popularity", y insérer le score de popularité arrondie
     if hasattr(analyze, "predicted_popularity"):
         analyze.predicted_popularity = int(round(score_0_100))
-    # Si la table Analyze a plutôt "popularity_probability", y insérer la popularité dans un intervalle [0 ; 1]
+    # Si la table Analyze a "popularity_probability", y insérer la popularité dans un intervalle [0 ; 1]
     elif hasattr(analyze, "popularity_probability"):
         analyze.popularity_probability = float(score_0_100 / 100.0)
     # Sinon, mettre une erreur
@@ -89,7 +83,6 @@ def predict_score_0_100(model_bundle, X: pd.DataFrame) -> float:
     - X : DataFrame Pandas contenant les caractéristiques des chansons
     - retourne : score float entre 0 et 100
     """
-    # Nouveau bundle
     if isinstance(model_bundle, dict) and "pipeline" in model_bundle:
         # Récupération du pipeline
         pipe = model_bundle["pipeline"]
@@ -97,8 +90,7 @@ def predict_score_0_100(model_bundle, X: pd.DataFrame) -> float:
         calibrator = model_bundle.get("calibrator", None)
 
         # Application du pipeline
-        z = pipe.predict(X)  # logit
-        # Transformation du logit entre 0 et 100
+        z = pipe.predict(X) 
         raw = float(inv_logit_to_0_100(np.asarray(z))[0])
 
         # Vérification que le calibrateur n'est pas None
@@ -191,6 +183,5 @@ def main():
 
         print(f"Done. processed={processed}, created={created}, updated={updated}")
 
-# Lancement du main
 if __name__ == "__main__":
     main()

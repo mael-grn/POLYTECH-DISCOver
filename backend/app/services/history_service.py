@@ -12,7 +12,6 @@ def touch_history(user_id: int, song_id: int) -> None:
     - user_id : identifiant de l'utilisateur
     - song_id : identifiant de la chanson
     """
-    # Date du moment
     now = datetime.now(timezone.utc)
 
     # Requête de l'historique en fonction de l'utilisateur et de la chanson

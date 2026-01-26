@@ -8,13 +8,11 @@ from app.models.analyze import Analyze
 from app.models.uploaded_by import UploadedBy
 from app.models.history import History
 
-# Création de l'application
 app = create_app()
 
-# Chemin relatif du CSV
+# Chemin du CSV
 CSV_PATH = './dataset.csv'
 
-# Active l'application
 with app.app_context():
     # Initialisation de la base de données
     db.create_all()
@@ -26,9 +24,8 @@ with app.app_context():
     else:
         print(f"Début de l'importation depuis {CSV_PATH}...")
         try:
-            # Ouverture du fichier CSV
+            # Ouverture et lecture du fichier CSV
             with open(CSV_PATH, 'r', encoding='utf-8') as f:
-                # Lecture du fichier CSV
                 reader = csv.DictReader(f)
                 # Création d'un tableau contenant les chansons à ajouter
                 songs_to_add = []
@@ -60,14 +57,12 @@ with app.app_context():
                 
                 # Ajout du contenu du tableau dans la base de données
                 db.session.bulk_save_objects(songs_to_add)
-                # Enregistrement de la base de données
                 db.session.commit()
                 print(f"Succès ! {len(songs_to_add)} chansons importées.")
 
-        # Gestion des erreurs (Fichier CSV non-trouvé)
+        # Gestion des erreurs
         except FileNotFoundError:
             print(f"Erreur : Le fichier CSV est introuvable à l'adresse {CSV_PATH}")
-        # Gestion des autres erreurs
         except Exception as e:
             # Réinitialise la base de données
             db.session.rollback()
