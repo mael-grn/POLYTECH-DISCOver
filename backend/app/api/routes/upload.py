@@ -70,12 +70,13 @@ def create_upload():
 @uploads_bp.patch("/uploads/<int:song_id>")
 @require_auth
 def patch_upload(song_id: int):
+    # 1) "auth" dev: user_id obligatoire
     user_id = g.user_id
-
+    # 2) récupérer payload
     payload = request.get_json(silent=True)
     if payload is None:
         return jsonify({"error": "InvalidOrMissingJSON", "message": "Invalid or missing JSON body"}), 400
-
+    # 3) valider
     try:
         data = upload_update_schema.load(payload)
     except ValidationError as e:
@@ -83,7 +84,7 @@ def patch_upload(song_id: int):
 
     if "private" not in data:
         return jsonify({"error": "ValidationError", "message": "Provide 'private' (true/false)."}), 422
-
+    # 4) récupérer upload
     upload = set_upload_private_for_owner(
         db.session,
         user_id=user_id,
