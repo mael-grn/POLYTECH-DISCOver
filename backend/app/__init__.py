@@ -7,12 +7,12 @@ from app.errors import *
 
 # Enregistrement de hooks pour chaque requête
 def register_db_hooks(app: Flask) -> None:
-        """
-    Enregistre des hooks pour chaque requête
-
-    - app : instance Flask
-    - retourne : None
     """
+        Enregistre des hooks pour chaque requête
+
+        - app : instance Flask
+        - retourne : None
+        """
     # Gestion des exceptions
     @app.teardown_request
     def _db_session_teardown(exception=None):
