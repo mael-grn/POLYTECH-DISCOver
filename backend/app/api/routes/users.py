@@ -69,6 +69,7 @@ def create_user():
 
 @users_bp.get("/users")
 def list_users():
+    # dev: limite pour éviter de dump trop
     limit = request.args.get("limit", 50, type=int)
     limit = max(1, min(limit, 200))
 
