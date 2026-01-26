@@ -14,11 +14,21 @@ class AudioAnalysisService:
         pass
 
     @staticmethod
-    def _estimate_mode_major_minor(chroma_mean: np.ndarray) -> int | None: #determine la tonalité de la musique
+    def _estimate_mode_major_minor(chroma_mean: np.ndarray) -> int | None:
+        """
+        Estimation de la tonalité majeure ou mineure d'une chanson à partir de son chroma (tonalité) moyen.
+
+        - chroma_mean : Vecteur représentant l'intensité moyenne.
+        - retourne :
+            - 1 si la chanson est estimée en tonalité majeure,
+            - 0 si la chanson est estimée en tonalité mineure.
+        """
+        # Tonalité majeure possibles
         major = np.array([6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88])
+        # Tonalité mineure possibles
         minor = np.array([6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17])
 
-
+        # Normalisation des tonalités de la chanson
         c = chroma_mean / (np.linalg.norm(chroma_mean) + 1e-9) 
         maj = major / np.linalg.norm(major) 
         minr = minor / np.linalg.norm(minor)
@@ -32,41 +42,48 @@ class AudioAnalysisService:
             best_maj = max(best_maj, float(np.dot(c, maj_s)))
             best_min = max(best_min, float(np.dot(c, min_s)))
 
+        # Retourne 1 si la chanson est plus de tonalité majeure, et 0 si mineure
         return 1 if best_maj >= best_min else 0 #1 pour majeur, 0 pour mineur
 
     def analyze_file(self, file_path: str, song_title: str = None) -> Song | None: #permet d'analyser et extraire les caractéristiques d'un morceau
+        
+        #Analyse d'un fichier audio et extraction de ses caractéristiques musicales.
+
+        # Si le fichier n'existe pas dans l'OS, arrêter la fonction
         if not os.path.exists(file_path):
             print(f"Fichier introuvable : {file_path}")
             return None
 
         try:
-
+            # Chargement du fichier audio
             y, sr = librosa.load(file_path, mono=True) 
 
+            # Si le fichier est vide ou qu'il dure moins d'une seconde, arrêter la fonction
             if y is None or len(y) < sr * 1:
                 print("Audio trop court ou vide.")
                 return None
 
-
-            duration_sec = librosa.get_duration(y=y, sr=sr) #récupération de la durée en secondes
+            # Récupérer la durée de l'audio en secondes
+            duration_sec = librosa.get_duration(y=y, sr=sr)
             duration_ms = int(duration_sec * 1000)
 
-
-            tempo, _ = librosa.beat.beat_track(y=y, sr=sr) #récupération du tempo en BPM
+            # Récupération du tempo
+            tempo, _ = librosa.beat.beat_track(y=y, sr=sr) 
             bpm = float(tempo) if np.isscalar(tempo) else float(tempo[0])
 
-
-            chroma = librosa.feature.chroma_stft(y=y, sr=sr) #récupération de la tonalité
+            # Récupération de la tonalité
+            chroma = librosa.feature.chroma_stft(y=y, sr=sr) 
             chroma_mean = np.mean(chroma, axis=1)
             key = int(np.argmax(chroma_mean))                #note fondamentale (0=C, 1=C#, ..., 11=B)
             audio_mode = self._estimate_mode_major_minor(chroma_mean)
 
-
-            rms = librosa.feature.rms(y=y)[0]                 #récupération de la puissance sonore
+            # Récupération de l'amplitude
+            rms = librosa.feature.rms(y=y)[0]
             rms_mean = float(np.mean(rms))
+            # Conversion de l'amplitude en décibels
             loudness_db = float(20.0 * np.log10(max(rms_mean, 1e-9)))
 
-
+            # Initialisation de la signature rythmique à 4, afin de simplifier l'analyse
             time_signature = 4
 
 
@@ -77,7 +94,7 @@ class AudioAnalysisService:
             liveness = None
             speechiness = None
             audio_valence = None
-
+            # Récupération du nom de la chanson
             final_title = song_title if song_title else Path(file_path).stem
 
             return Song(  #création de l'objet Song avec les caractéristiques extraites
