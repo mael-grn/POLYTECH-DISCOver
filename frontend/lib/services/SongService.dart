@@ -22,6 +22,7 @@ class SongService {
 
   Future<Song> getSongById(int id) async {
     final response = await Provider.sendRequest(route: "/songs/$id", method: HttpMethod.GET);
+    print(response);
     return Song.fromJson(jsonDecode(response));
   }
 

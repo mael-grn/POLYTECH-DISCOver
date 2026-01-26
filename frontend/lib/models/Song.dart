@@ -13,7 +13,9 @@ class Song {
   final double liveness;
   final bool isInDataset;
 
-  const Song(this.id, this.name, this.duration, this.danceability, this.energy, this.key, this.loudness, this.acousticness, this.instrumentalness, this.liveness, this.isInDataset);
+  final double? tempo;
+
+  const Song(this.id, this.name, this.duration, this.danceability, this.energy, this.key, this.loudness, this.acousticness, this.instrumentalness, this.liveness, this.isInDataset, {this.tempo});
 
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
@@ -28,6 +30,7 @@ class Song {
       (json['instrumentalness'] ?? 0.0).toDouble(),
       (json['liveness'] ?? 0.0).toDouble(),
       json['is_in_data_set'] ?? true,
+      tempo: json['tempo'] != null ? json['tempo'].toDouble() : null,
     );
   }
 

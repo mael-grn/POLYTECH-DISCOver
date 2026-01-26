@@ -114,14 +114,18 @@ class _SongView extends State<SongView> {
                 ],
               ),
             ),
-            const SizedBox(height: 30),
-            ContainerWidget(
+            if (widget.song.tempo != null) const SizedBox(height: 30),
+            if (widget.song.tempo != null) ContainerWidget(
               Column(
                 children: [
-                  LordiconWidget(widget.song.isInDataset ? "server" : "cloud-user", loop: true, size: 100, key:Key(widget.song.isInDataset.toString()) ,),
-                  Text(
-                    widget.song.isInDataset ? "This song comes from our database." : "This song has been uploaded by another user.",
+                  const Text(
+                    "Tempo",
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "${widget.song.tempo} BMP",
+                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 35),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -134,6 +138,19 @@ class _SongView extends State<SongView> {
               _buildStatBar("Instrumentalness", widget.song.instrumentalness),
               _buildStatBar("Liveness", widget.song.liveness),
             ],
+            const SizedBox(height: 30),
+            ContainerWidget(
+              Column(
+                children: [
+                  LordiconWidget(widget.song.isInDataset ? "server" : "cloud-user", loop: true, size: 100, key:Key(widget.song.isInDataset.toString()) ,),
+                  Text(
+                    widget.song.isInDataset ? "This song comes from our database." : "This song has been uploaded.",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
