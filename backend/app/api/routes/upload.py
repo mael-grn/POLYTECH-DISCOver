@@ -153,7 +153,7 @@ def upload_audio_file():
     filepath = UPLOAD_DIR / filename
     f.save(filepath)
 
-    analyzed_song = audio_service.analyze_file(str(filepath))
+    analyzed_song = audio_service.analyze_file(str(filepath), str(f.filename).removesuffix(".mp3"))
     if analyzed_song is None:
         return jsonify({"error": "AudioAnalysisFailed"}), 500
 

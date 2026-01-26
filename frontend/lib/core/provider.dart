@@ -20,7 +20,7 @@ class Provider {
   static final _client = http.Client();
   static final _cookieJar = CookieJar();
 
-  static const String _baseUrl = 'http://192.168.0.16:5000/api';
+  static const String _baseUrl = 'http://10.92.68.189:5000/api';
 
   //static const String _baseUrl = 'http://localhost:5000/api';
 

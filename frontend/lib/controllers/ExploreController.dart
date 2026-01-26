@@ -1,6 +1,7 @@
 
 import 'package:discover/core/CustomNavigator.dart';
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
+import 'package:discover/enums/NetworkErrorEnum.dart';
 import 'package:discover/models/Song.dart';
 import 'package:discover/services/SongService.dart';
 import 'package:discover/views/song/SongView.dart';
@@ -16,16 +17,21 @@ class ExploreController with ChangeNotifier {
   final SongService songService;
 
   List<Song> history = [];
+  bool showHistory = false;
 
   Future<void> initData() async {
     try {
       history = await songService.getHistory();
+      showHistory = true;
     } on NetworkException catch (e) {
-      DialogBuilder.networkError(e.networkError);
+      if (e.networkError != NetworkErrorEnum.unauthorized) {
+        DialogBuilder.networkError(e.networkError);
+      }
     } catch (e) {
       DialogBuilder.appError();
+    } finally {
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void onSearchSongClicked() {

@@ -12,8 +12,8 @@ class UploadedResult {
     return UploadedResult(
       json['song_id'],
       json['song_name'],  
-      json['predicted_popularity'],
-      json['private'],
+      json['predicted_popularity'] ?? json['predicted_popularity_preview'],
+      json['private'] ?? false,
     );
   }
 

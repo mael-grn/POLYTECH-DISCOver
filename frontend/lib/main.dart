@@ -5,6 +5,7 @@ import 'package:discover/controllers/settings/ManageUploadsController.dart';
 import 'package:discover/controllers/settings/ViewUserDataController.dart';
 import 'package:discover/controllers/song/SearchSongController.dart';
 import 'package:discover/controllers/HomeController.dart';
+import 'package:discover/controllers/song/SongController.dart';
 import 'package:discover/controllers/upload/UploadController.dart';
 import 'package:discover/controllers/upload/UploadSuccessController.dart';
 import 'package:discover/services/AuthService.dart';
@@ -53,6 +54,7 @@ void main() async {
           ChangeNotifierProvider(create: (_) => EditUserDataController(userService, authService)),
           ChangeNotifierProvider(create: (_) => ViewUserDataController(authService)),
           ChangeNotifierProvider(create: (_) => ManageUploadsController(uploadService, songService)),
+          ChangeNotifierProvider(create: (_) => SongController(songService)),
 
         ],
         child: MaterialApp(

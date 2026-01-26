@@ -2,11 +2,13 @@
 import 'package:discover/core/CustomNavigator.dart';
 import 'package:discover/dialogs/AlertDialogBuilder.dart';
 import 'package:discover/models/Song.dart';
+import 'package:discover/models/Upload.dart';
 import 'package:discover/services/SongService.dart';
 import 'package:discover/services/UploadService.dart';
 import 'package:discover/views/upload/UploadNewSongView.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../enums/NetworkErrorEnum.dart';
 import '../exceptions/RequestException.dart';
 import '../views/song/SongView.dart';
 
@@ -17,15 +19,18 @@ class HomeController with ChangeNotifier {
   final Uploadservice uploadService;
   final SongService songService;
 
-  Song? song = null;
+  Upload? upload = null;
   List<Song> trends = [];
 
   Future<void> initData() async {
     try {
       trends = await songService.getSongs();
-      song = await uploadService.getLastUploadedSongByUser();
+      final uploadLst = await uploadService.getMyUploads();
+      upload = uploadLst.isNotEmpty ? uploadLst.first : null;
     } on NetworkException catch (e) {
-      DialogBuilder.networkError(e.networkError);
+      if (e.networkError != NetworkErrorEnum.unauthorized) {
+        DialogBuilder.networkError(e.networkError);
+      }
     } catch (e) {
       DialogBuilder.appError();
     }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:discover/models/Song.dart';
+import 'package:discover/models/Upload.dart';
+import 'package:discover/models/UploadedResult.dart';
 import '../core/provider.dart';
 import '../exceptions/RequestException.dart';
 
@@ -20,6 +22,7 @@ class SongService {
 
   Future<Song> getSongById(int id) async {
     final response = await Provider.sendRequest(route: "/songs/$id", method: HttpMethod.GET);
+    print(response);
     return Song.fromJson(jsonDecode(response));
   }
 
@@ -34,6 +37,11 @@ class SongService {
       }
       rethrow;
     }
+  }
+
+  Future<UploadedResult> getAnalyzePreviewBySongId(int id) async {
+    final response = await Provider.sendRequest(route: "/analyze/$id/preview", method: HttpMethod.GET);
+    return UploadedResult.fromJson(jsonDecode(response));
   }
 
   Future<List<Song>> getHistory() async {

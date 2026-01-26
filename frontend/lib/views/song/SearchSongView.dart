@@ -46,7 +46,7 @@ class _SearchSongView extends State<SearchSongView> {
                   children: [
                     TextInputWidget(
                       controller: controller.searchQueryController,
-                      hint: "Artists, songs, ...",
+                      hint: "Songs name, ...",
                       icon: Icons.search,
                       big: true,
                       onIconClick: () => controller.searchSongs(),

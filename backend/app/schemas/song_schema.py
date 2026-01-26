@@ -39,14 +39,22 @@ class SongUpdateSchema(Schema):
     is_in_data_set = fields.Bool(required=False)
 
 
+from marshmallow import Schema, fields
+
+
 class SongReadSchema(Schema):
-    """Cette classe defini ce que renvoie l'API au sujet d'un song."""
+    """Cette classe définit ce que renvoie l'API pour un Song."""
+
+    # Identité
     song_id = fields.Int(dump_only=True)
     song_name = fields.Str(dump_only=True)
 
+    # Données globales
     song_popularity = fields.Int(dump_only=True, allow_none=True)
     song_duration_ms = fields.Int(dump_only=True, allow_none=True)
+    is_in_data_set = fields.Bool(dump_only=True)
 
+    # Audio features (dataset / ML)
     acousticness = fields.Float(dump_only=True, allow_none=True)
     danceability = fields.Float(dump_only=True, allow_none=True)
     energy = fields.Float(dump_only=True, allow_none=True)
@@ -55,4 +63,9 @@ class SongReadSchema(Schema):
     liveness = fields.Float(dump_only=True, allow_none=True)
     loudness = fields.Float(dump_only=True, allow_none=True)
 
-    is_in_data_set = fields.Bool(dump_only=True)
+    # Champs ajoutés / oubliés jusque-là
+    tempo = fields.Float(dump_only=True, allow_none=True)
+    audio_mode = fields.Int(dump_only=True, allow_none=True)
+    time_signature = fields.Int(dump_only=True, allow_none=True)
+    speechiness = fields.Float(dump_only=True, allow_none=True)
+    audio_valence = fields.Float(dump_only=True, allow_none=True)
